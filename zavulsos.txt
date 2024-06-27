@@ -1,0 +1,56 @@
+letra               [a-zA-Z]
+digito              [0-9]
+simbolo             [~`!@#$%^&*()_\-+\\/\[\]|'?,><.,]
+
+NUMERO              {digito}+("."{digito}+)?(("E"|"e")("+"|"-")?{digito}+)?{VAZIO}?
+LITERAL             \"({letra}|{digito}|{simbolo}|" "|\t)*\"
+IDENTIFICADOR       {letra}({letra}|{digito}|_)*
+OP_RELACIONAL       <|>|>=|<=|==|<>
+OP_ARITIMETICO      +|-|*|/
+ATRIBUICAO          = 
+ABRE_PAR            \(
+FECHA_PAR           \)
+VIRGULA             ,
+PONTO_E_VIRG        ;
+VAZIO               (" "|\t|\r|\\n)+
+COMENTARIO          \{({letra}|{digito}|{simbolo}|" "|\t)*\}
+
+/* Define os lexemas */
+L    [a-zA-Z]
+D    [0-9]
+S    [~`!@#$%^&*()_\-+\\/\[\]|'?,><.,]
+
+%%
+
+/* Regras para os lexemas fornecidos */
+NUMERO         {D}+(\.{D}+)?((E|e)(+|-)?{D}+)?
+LITERAL        \"({L}|{D}|{S}|=|\t)*\"
+IDENTIFICADOR  {L}({L}|{D}|_)*
+OP_RELACIONAL  <|>|>=|<=|==|<>
+OP_ARITIMETICO  \+|\-|\*|\/
+ATRIBUICAO     =
+ABRE_PAR       \(
+FECHA_PAR      \)
+VIRGULA        ,
+PONTO_E_VIRG   ;
+VAZIO          ( |\t|\r|\n)+
+COMENTARIO     \{({L}|{D}|{S}| |\t)*\}
+
+{NUMERO}                { ret_print("NUMERO"); }
+{LITERAL}               { tipo_declarado = TIPO_STRING ;ret_print("STRING"); }
+{IDENTIFICADOR}         { ret_print("IDENTIFICADOR"); }
+{OP_RELACIONAL}         { ret_print("OP_RELACIONAL"); }
+{OP_ARITIMETICO}        { ret_print("OP_ARITMETICO"); }
+{ATRIBUICAO}            { ret_print("ATRIBUICAO"); }
+{ABRE_PAR}              { ret_print("ABRE_PAR"); }
+{FECHA_PAR}             { ret_print("FECHA_PAR"); }
+{VIRGULA}               { ret_print("VIRGULA"); }
+{PONTO_E_VIRG}          { ret_print("PONTO_E_VIRG"); }
+{VAZIO}                 { ret_print("VAZIO"); }
+{COMENTARIO}            { tipo_declarado = TIPO_COMENTARIO; ret_print("COMENTARIO"); }
+
+{NUMERO}                { ret_print("NUMERO"); }
+{LITERAL}               { tipo_declarado = TIPO_STRING ;ret_print("STRING"); }
+{IDENTIFICADOR}         { ret_print("IDENTIFICADOR"); }
+{VAZIO}                 { ret_print("VAZIO"); }
+{COMENTARIO}            { tipo_declarado = TIPO_COMENTARIO; ret_print("COMENTARIO"); }
