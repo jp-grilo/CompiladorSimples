@@ -450,21 +450,18 @@ char *yytext;
     #include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
-    #include "lista_t.c"
+    #include "lista_t.h"
+    #include "parser.tab.h"
 
     extern FILE *yyin;
     extern FILE *yyout;
 
-    int lineno = 1;     // número da linha
-
-    void ret_print(char *token_type);
-    void ret_printt(char *token_type);
-
     void yyerror();
-    void token_dump(char *token_type);
+
+    int lineno = 1;     // número da linha
 /* Define os lexemas */
 /* Regras para os lexemas fornecidos */
-#line 468 "lex.yy.c"
+#line 465 "lex.yy.c"
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -615,10 +612,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
 
-#line 41 "lexico.l"
+#line 37 "lexico.l"
 
 
-#line 622 "lex.yy.c"
+#line 619 "lex.yy.c"
 
 	if ( yy_init )
 		{
@@ -703,162 +700,161 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 43 "lexico.l"
-{ ret_print("INICIOPROG"); }
+#line 39 "lexico.l"
+{ return INICIOPROG ; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 44 "lexico.l"
-{ ret_print("FIMPROG"); }
+#line 40 "lexico.l"
+{ return FIMPROG ; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 45 "lexico.l"
-{ ret_print("INICIOARGS"); }
+#line 41 "lexico.l"
+{ return INICIOARGS ; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 46 "lexico.l"
-{ ret_print("FIMARGS"); }
+#line 42 "lexico.l"
+{ return FIMARGS ; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 47 "lexico.l"
-{ ret_print("INICIOVARS"); }
+#line 43 "lexico.l"
+{ return INICIOVARS ; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 48 "lexico.l"
-{ ret_print("FIMVARS"); }
+#line 44 "lexico.l"
+{ return FIMVARS ; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 49 "lexico.l"
-{ ret_print("COMANDO_ESCREVA"); }
+#line 45 "lexico.l"
+{ return ESCREVA ; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 50 "lexico.l"
-{ ret_print("CONDICIONAL_SE"); }
+#line 46 "lexico.l"
+{ return SE ; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 51 "lexico.l"
-{ ret_print("CONDICIONAL_ENTAO"); }
+#line 47 "lexico.l"
+{ return ENTAO ; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 52 "lexico.l"
-{ ret_print("CONDICIONAL_FIM_SE"); }
+#line 48 "lexico.l"
+{ return FIM_SE ; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 53 "lexico.l"
-{ ret_print("CONDICIONAL_ENQUANTO"); }
+#line 49 "lexico.l"
+{ return ENQUANTO ; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 54 "lexico.l"
-{ ret_print("COMANDO_FACA"); }
+#line 50 "lexico.l"
+{ return FACA ; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 55 "lexico.l"
-{ ret_print("CONDICIONAL_FIM_ENQUANTO"); }
+#line 51 "lexico.l"
+{ return FIM_ENQUANTO ; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 57 "lexico.l"
-{ ret_print("INTEIRO"); }
+#line 53 "lexico.l"
+{ return INTEIRO ; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 58 "lexico.l"
-{ ret_print("REAL"); }
+#line 54 "lexico.l"
+{ return REAL ; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 59 "lexico.l"
-{ ret_print("LITERAL"); }
+#line 55 "lexico.l"
+{ return LITERAL ; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 61 "lexico.l"
-{ ret_print("NUMERO"); }
+#line 57 "lexico.l"
+{ return NUMERO ; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 62 "lexico.l"
-{ ret_print("STRING"); }
+#line 58 "lexico.l"
+{ return STRING ; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 63 "lexico.l"
-{ ret_print("IDENTIFICADOR"); 
-                          insert(yytext, strlen(yytext), INDEF, lineno);
-}
+#line 59 "lexico.l"
+{ insert(yytext, strlen(yytext), INDEF, lineno);
+                        return IDENTIFICADOR ; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 66 "lexico.l"
-{ ret_print("OP_RELACIONAL"); }
+#line 61 "lexico.l"
+{ return OP_RELACIONAL ; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 67 "lexico.l"
-{ ret_print("OP_ARITMETICO"); }
+#line 62 "lexico.l"
+{ return OP_ARITIMETICO ; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 68 "lexico.l"
-{ ret_print("ATRIBUICAO"); }
+#line 63 "lexico.l"
+{ return ATRIBUICAO ; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 69 "lexico.l"
-{ ret_print("ABRE_PAR"); }
+#line 64 "lexico.l"
+{ return ABRE_PAR ; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 70 "lexico.l"
-{ ret_print("FECHA_PAR"); }
+#line 65 "lexico.l"
+{ return FECHA_PAR ; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 71 "lexico.l"
-{ ret_print("VIRGULA"); }
+#line 66 "lexico.l"
+{ return VIRGULA ; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 72 "lexico.l"
-{ ret_print("PONTO_E_VIRG"); }
+#line 67 "lexico.l"
+{ return PONTO_E_VIRG ; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 73 "lexico.l"
-{  }
+#line 68 "lexico.l"
+{ return VAZIO ;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 74 "lexico.l"
-{ ret_print("COMENTARIO"); }
+#line 69 "lexico.l"
+{ return COMENTARIO ; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 76 "lexico.l"
+#line 71 "lexico.l"
 { lineno += 1; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 77 "lexico.l"
-{ yyerror("Caracter nao reconhecido"); }
+#line 72 "lexico.l"
+{ yyerror("Caracter nao reconhecido") ; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 79 "lexico.l"
+#line 74 "lexico.l"
 ECHO;
 	YY_BREAK
-#line 862 "lex.yy.c"
+#line 858 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1744,33 +1740,4 @@ int main()
 	return 0;
 	}
 #endif
-#line 79 "lexico.l"
-
- 
-void ret_print(char *token_type){
-    printf("'valor': %s\ttoken: %s\tlinha nro: %d\n", yytext, token_type, lineno);
-}
-
-void yyerror(char *message){
-    printf("Error: \"%s\" in line %d. Token = %s\n", message, lineno, yytext);
-}
-
-int main(int argc, char *argv[]){
-
-    // initialize symbol table
-    init_hash_table();
-
-	// open input file
-	yyin = fopen("input.txt", "r");
-	
-	// lexical analysis
-	yylex();
-	fclose(yyin);
-
-    // symbol table dump
-    yyout = fopen("symtab_dump.txt", "w");
-    tabsimb_dump(yyout);
-    fclose(yyout);  
-	
-	return 0;
-}
+#line 74 "lexico.l"

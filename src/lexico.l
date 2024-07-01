@@ -4,21 +4,17 @@
     #include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
-    #include "lista_t.c"
+    #include "lista_t.h"
+    #include "parser.tab.h"
 
     extern FILE *yyin;
     extern FILE *yyout;
 
-    int lineno = 1;     // número da linha
-
-    void ret_print(char *token_type);
-    void ret_printt(char *token_type);
-
     void yyerror();
-    void token_dump(char *token_type);
+
+    int lineno = 1;     // número da linha
 %}
 
- 
 /* Define os lexemas */
 L    [a-zA-Z]
 D    [0-9]
@@ -40,68 +36,39 @@ COMENTARIO          \{({L}|{D}|{S}|" "|\t)*\}
 
 %%
 
-"inicioprog"            { ret_print("INICIOPROG"); }
-"fimprog"               { ret_print("FIMPROG"); }
-"inicioargs"            { ret_print("INICIOARGS"); }
-"fimargs"               { ret_print("FIMARGS"); }
-"iniciovars"            { ret_print("INICIOVARS"); }
-"fimvars"               { ret_print("FIMVARS"); }
-"escreva"               { ret_print("COMANDO_ESCREVA"); }
-"se"                    { ret_print("CONDICIONAL_SE"); }
-"entao"                 { ret_print("CONDICIONAL_ENTAO"); }
-"fimse"                 { ret_print("CONDICIONAL_FIM_SE"); }
-"enquanto"              { ret_print("CONDICIONAL_ENQUANTO"); }
-"faca"                  { ret_print("COMANDO_FACA"); }
-"fimenquanto"           { ret_print("CONDICIONAL_FIM_ENQUANTO"); }
+"inicioprog"            { return INICIOPROG ; }
+"fimprog"               { return FIMPROG ; }
+"inicioargs"            { return INICIOARGS ; }
+"fimargs"               { return FIMARGS ; }
+"iniciovars"            { return INICIOVARS ; }
+"fimvars"               { return FIMVARS ; }
+"escreva"               { return ESCREVA ; }
+"se"                    { return SE ; }
+"entao"                 { return ENTAO ; }
+"fimse"                 { return FIM_SE ; }
+"enquanto"              { return ENQUANTO ; }
+"faca"                  { return FACA ; }
+"fimenquanto"           { return FIM_ENQUANTO ; }
 
-"inteiro"               { ret_print("INTEIRO"); }
-"real"                  { ret_print("REAL"); }
-"literal"               { ret_print("LITERAL"); }
+"inteiro"               { return INTEIRO ; }
+"real"                  { return REAL ; }
+"literal"               { return LITERAL ; }
 
-{NUMERO}                { ret_print("NUMERO"); }
-{LITERAL}               { ret_print("STRING"); }
-{IDENTIFICADOR}         { ret_print("IDENTIFICADOR"); 
-                          insert(yytext, strlen(yytext), INDEF, lineno);
-}
-{OP_RELACIONAL}         { ret_print("OP_RELACIONAL"); }
-{OP_ARITIMETICO}        { ret_print("OP_ARITMETICO"); }
-{ATRIBUICAO}            { ret_print("ATRIBUICAO"); }
-{ABRE_PAR}              { ret_print("ABRE_PAR"); }
-{FECHA_PAR}             { ret_print("FECHA_PAR"); }
-{VIRGULA}               { ret_print("VIRGULA"); }
-{PONTO_E_VIRG}          { ret_print("PONTO_E_VIRG"); }
-{VAZIO}                 {  }
-{COMENTARIO}            { ret_print("COMENTARIO"); }
+{NUMERO}                { return NUMERO ; }
+{LITERAL}               { return STRING ; }
+{IDENTIFICADOR}         { insert(yytext, strlen(yytext), INDEF, lineno);
+                        return IDENTIFICADOR ; }
+{OP_RELACIONAL}         { return OP_RELACIONAL ; }
+{OP_ARITIMETICO}        { return OP_ARITIMETICO ; }
+{ATRIBUICAO}            { return ATRIBUICAO ; }
+{ABRE_PAR}              { return ABRE_PAR ; }
+{FECHA_PAR}             { return FECHA_PAR ; }
+{VIRGULA}               { return VIRGULA ; }
+{PONTO_E_VIRG}          { return PONTO_E_VIRG ; }
+{VAZIO}                 { return VAZIO ;}
+{COMENTARIO}            { return COMENTARIO ; }
 
 "\n"                    { lineno += 1; }
-.              { yyerror("Caracter nao reconhecido"); }
+.                       { yyerror("Caracter nao reconhecido") ; }
 
 %%
- 
-void ret_print(char *token_type){
-    printf("'valor': %s\ttoken: %s\tlinha nro: %d\n", yytext, token_type, lineno);
-}
-
-void yyerror(char *message){
-    printf("Error: \"%s\" in line %d. Token = %s\n", message, lineno, yytext);
-}
-
-int main(int argc, char *argv[]){
-
-    // initialize symbol table
-    init_hash_table();
-
-	// open input file
-	yyin = fopen("input.txt", "r");
-	
-	// lexical analysis
-	yylex();
-	fclose(yyin);
-
-    // symbol table dump
-    yyout = fopen("symtab_dump.txt", "w");
-    tabsimb_dump(yyout);
-    fclose(yyout);  
-	
-	return 0;
-}
