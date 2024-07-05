@@ -67,7 +67,8 @@
      PONTO_E_VIRG = 283,
      VAZIO = 284,
      COMENTARIO = 285,
-     UMINUS = 286
+     ERROR = 286,
+     UMINUS = 287
    };
 #endif
 

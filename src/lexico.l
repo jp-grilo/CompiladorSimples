@@ -11,7 +11,7 @@
     extern FILE *yyout;
 
     void yyerror();
-
+    void ret_print(char *token_type);
     int lineno = 1;     // número da linha
 %}
 
@@ -36,39 +36,45 @@ COMENTARIO          \{({L}|{D}|{S}|" "|\t)*\}
 
 %%
 
-"inicioprog"            { return INICIOPROG ; }
-"fimprog"               { return FIMPROG ; }
-"inicioargs"            { return INICIOARGS ; }
-"fimargs"               { return FIMARGS ; }
-"iniciovars"            { return INICIOVARS ; }
-"fimvars"               { return FIMVARS ; }
-"escreva"               { return ESCREVA ; }
-"se"                    { return SE ; }
-"entao"                 { return ENTAO ; }
-"fimse"                 { return FIM_SE ; }
-"enquanto"              { return ENQUANTO ; }
-"faca"                  { return FACA ; }
-"fimenquanto"           { return FIM_ENQUANTO ; }
+"inicioprog"            {  ret_print("INICIOPROG"); return INICIOPROG ; }
+"fimprog"               {  ret_print("FIMPROG"); return FIMPROG ;}
+"inicioargs"            {  ret_print("INICIOARGS"); return INICIOARGS ;}
+"fimargs"               {  ret_print("FIMARGS"); return FIMARGS ;}
+"iniciovars"            {  ret_print("INICIOVARS"); return INICIOVARS ;}
+"fimvars"               {  ret_print("FIMVARS"); return FIMVARS ;}
+"escreva"               {   ret_print("ESCREVA"); return ESCREVA ;}
+"se"                    {   ret_print("SE"); return SE ;}
+"entao"                 {   ret_print("ENTAO"); return ENTAO ;}
+"fimse"                 {   ret_print("FIM_SE"); return FIM_SE ;}
+"enquanto"              {   ret_print("ENQUANTO"); return ENQUANTO ;}
+"faca"                  {   ret_print("FACA"); return FACA ;}
+"fimenquanto"           {   ret_print("FIM_ENQUANTO"); return FIM_ENQUANTO ;}
 
-"inteiro"               { return INTEIRO ; }
-"real"                  { return REAL ; }
-"literal"               { return LITERAL ; }
+"inteiro"               { ret_print("INTEIRO"); return INTEIRO; }
+"real"                  { ret_print("REAL"); return REAL; }
+"literal"               { ret_print("LITERAL"); return LITERAL; }
 
-{NUMERO}                { return NUMERO ; }
-{LITERAL}               { return STRING ; }
+{NUMERO}                { ret_print("NUMERO"); return NUMERO; }
+{LITERAL}               { ret_print("STRING"); return STRING; }
 {IDENTIFICADOR}         { insert(yytext, strlen(yytext), INDEF, lineno);
-                        return IDENTIFICADOR ; }
-{OP_RELACIONAL}         { return OP_RELACIONAL ; }
-{OP_ARITIMETICO}        { return OP_ARITIMETICO ; }
-{ATRIBUICAO}            { return ATRIBUICAO ; }
-{ABRE_PAR}              { return ABRE_PAR ; }
-{FECHA_PAR}             { return FECHA_PAR ; }
-{VIRGULA}               { return VIRGULA ; }
-{PONTO_E_VIRG}          { return PONTO_E_VIRG ; }
-{VAZIO}                 { return VAZIO ;}
-{COMENTARIO}            { return COMENTARIO ; }
+                        ret_print("IDENTIFICADOR"); return IDENTIFICADOR; }
+{OP_RELACIONAL}         { ret_print("OP_RELACIONAL"); return OP_RELACIONAL; }
+{OP_ARITIMETICO}        { ret_print("OP_ARITIMETICO"); return OP_ARITIMETICO; }
+{ATRIBUICAO}            { ret_print("ATRIBUICAO"); return ATRIBUICAO; }
+{ABRE_PAR}              { ret_print("ABRE_PAR"); return ABRE_PAR; }
+{FECHA_PAR}             { ret_print("FECHA_PAR"); return FECHA_PAR; }
+{VIRGULA}               { ret_print("VIRGULA"); return VIRGULA; }
+{PONTO_E_VIRG}          { ret_print("PONTO_E_VIRG"); return PONTO_E_VIRG; }
+{VAZIO}                 { ret_print("VAZIO");  }
+{COMENTARIO}            { ret_print("COMENTARIO"); }
 
-"\n"                    { lineno += 1; }
-.                       { yyerror("Caracter nao reconhecido") ; }
+"\n"                    {  }
+.                       { ret_print("ERROR"); return ERROR; }
+
 
 %%
+
+
+void ret_print(char *token_type){
+    //printf("yytext: %s\ttoken: %s\tlineno: %d\n", yytext, token_type, lineno);
+}

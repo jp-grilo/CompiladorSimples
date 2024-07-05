@@ -1,0 +1,33 @@
+inicioprog
+inicioargs
+	literal letra;
+	inteiro cont;
+fimargs
+iniciovars
+	literal chute;
+	inteiro zero;
+	inteiro num;
+fimvars
+
+enquanto(cont > 0) faca
+	escreva num;
+	se(cont > 1) faca
+		escreva "cont > 1";
+fim_enquanto
+
+se(letra==chute) entao
+	num = 5.3E+3.9;
+	se(cont < zero) entao
+		escreva "cont < 0\n"
+	fimse
+
+enquanto(cont > 0) faca
+	escreva letra
+	se(cont > 1) faca
+		escreva "cont > 1";
+		escreva "error"
+fim_enquanto
+
+escreva "FIM";
+
+fimprog

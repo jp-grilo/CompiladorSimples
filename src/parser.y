@@ -6,10 +6,12 @@
 
 extern FILE *yyin;
 extern FILE *yyout;
+
 extern int lineno;
 extern int yylex();
 
 void yyerror();
+void parser_log(char *producao);
 
 %}
 
@@ -20,96 +22,139 @@ void yyerror();
 %token NUMERO STRING IDENTIFICADOR
 %token OP_RELACIONAL OP_ARITIMETICO ATRIBUICAO
 %token ABRE_PAR FECHA_PAR VIRGULA PONTO_E_VIRG VAZIO
-%token COMENTARIO
-
-%start PROGRAMA
+%token COMENTARIO ERROR
 
 /* expression priorities and rules */
+%left '+' '-'
+%left '*' '/'
+%right UMINUS
 
 %%
 
 PROGRAMA:
-    INICIOPROG LISTA_PARAM FIMPROG
+    INICIOPROG LISTA_PARAM FIMPROG             { parser_log("PROGRAMA -> INICIOPROG LISTA_PARAM FIMPROG"); }
+    | 
+    error { parser_log("\nPROGRAMA -> error"); }
 ;
 
 LISTA_PARAM:
-    INICIOARGS DECLARA_VAR FIMARGS LISTA_VAR
+    INICIOARGS DECLARA_VAR FIMARGS LISTA_VAR    { parser_log("LISTA_PARAM -> INICIOARGS DECLARA_VAR FIMARGS LISTA_VAR"); }
     |
-    LISTA_VAR
+    LISTA_VAR                                   { parser_log("LISTA_PARAM -> LISTA_VAR"); }
+    | 
+    error { parser_log("\nLISTA_PARAM -> error"); }
 ;
 
 LISTA_VAR:
-    INICIOVARS DECLARA_VAR FIMVARS CODIGO
+    INICIOVARS DECLARA_VAR FIMVARS CODIGO       { parser_log("LISTA_VAR -> INICIOVARS DECLARA_VAR FIMVARS CODIGO"); }
     |
-    CODIGO
+    CODIGO                                      { parser_log("LISTA_VAR -> CODIGO"); }
+    | 
+    error { parser_log("\nLISTA_VAR -> error"); }
 ;
 
 DECLARA_VAR:
-    TIPO_VAR NOMES PONTO_E_VIRG DECLARA_VAR
+    TIPO_VAR NOMES PONTO_E_VIRG DECLARA_VAR     { parser_log("DECLARA_VAR -> TIPO_VAR NOMES PONTO_E_VIRG DECLARA_VAR"); }
     |
-    VAZIO
+
+    | 
+    error { parser_log("\nDECLARA_VAR -> error"); }
 ;
 
 NOMES:
-    IDENTIFICADOR VIRGULA NOMES
+    IDENTIFICADOR VIRGULA NOMES                 { parser_log("NOMES -> IDENTIFICADOR VIRGULA NOMES"); }
     |
-    IDENTIFICADOR
+    IDENTIFICADOR                               { parser_log("NOMES -> IDENTIFICADOR"); }
+    | 
+    error { parser_log("\nNOMES -> error"); }
 ;
 
 TIPO_VAR:
-    INTEIRO
+    INTEIRO                                     { parser_log("TIPO_VAR -> INTEIRO"); }
     |
-    REAL
+    REAL                                        { parser_log("TIPO_VAR -> REAL"); }
     |
-    LITERAL
+    LITERAL                                     { parser_log("TIPO_VAR -> LITERAL"); }
+    | 
+    error { parser_log("\nTIPO_VAR -> error"); }
 ;
 
 CODIGO:
-    COMANDO CODIGO 
+    COMANDO CODIGO                              { parser_log("CODIGO -> COMANDO CODIGO"); }
     |
-    COMENTARIO CODIGO
-    |
-    VAZIO
+    COMENTARIO CODIGO                           { parser_log("CODIGO -> COMENTARIO CODIGO"); }
+    | 
+    error { parser_log("\nCODIGO -> error"); }
 ;
 
 COMANDO:
-    IDENTIFICADOR ATRIBUICAO EXPRESSAO PONTO_E_VIRG CODIGO
+    IDENTIFICADOR ATRIBUICAO EXPRESSAO PONTO_E_VIRG { $1 = $3; parser_log("COMANDO -> IDENTIFICADOR ATRIBUICAO EXPRESSAO PONTO_E_VIRG"); }
     |
-    ESCREVA CORPO_ESCREVA PONTO_E_VIRG
+    IDENTIFICADOR ATRIBUICAO STRING PONTO_E_VIRG { $1 = $3; parser_log("COMANDO -> IDENTIFICADOR ATRIBUICAO STRING PONTO_E_VIRG"); }
+
     |
-    SE CONDICAO ENTAO CODIGO FIM_SE
+    ESCREVA CORPO_ESCREVA PONTO_E_VIRG { parser_log("COMANDO -> ESCREVA CORPO_ESCREVA PONTO_E_VIRG"); }
     |
-    ENQUANTO CONDICAO FACA CODIGO FIM_ENQUANTO
+    SE CONDICAO ENTAO CODIGO FIM_SE { parser_log("COMANDO -> SE CONDICAO ENTAO CODIGO FIM_SE"); }
+    |
+    ENQUANTO CONDICAO FACA CODIGO FIM_ENQUANTO { parser_log("COMANDO -> ENQUANTO CONDICAO FACA CODIGO FIM_ENQUANTO"); }
+    | 
+    error { parser_log("\nCOMANDO -> error"); }
 ;
 
 CORPO_ESCREVA:
-    STRING
+    STRING  { parser_log("CORPO_ESCREVA -> STRING"); }
     |
-    IDENTIFICADOR
+    IDENTIFICADOR { parser_log("CORPO_ESCREVA -> IDENTIFICADOR"); }
     |
-    EXPRESSAO
+    EXPRESSAO { parser_log("CORPO_ESCREVA -> EXPRESSAO"); }
+    | 
+    error { parser_log("\nCORPO_ESCREVA -> error"); }
 ;
 
 CONDICAO:
-    ABRE_PAR IDENTIFICADOR OP_RELACIONAL IDENTIFICADOR FECHA_PAR
+    ABRE_PAR IDENTIFICADOR OP_RELACIONAL IDENTIFICADOR FECHA_PAR { parser_log("CONDICAO -> ABRE_PAR IDENTIFICADOR OP_RELACIONAL IDENTIFICADOR FECHA_PAR"); }
+    | 
+    error { parser_log("\nCONDICAO -> error"); }
 ;
 
 EXPRESSAO : 
-    EXPRESSAO OP_ARITIMETICO EXPRESSAO { $$ = $1 + $3; }
-    | ABRE_PAR EXPRESSAO FECHA_PAR { $$ = $2; }
-    | '-' EXPRESSAO %prec UMINUS { $$ = -$2; }
-    | NUMERO
+    EXPRESSAO '+' EXPRESSAO { $$ = $1 + $3;  parser_log("EXPRESSAO -> EXPRESSAO '+' EXPRESSAO"); } 
+    | 
+    EXPRESSAO '-' EXPRESSAO { $$ = $1 - $3; parser_log("EXPRESSAO -> EXPRESSAO '-' EXPRESSAO");}
+    | 
+    EXPRESSAO '*' EXPRESSAO { $$ = $1 * $3; parser_log("EXPRESSAO -> EXPRESSAO '*' EXPRESSAO");}
+    | 
+    EXPRESSAO '/' EXPRESSAO { $$ = $1 / $3; parser_log("EXPRESSAO -> EXPRESSAO '/' EXPRESSAO");}
+    | 
+    ABRE_PAR EXPRESSAO FECHA_PAR { $$ = $2; parser_log("EXPRESSAO -> ABRE_PAR EXPRESSAO FECHA_PAR");}
+    | 
+    '-' EXPRESSAO %prec UMINUS { $$ = -$2; parser_log("EXPRESSAO -> '-' EXPRESSAO \%prec UMINUS");}
+    | 
+    NUMERO {parser_log("EXPRESSAO -> NUMERO");}
+    | 
+    error { parser_log("\nEXPRESSAO -> error"); }
 ;
 
 %%
 
-void yyerror ()
+void yyerror (char *producao)
 {
-    fprintf(stderr, "Syntax error at line %d\n", lineno);
-    exit(1);
+
+}
+
+void parser_log(char *producao){
+    printf("%s\t\tnro linha: %d\n", producao, lineno);
+    //FILE *pout;
+    //pout = fopen("printf.txt", "a") ;
+    //fprintf(pout, "%s\n", producao);
+    //fclose(yyout);
 }
 
 int main (int argc, char *argv[]){
+    // apagando log anterior
+    remove("printf.txt");
+    
     // initialize symbol table
     init_hash_table();
 

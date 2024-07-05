@@ -1,5 +1,5 @@
 default:
 	clear
 	flex lexico.l
-	gcc lex.yy.c -o lexic
-	./lexico
+	bison -dv parser.y
+	gcc parser.tab.c lex.yy.c -o parser

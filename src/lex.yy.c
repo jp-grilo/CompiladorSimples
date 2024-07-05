@@ -457,7 +457,7 @@ char *yytext;
     extern FILE *yyout;
 
     void yyerror();
-
+    void ret_print(char *token_type);
     int lineno = 1;     // número da linha
 /* Define os lexemas */
 /* Regras para os lexemas fornecidos */
@@ -701,143 +701,143 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 YY_RULE_SETUP
 #line 39 "lexico.l"
-{ return INICIOPROG ; }
+{  ret_print("INICIOPROG"); return INICIOPROG ; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
 #line 40 "lexico.l"
-{ return FIMPROG ; }
+{  ret_print("FIMPROG"); return FIMPROG ;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
 #line 41 "lexico.l"
-{ return INICIOARGS ; }
+{  ret_print("INICIOARGS"); return INICIOARGS ;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
 #line 42 "lexico.l"
-{ return FIMARGS ; }
+{  ret_print("FIMARGS"); return FIMARGS ;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
 #line 43 "lexico.l"
-{ return INICIOVARS ; }
+{  ret_print("INICIOVARS"); return INICIOVARS ;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
 #line 44 "lexico.l"
-{ return FIMVARS ; }
+{  ret_print("FIMVARS"); return FIMVARS ;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
 #line 45 "lexico.l"
-{ return ESCREVA ; }
+{   ret_print("ESCREVA"); return ESCREVA ;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
 #line 46 "lexico.l"
-{ return SE ; }
+{   ret_print("SE"); return SE ;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
 #line 47 "lexico.l"
-{ return ENTAO ; }
+{   ret_print("ENTAO"); return ENTAO ;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
 #line 48 "lexico.l"
-{ return FIM_SE ; }
+{   ret_print("FIM_SE"); return FIM_SE ;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
 #line 49 "lexico.l"
-{ return ENQUANTO ; }
+{   ret_print("ENQUANTO"); return ENQUANTO ;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
 #line 50 "lexico.l"
-{ return FACA ; }
+{   ret_print("FACA"); return FACA ;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
 #line 51 "lexico.l"
-{ return FIM_ENQUANTO ; }
+{   ret_print("FIM_ENQUANTO"); return FIM_ENQUANTO ;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
 #line 53 "lexico.l"
-{ return INTEIRO ; }
+{ ret_print("INTEIRO"); return INTEIRO; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
 #line 54 "lexico.l"
-{ return REAL ; }
+{ ret_print("REAL"); return REAL; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
 #line 55 "lexico.l"
-{ return LITERAL ; }
+{ ret_print("LITERAL"); return LITERAL; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
 #line 57 "lexico.l"
-{ return NUMERO ; }
+{ ret_print("NUMERO"); return NUMERO; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
 #line 58 "lexico.l"
-{ return STRING ; }
+{ ret_print("STRING"); return STRING; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
 #line 59 "lexico.l"
 { insert(yytext, strlen(yytext), INDEF, lineno);
-                        return IDENTIFICADOR ; }
+                        ret_print("IDENTIFICADOR"); return IDENTIFICADOR; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
 #line 61 "lexico.l"
-{ return OP_RELACIONAL ; }
+{ ret_print("OP_RELACIONAL"); return OP_RELACIONAL; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
 #line 62 "lexico.l"
-{ return OP_ARITIMETICO ; }
+{ ret_print("OP_ARITIMETICO"); return OP_ARITIMETICO; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
 #line 63 "lexico.l"
-{ return ATRIBUICAO ; }
+{ ret_print("ATRIBUICAO"); return ATRIBUICAO; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
 #line 64 "lexico.l"
-{ return ABRE_PAR ; }
+{ ret_print("ABRE_PAR"); return ABRE_PAR; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
 #line 65 "lexico.l"
-{ return FECHA_PAR ; }
+{ ret_print("FECHA_PAR"); return FECHA_PAR; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
 #line 66 "lexico.l"
-{ return VIRGULA ; }
+{ ret_print("VIRGULA"); return VIRGULA; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
 #line 67 "lexico.l"
-{ return PONTO_E_VIRG ; }
+{ ret_print("PONTO_E_VIRG"); return PONTO_E_VIRG; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
 #line 68 "lexico.l"
-{ return VAZIO ;}
+{ ret_print("VAZIO");  }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
 #line 69 "lexico.l"
-{ return COMENTARIO ; }
+{ ret_print("COMENTARIO"); }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
@@ -847,11 +847,11 @@ YY_RULE_SETUP
 case 30:
 YY_RULE_SETUP
 #line 72 "lexico.l"
-{ yyerror("Caracter nao reconhecido") ; }
+{ ret_print("ERROR"); return ERROR; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 74 "lexico.l"
+#line 75 "lexico.l"
 ECHO;
 	YY_BREAK
 #line 858 "lex.yy.c"
@@ -1740,4 +1740,10 @@ int main()
 	return 0;
 	}
 #endif
-#line 74 "lexico.l"
+#line 75 "lexico.l"
+
+
+
+void ret_print(char *token_type){
+    //printf("yytext: %s\ttoken: %s\tlineno: %d\n", yytext, token_type, lineno);
+}
