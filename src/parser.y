@@ -21,7 +21,7 @@ void parser_log(char *producao);
 %token ESCREVA SE ENTAO FIM_SE ENQUANTO FACA FIM_ENQUANTO
 %token INTEIRO REAL LITERAL
 %token NUMERO STRING IDENTIFICADOR
-%token OP_RELACIONAL OP_ARITIMETICO ATRIBUICAO
+%token OP_RELACIONAL SOMA SUB MULT DIV ATRIBUICAO
 %token ABRE_PAR FECHA_PAR VIRGULA PONTO_E_VIRG VAZIO
 %token COMENTARIO ERROR
 
@@ -118,29 +118,30 @@ CONDICAO:
     error { parser_log("\nCONDICAO -> error"); }
 ;
 
-ID_OR_NUMBER:
-    IDENTIFICADOR
-    |
-    NUMERO
-;
-
 EXPRESSAO : 
-    EXPRESSAO '+' EXPRESSAO { $$ = $1 + $3;  parser_log("EXPRESSAO -> EXPRESSAO '+' EXPRESSAO"); } 
+    EXPRESSAO SOMA EXPRESSAO { $$ = $1 + $3;  parser_log("EXPRESSAO -> EXPRESSAO SOMA EXPRESSAO"); } 
     | 
-    EXPRESSAO '-' EXPRESSAO { $$ = $1 - $3; parser_log("EXPRESSAO -> EXPRESSAO '-' EXPRESSAO");}
+    EXPRESSAO SUB EXPRESSAO { $$ = $1 - $3; parser_log("EXPRESSAO -> EXPRESSAO SUB EXPRESSAO");}
     | 
-    EXPRESSAO '*' EXPRESSAO { $$ = $1 * $3; parser_log("EXPRESSAO -> EXPRESSAO '*' EXPRESSAO");}
+    EXPRESSAO MULT EXPRESSAO { $$ = $1 * $3; parser_log("EXPRESSAO -> EXPRESSAO MULT EXPRESSAO");}
     | 
-    EXPRESSAO '/' EXPRESSAO { $$ = $1 / $3; parser_log("EXPRESSAO -> EXPRESSAO '/' EXPRESSAO");}
+    EXPRESSAO DIV EXPRESSAO { $$ = $1 / $3; parser_log("EXPRESSAO -> EXPRESSAO DIV EXPRESSAO");}
     | 
     ABRE_PAR EXPRESSAO FECHA_PAR { $$ = $2; parser_log("EXPRESSAO -> ABRE_PAR EXPRESSAO FECHA_PAR");}
     | 
-    '-' EXPRESSAO %prec UMINUS { $$ = -$2; parser_log("EXPRESSAO -> '-' EXPRESSAO \%prec UMINUS");}
+    SUB EXPRESSAO %prec UMINUS { $$ = -$2; parser_log("EXPRESSAO -> '-' EXPRESSAO \%prec UMINUS");}
     | 
-    NUMERO {parser_log("EXPRESSAO -> NUMERO");}
-    | 
+    ID_OR_NUMBER {parser_log("EXPRESSAO -> ID_OR_NUMBER");}
+    |
     error { parser_log("\nEXPRESSAO -> error"); }
 ;
+
+ID_OR_NUMBER:
+    IDENTIFICADOR   {parser_log("ID_OR_NUMBER -> IDENTIFICADOR");}
+    |
+    NUMERO          {parser_log("ID_OR_NUMBER -> NUMERO");}
+;
+
 
 %%
 

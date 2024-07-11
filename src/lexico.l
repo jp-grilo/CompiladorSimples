@@ -25,7 +25,10 @@ NUMERO              {D}+(\.{D}+)?((E|e)(\+|\-)?{D}+)?
 LITERAL             \"({L}|{D}|{S}|" "|\t)*\"
 IDENTIFICADOR       {L}({L}|{D}|_)*
 OP_RELACIONAL       \<|\>|\>\=|\<\=|\=\=|\<\>
-OP_ARITIMETICO      \+|\-|\*|\/
+SOMA                \+
+SUB                 \-
+MULT                \*
+DIV                 \/
 ATRIBUICAO          =
 ABRE_PAR            \(
 FECHA_PAR           \)
@@ -59,7 +62,10 @@ COMENTARIO          \{({L}|{D}|{S}|" "|\t)*\}
 {IDENTIFICADOR}         { insert(yytext, strlen(yytext), INDEF, lineno);
                         ret_print("IDENTIFICADOR"); return IDENTIFICADOR; }
 {OP_RELACIONAL}         { ret_print("OP_RELACIONAL"); return OP_RELACIONAL; }
-{OP_ARITIMETICO}        { ret_print("OP_ARITIMETICO"); return OP_ARITIMETICO; }
+{SOMA}                  { ret_print("SOMA"); return SOMA; }
+{SUB}                  { ret_print("SUB"); return SUB; }
+{MULT}                  { ret_print("MULT"); return MULT; }
+{DIV}                  { ret_print("DIV"); return DIV; }
 {ATRIBUICAO}            { ret_print("ATRIBUICAO"); return ATRIBUICAO; }
 {ABRE_PAR}              { ret_print("ABRE_PAR"); return ABRE_PAR; }
 {FECHA_PAR}             { ret_print("FECHA_PAR"); return FECHA_PAR; }
@@ -78,5 +84,5 @@ COMENTARIO          \{({L}|{D}|{S}|" "|\t)*\}
 void ret_print(char *token_type){
     FILE *pout;
     pout = fopen("printf.txt", "a") ;
-    fprintf(pout, "%s\n", token_type);
+    fprintf(pout, "%s\t ->\t %s linha %d\n", token_type, yytext, lineno);
 }

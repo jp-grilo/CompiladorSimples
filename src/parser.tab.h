@@ -59,16 +59,19 @@
      STRING = 275,
      IDENTIFICADOR = 276,
      OP_RELACIONAL = 277,
-     OP_ARITIMETICO = 278,
-     ATRIBUICAO = 279,
-     ABRE_PAR = 280,
-     FECHA_PAR = 281,
-     VIRGULA = 282,
-     PONTO_E_VIRG = 283,
-     VAZIO = 284,
-     COMENTARIO = 285,
-     ERROR = 286,
-     UMINUS = 287
+     SOMA = 278,
+     SUB = 279,
+     MULT = 280,
+     DIV = 281,
+     ATRIBUICAO = 282,
+     ABRE_PAR = 283,
+     FECHA_PAR = 284,
+     VIRGULA = 285,
+     PONTO_E_VIRG = 286,
+     VAZIO = 287,
+     COMENTARIO = 288,
+     ERROR = 289,
+     UMINUS = 290
    };
 #endif
 
