@@ -1745,5 +1745,7 @@ int main()
 
 
 void ret_print(char *token_type){
-    //printf("yytext: %s\ttoken: %s\tlineno: %d\n", yytext, token_type, lineno);
+    FILE *pout;
+    pout = fopen("printf.txt", "a") ;
+    fprintf(pout, "%s\n", token_type);
 }

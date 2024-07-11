@@ -77,6 +77,7 @@
 
 extern FILE *yyin;
 extern FILE *yyout;
+extern FILE *pout;
 
 extern int lineno;
 extern int yylex();
@@ -87,7 +88,7 @@ void parser_log(char *producao);
 
 
 /* Line 189 of yacc.c  */
-#line 91 "parser.tab.c"
+#line 92 "parser.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -161,7 +162,7 @@ typedef int YYSTYPE;
 
 
 /* Line 264 of yacc.c  */
-#line 165 "parser.tab.c"
+#line 166 "parser.tab.c"
 
 #ifdef short
 # undef short
@@ -461,11 +462,11 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    35,    35,    37,    41,    43,    45,    49,    51,    53,
-      57,    58,    61,    65,    67,    69,    73,    75,    77,    79,
-      83,    85,    87,    91,    93,    96,    98,   100,   102,   106,
-     108,   110,   112,   116,   118,   122,   124,   126,   128,   130,
-     132,   134,   136
+       0,    36,    36,    38,    42,    44,    46,    50,    52,    54,
+      58,    59,    62,    66,    68,    70,    74,    76,    78,    80,
+      84,    86,    88,    92,    94,    97,    99,   101,   103,   107,
+     109,   111,   113,   117,   119,   123,   125,   127,   129,   131,
+     133,   135,   137
 };
 #endif
 
@@ -1424,287 +1425,287 @@ yyreduce:
         case 2:
 
 /* Line 1455 of yacc.c  */
-#line 35 "parser.y"
+#line 36 "parser.y"
     { parser_log("PROGRAMA -> INICIOPROG LISTA_PARAM FIMPROG"); ;}
     break;
 
   case 3:
 
 /* Line 1455 of yacc.c  */
-#line 37 "parser.y"
+#line 38 "parser.y"
     { parser_log("\nPROGRAMA -> error"); ;}
     break;
 
   case 4:
 
 /* Line 1455 of yacc.c  */
-#line 41 "parser.y"
+#line 42 "parser.y"
     { parser_log("LISTA_PARAM -> INICIOARGS DECLARA_VAR FIMARGS LISTA_VAR"); ;}
     break;
 
   case 5:
 
 /* Line 1455 of yacc.c  */
-#line 43 "parser.y"
+#line 44 "parser.y"
     { parser_log("LISTA_PARAM -> LISTA_VAR"); ;}
     break;
 
   case 6:
 
 /* Line 1455 of yacc.c  */
-#line 45 "parser.y"
+#line 46 "parser.y"
     { parser_log("\nLISTA_PARAM -> error"); ;}
     break;
 
   case 7:
 
 /* Line 1455 of yacc.c  */
-#line 49 "parser.y"
+#line 50 "parser.y"
     { parser_log("LISTA_VAR -> INICIOVARS DECLARA_VAR FIMVARS CODIGO"); ;}
     break;
 
   case 8:
 
 /* Line 1455 of yacc.c  */
-#line 51 "parser.y"
+#line 52 "parser.y"
     { parser_log("LISTA_VAR -> CODIGO"); ;}
     break;
 
   case 9:
 
 /* Line 1455 of yacc.c  */
-#line 53 "parser.y"
+#line 54 "parser.y"
     { parser_log("\nLISTA_VAR -> error"); ;}
     break;
 
   case 10:
 
 /* Line 1455 of yacc.c  */
-#line 57 "parser.y"
+#line 58 "parser.y"
     { parser_log("DECLARA_VAR -> TIPO_VAR NOMES PONTO_E_VIRG DECLARA_VAR"); ;}
     break;
 
   case 12:
 
 /* Line 1455 of yacc.c  */
-#line 61 "parser.y"
+#line 62 "parser.y"
     { parser_log("\nDECLARA_VAR -> error"); ;}
     break;
 
   case 13:
 
 /* Line 1455 of yacc.c  */
-#line 65 "parser.y"
+#line 66 "parser.y"
     { parser_log("NOMES -> IDENTIFICADOR VIRGULA NOMES"); ;}
     break;
 
   case 14:
 
 /* Line 1455 of yacc.c  */
-#line 67 "parser.y"
+#line 68 "parser.y"
     { parser_log("NOMES -> IDENTIFICADOR"); ;}
     break;
 
   case 15:
 
 /* Line 1455 of yacc.c  */
-#line 69 "parser.y"
+#line 70 "parser.y"
     { parser_log("\nNOMES -> error"); ;}
     break;
 
   case 16:
 
 /* Line 1455 of yacc.c  */
-#line 73 "parser.y"
+#line 74 "parser.y"
     { parser_log("TIPO_VAR -> INTEIRO"); ;}
     break;
 
   case 17:
 
 /* Line 1455 of yacc.c  */
-#line 75 "parser.y"
+#line 76 "parser.y"
     { parser_log("TIPO_VAR -> REAL"); ;}
     break;
 
   case 18:
 
 /* Line 1455 of yacc.c  */
-#line 77 "parser.y"
+#line 78 "parser.y"
     { parser_log("TIPO_VAR -> LITERAL"); ;}
     break;
 
   case 19:
 
 /* Line 1455 of yacc.c  */
-#line 79 "parser.y"
+#line 80 "parser.y"
     { parser_log("\nTIPO_VAR -> error"); ;}
     break;
 
   case 20:
 
 /* Line 1455 of yacc.c  */
-#line 83 "parser.y"
+#line 84 "parser.y"
     { parser_log("CODIGO -> COMANDO CODIGO"); ;}
     break;
 
   case 21:
 
 /* Line 1455 of yacc.c  */
-#line 85 "parser.y"
+#line 86 "parser.y"
     { parser_log("CODIGO -> COMENTARIO CODIGO"); ;}
     break;
 
   case 22:
 
 /* Line 1455 of yacc.c  */
-#line 87 "parser.y"
+#line 88 "parser.y"
     { parser_log("\nCODIGO -> error"); ;}
     break;
 
   case 23:
 
 /* Line 1455 of yacc.c  */
-#line 91 "parser.y"
+#line 92 "parser.y"
     { (yyvsp[(1) - (4)]) = (yyvsp[(3) - (4)]); parser_log("COMANDO -> IDENTIFICADOR ATRIBUICAO EXPRESSAO PONTO_E_VIRG"); ;}
     break;
 
   case 24:
 
 /* Line 1455 of yacc.c  */
-#line 93 "parser.y"
+#line 94 "parser.y"
     { (yyvsp[(1) - (4)]) = (yyvsp[(3) - (4)]); parser_log("COMANDO -> IDENTIFICADOR ATRIBUICAO STRING PONTO_E_VIRG"); ;}
     break;
 
   case 25:
 
 /* Line 1455 of yacc.c  */
-#line 96 "parser.y"
+#line 97 "parser.y"
     { parser_log("COMANDO -> ESCREVA CORPO_ESCREVA PONTO_E_VIRG"); ;}
     break;
 
   case 26:
 
 /* Line 1455 of yacc.c  */
-#line 98 "parser.y"
+#line 99 "parser.y"
     { parser_log("COMANDO -> SE CONDICAO ENTAO CODIGO FIM_SE"); ;}
     break;
 
   case 27:
 
 /* Line 1455 of yacc.c  */
-#line 100 "parser.y"
+#line 101 "parser.y"
     { parser_log("COMANDO -> ENQUANTO CONDICAO FACA CODIGO FIM_ENQUANTO"); ;}
     break;
 
   case 28:
 
 /* Line 1455 of yacc.c  */
-#line 102 "parser.y"
+#line 103 "parser.y"
     { parser_log("\nCOMANDO -> error"); ;}
     break;
 
   case 29:
 
 /* Line 1455 of yacc.c  */
-#line 106 "parser.y"
+#line 107 "parser.y"
     { parser_log("CORPO_ESCREVA -> STRING"); ;}
     break;
 
   case 30:
 
 /* Line 1455 of yacc.c  */
-#line 108 "parser.y"
+#line 109 "parser.y"
     { parser_log("CORPO_ESCREVA -> IDENTIFICADOR"); ;}
     break;
 
   case 31:
 
 /* Line 1455 of yacc.c  */
-#line 110 "parser.y"
+#line 111 "parser.y"
     { parser_log("CORPO_ESCREVA -> EXPRESSAO"); ;}
     break;
 
   case 32:
 
 /* Line 1455 of yacc.c  */
-#line 112 "parser.y"
+#line 113 "parser.y"
     { parser_log("\nCORPO_ESCREVA -> error"); ;}
     break;
 
   case 33:
 
 /* Line 1455 of yacc.c  */
-#line 116 "parser.y"
+#line 117 "parser.y"
     { parser_log("CONDICAO -> ABRE_PAR IDENTIFICADOR OP_RELACIONAL IDENTIFICADOR FECHA_PAR"); ;}
     break;
 
   case 34:
 
 /* Line 1455 of yacc.c  */
-#line 118 "parser.y"
+#line 119 "parser.y"
     { parser_log("\nCONDICAO -> error"); ;}
     break;
 
   case 35:
 
 /* Line 1455 of yacc.c  */
-#line 122 "parser.y"
+#line 123 "parser.y"
     { (yyval) = (yyvsp[(1) - (3)]) + (yyvsp[(3) - (3)]);  parser_log("EXPRESSAO -> EXPRESSAO '+' EXPRESSAO"); ;}
     break;
 
   case 36:
 
 /* Line 1455 of yacc.c  */
-#line 124 "parser.y"
+#line 125 "parser.y"
     { (yyval) = (yyvsp[(1) - (3)]) - (yyvsp[(3) - (3)]); parser_log("EXPRESSAO -> EXPRESSAO '-' EXPRESSAO");;}
     break;
 
   case 37:
 
 /* Line 1455 of yacc.c  */
-#line 126 "parser.y"
+#line 127 "parser.y"
     { (yyval) = (yyvsp[(1) - (3)]) * (yyvsp[(3) - (3)]); parser_log("EXPRESSAO -> EXPRESSAO '*' EXPRESSAO");;}
     break;
 
   case 38:
 
 /* Line 1455 of yacc.c  */
-#line 128 "parser.y"
+#line 129 "parser.y"
     { (yyval) = (yyvsp[(1) - (3)]) / (yyvsp[(3) - (3)]); parser_log("EXPRESSAO -> EXPRESSAO '/' EXPRESSAO");;}
     break;
 
   case 39:
 
 /* Line 1455 of yacc.c  */
-#line 130 "parser.y"
+#line 131 "parser.y"
     { (yyval) = (yyvsp[(2) - (3)]); parser_log("EXPRESSAO -> ABRE_PAR EXPRESSAO FECHA_PAR");;}
     break;
 
   case 40:
 
 /* Line 1455 of yacc.c  */
-#line 132 "parser.y"
+#line 133 "parser.y"
     { (yyval) = -(yyvsp[(2) - (2)]); parser_log("EXPRESSAO -> '-' EXPRESSAO \%prec UMINUS");;}
     break;
 
   case 41:
 
 /* Line 1455 of yacc.c  */
-#line 134 "parser.y"
+#line 135 "parser.y"
     {parser_log("EXPRESSAO -> NUMERO");;}
     break;
 
   case 42:
 
 /* Line 1455 of yacc.c  */
-#line 136 "parser.y"
+#line 137 "parser.y"
     { parser_log("\nEXPRESSAO -> error"); ;}
     break;
 
 
 
 /* Line 1455 of yacc.c  */
-#line 1708 "parser.tab.c"
+#line 1709 "parser.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1916,7 +1917,7 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 139 "parser.y"
+#line 140 "parser.y"
 
 
 void yyerror (char *producao)
@@ -1929,7 +1930,6 @@ void parser_log(char *producao){
     //FILE *pout;
     //pout = fopen("printf.txt", "a") ;
     //fprintf(pout, "%s\n", producao);
-    //fclose(yyout);
 }
 
 int main (int argc, char *argv[]){
@@ -1952,5 +1952,6 @@ int main (int argc, char *argv[]){
  
 	return flag;
 
+    fclose(pout);
     return 0;
 }

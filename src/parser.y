@@ -6,6 +6,7 @@
 
 extern FILE *yyin;
 extern FILE *yyout;
+extern FILE *pout;
 
 extern int lineno;
 extern int yylex();
@@ -148,7 +149,6 @@ void parser_log(char *producao){
     //FILE *pout;
     //pout = fopen("printf.txt", "a") ;
     //fprintf(pout, "%s\n", producao);
-    //fclose(yyout);
 }
 
 int main (int argc, char *argv[]){
@@ -171,5 +171,6 @@ int main (int argc, char *argv[]){
  
 	return flag;
 
+    fclose(pout);
     return 0;
 }
