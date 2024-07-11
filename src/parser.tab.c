@@ -1614,7 +1614,7 @@ yyreduce:
 
 /* Line 1455 of yacc.c  */
 #line 108 "parser.y"
-    { parser_log("CORPO_ESCREVA -> IDENTIFICADor"); ;}
+    { parser_log("CORPO_ESCREVA -> IDENTIFICADOR"); ;}
     break;
 
   case 31:

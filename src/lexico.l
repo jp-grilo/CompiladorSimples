@@ -68,7 +68,7 @@ COMENTARIO          \{({L}|{D}|{S}|" "|\t)*\}
 {VAZIO}                 { ret_print("VAZIO");  }
 {COMENTARIO}            { ret_print("COMENTARIO"); }
 
-"\n"                    {  }
+"\n"                    { lineno += 1; }
 .                       { ret_print("ERROR"); return ERROR; }
 
 
