@@ -1,10 +1,6 @@
 /201909754
 201909754.zip
 src/Gramatica.pdf
-src/parser.output
-src/symtab_dump.txt
-src/input.txt
-src/printf.txt
 src/parser.exe
 src/lex.yy.c
 src/input.txt
