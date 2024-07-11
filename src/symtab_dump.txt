@@ -1,6 +1,7 @@
 ------------ ------ ------------
 Name         Type   Line Numbers
 ------------ ------ -------------
-cont         undef     7 
-zero         undef     7 
-chute        undef     4 
+cont         undef     5   22   26 
+zero         undef    11   15   22 
+letra        undef     4   17   27 
+chute        undef    10   14   17 

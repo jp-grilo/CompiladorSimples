@@ -3,3 +3,5 @@
 src/Gramatica.pdf
 src/parser.output
 src/symtab_dump.txt
+src/input.txt
+src/printf.txt

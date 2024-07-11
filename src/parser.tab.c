@@ -1638,7 +1638,7 @@ yyreduce:
 
 /* Line 1455 of yacc.c  */
 #line 116 "parser.y"
-    { parser_log("CONDICAO -> ABRE_PAR ID_OR_NUMBER OP_RELACIONAL ID_OR_NUMBER FECHA_PAR"); ;}
+    { parser_log("CONDICAO -> ABRE_PAR ID_OR_NUMBER OP_RELACIONAL IDENTIFICADOR FECHA_PAR"); ;}
     break;
 
   case 34:
