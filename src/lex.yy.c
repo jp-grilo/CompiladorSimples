@@ -832,7 +832,7 @@ YY_RULE_SETUP
 case 27:
 YY_RULE_SETUP
 #line 68 "lexico.l"
-{ ret_print("VAZIO");  }
+{   }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP

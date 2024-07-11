@@ -65,7 +65,7 @@ COMENTARIO          \{({L}|{D}|{S}|" "|\t)*\}
 {FECHA_PAR}             { ret_print("FECHA_PAR"); return FECHA_PAR; }
 {VIRGULA}               { ret_print("VIRGULA"); return VIRGULA; }
 {PONTO_E_VIRG}          { ret_print("PONTO_E_VIRG"); return PONTO_E_VIRG; }
-{VAZIO}                 { ret_print("VAZIO");  }
+{VAZIO}                 {   }
 {COMENTARIO}            { ret_print("COMENTARIO"); }
 
 "\n"                    { lineno += 1; }
