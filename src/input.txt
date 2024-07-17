@@ -1,16 +1,37 @@
 inicioprog
 
-inicioargs
-	inteiro num;
-fimargs
-
 iniciovars
-	inteiro i;
+      inteiro potencia;
+      real valor, resultado;
 fimvars
 
-num = 66.6E-10; i = -55.5E+5;
+potencia = 3;
+valor = 5.0;
+resultado = 1.0;
 
-escreva num + i;
-escreva "num + i";
+se (potencia == 0) entao
+     valor = 1.0;
+fimse
+
+se (potencia < 0) entao
+     valor = 1 / valor;
+	potencia = potencia * (-1);
+	enquanto (potencia > 0) faca
+		resultado = resultado * valor;
+		potencia = potencia - 1;
+	fimenquanto
+fimse
+
+enquanto (potencia > 0) faca
+	resultado = resultado * valor;
+	potencia = potencia - 1;
+	se (resultado > 1000) entao
+     	escreva "Este valor eh grande\n";
+	fimse
+fimenquanto
+
+escreva "Resultado: ";
+escreva resultado;
+escreva "\n";
 
 fimprog

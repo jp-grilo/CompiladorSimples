@@ -1,5 +1,6 @@
 ------------ ------ ------------
 Name         Type   Line Numbers
 ------------ ------ -------------
-i            undef     8   11   13 
-num          undef     4   11   13 
+potencia     undef     4    8   12   16   18   18   19   21   21   25   27   27 
+valor        undef     5    9   13   17   17   20   26 
+resultado    undef     5   10   20   20   26   26   28   34 
