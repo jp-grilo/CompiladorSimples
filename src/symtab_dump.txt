@@ -1,8 +1,5 @@
 ------------ ------ ------------
 Name         Type   Line Numbers
 ------------ ------ -------------
-potencia     undef     3    7 
-fims         undef     9 
-zero         undef     7 
-valor        undef     4    8    8 
-resultado    undef     4 
+i            undef     8   11   13 
+num          undef     4   11   13 

@@ -33,7 +33,7 @@ void parser_log(char *producao);
 %%
 
 PROGRAMA:
-    INICIOPROG LISTA_PARAM FIMPROG             { parser_log("PROGRAMA -> INICIOPROG LISTA_PARAM FIMPROG"); }
+    INICIOPROG LISTA_PARAM FIMPROG             { parser_log("PROGRAMA -> INICIOPROG LISTA_PARAM FIMPROG"); printf("\n\n------------------------ Programa aceito! ------------------------\n"); }
     | 
     error { parser_log("\nPROGRAMA -> error"); }
 ;
@@ -131,17 +131,28 @@ EXPRESSAO :
     | 
     SUB EXPRESSAO %prec UMINUS { $$ = -$2; parser_log("EXPRESSAO -> '-' EXPRESSAO \%prec UMINUS");}
     | 
-    ID_OR_NUMBER {parser_log("EXPRESSAO -> ID_OR_NUMBER");}
+    ID_OR_NUMBER_OR_STRING {parser_log("EXPRESSAO -> ID_OR_NUMBER_OR_STRING");}
     |
     error { parser_log("\nEXPRESSAO -> error"); }
+;
+
+ID_OR_NUMBER_OR_STRING:
+    IDENTIFICADOR   {parser_log("ID_OR_NUMBER_OR_STRING -> IDENTIFICADOR");}
+    |
+    NUMERO          {parser_log("ID_OR_NUMBER_OR_STRING -> NUMERO");}
+    |
+    STRING          {parser_log("ID_OR_NUMBER_OR_STRING -> STRING");}
+    |
+    error           { parser_log("\nID_OR_NUMBER_OR_STRING -> error"); }
 ;
 
 ID_OR_NUMBER:
     IDENTIFICADOR   {parser_log("ID_OR_NUMBER -> IDENTIFICADOR");}
     |
     NUMERO          {parser_log("ID_OR_NUMBER -> NUMERO");}
+    |
+    error           { parser_log("\nID_OR_NUMBER_OR_STRING -> error"); }
 ;
-
 
 %%
 

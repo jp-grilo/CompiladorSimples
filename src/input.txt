@@ -1,12 +1,16 @@
 inicioprog
 
+inicioargs
+	inteiro num;
+fimargs
+
 iniciovars
-	inteiro potencia;
-	real valor, resultado;
+	inteiro i;
 fimvars
 
-se (potencia < zero) entao
-	valor = 1 / valor;
-fims
+num = 66.6E-10; i = -55.5E+5;
+
+escreva num + i;
+escreva "num + i";
 
 fimprog
