@@ -12,8 +12,10 @@
 
     void yyerror();
     void ret_print(char *token_type);
-    int lineno = 1;     // número da linha
+    
     int type;
+    int declaracao;
+    int lineno = 1;     // número da linha
 %}
 
 /* Define os lexemas */
@@ -40,12 +42,12 @@ COMENTARIO          \{({L}|{D}|{S}|" "|\t)*\}
 
 %%
 
-"inicioprog"            {  ret_print("INICIOPROG"); return INICIOPROG ; }
-"fimprog"               {  ret_print("FIMPROG"); return FIMPROG ;}
-"inicioargs"            {  ret_print("INICIOARGS"); return INICIOARGS ;}
-"fimargs"               {  ret_print("FIMARGS"); return FIMARGS ;}
-"iniciovars"            {  ret_print("INICIOVARS"); return INICIOVARS ;}
-"fimvars"               {  ret_print("FIMVARS"); return FIMVARS ;}
+"inicioprog"            {   ret_print("INICIOPROG"); return INICIOPROG ; }
+"fimprog"               {   ret_print("FIMPROG"); return FIMPROG ;}
+"inicioargs"            {   declaracao=0; ret_print("INICIOARGS"); return INICIOARGS ;}
+"fimargs"               {   ret_print("FIMARGS"); return FIMARGS ;}
+"iniciovars"            {   declaracao=1; ret_print("INICIOVARS"); return INICIOVARS ;}
+"fimvars"               {   ret_print("FIMVARS"); return FIMVARS ;}
 "escreva"               {   ret_print("ESCREVA"); return ESCREVA ;}
 "se"                    {   ret_print("SE"); return SE ;}
 "entao"                 {   ret_print("ENTAO"); return ENTAO ;}
@@ -54,29 +56,29 @@ COMENTARIO          \{({L}|{D}|{S}|" "|\t)*\}
 "faca"                  {   ret_print("FACA"); return FACA ;}
 "fimenquanto"           {   ret_print("FIM_ENQUANTO"); return FIM_ENQUANTO ;}
 
-"inteiro"               { type=1; ret_print("INTEIRO"); return INTEIRO; }
-"real"                  { type=2; ret_print("REAL"); return REAL; }
-"literal"               { type=3; ret_print("LITERAL"); return LITERAL; }
+"inteiro"               {   type=TIPO_INT; ret_print("INTEIRO"); return INTEIRO; }
+"real"                  {   type=TIPO_REAL; ret_print("REAL"); return REAL; }
+"literal"               {   type=TIPO_LITERAL; ret_print("LITERAL"); return LITERAL; }
 
-{NUMERO}                { ret_print("NUMERO"); return NUMERO; }
-{LITERAL}               { ret_print("STRING"); return STRING; }
-{IDENTIFICADOR}         { insert(yytext, strlen(yytext), type, lineno);
-                        ret_print("IDENTIFICADOR"); return IDENTIFICADOR; }
-{OP_RELACIONAL}         { ret_print("OP_RELACIONAL"); return OP_RELACIONAL; }
-{SOMA}                  { ret_print("SOMA"); return SOMA; }
-{SUB}                  { ret_print("SUB"); return SUB; }
-{MULT}                  { ret_print("MULT"); return MULT; }
-{DIV}                  { ret_print("DIV"); return DIV; }
-{ATRIBUICAO}            { ret_print("ATRIBUICAO"); return ATRIBUICAO; }
-{ABRE_PAR}              { ret_print("ABRE_PAR"); return ABRE_PAR; }
-{FECHA_PAR}             { ret_print("FECHA_PAR"); return FECHA_PAR; }
-{VIRGULA}               { ret_print("VIRGULA"); return VIRGULA; }
-{PONTO_E_VIRG}          { ret_print("PONTO_E_VIRG"); return PONTO_E_VIRG; }
+{NUMERO}                {   ret_print("NUMERO"); return NUMERO; }
+{LITERAL}               {   ret_print("STRING"); return STRING; }
+{IDENTIFICADOR}         {   insert(yytext, strlen(yytext), type, declaracao, lineno);
+                            ret_print("IDENTIFICADOR"); return IDENTIFICADOR; }
+{OP_RELACIONAL}         {   ret_print("OP_RELACIONAL"); return OP_RELACIONAL; }
+{SOMA}                  {   ret_print("SOMA"); return SOMA; }
+{SUB}                   {   ret_print("SUB"); return SUB; }
+{MULT}                  {   ret_print("MULT"); return MULT; }
+{DIV}                   {   ret_print("DIV"); return DIV; }
+{ATRIBUICAO}            {   ret_print("ATRIBUICAO"); return ATRIBUICAO; }
+{ABRE_PAR}              {   ret_print("ABRE_PAR"); return ABRE_PAR; }
+{FECHA_PAR}             {   ret_print("FECHA_PAR"); return FECHA_PAR; }
+{VIRGULA}               {   ret_print("VIRGULA"); return VIRGULA; }
+{PONTO_E_VIRG}          {   ret_print("PONTO_E_VIRG"); return PONTO_E_VIRG; }
 {VAZIO}                 {   }
-{COMENTARIO}            { ret_print("COMENTARIO"); }
+{COMENTARIO}            {   ret_print("COMENTARIO"); }
 
-"\n"                    { lineno += 1; }
-.                       { ret_print("ERROR"); return ERROR; }
+"\n"                    {   lineno += 1; }
+.                       {   ret_print("ERROR"); return ERROR; }
 
 
 %%

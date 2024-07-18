@@ -16,7 +16,7 @@ unsigned int hash(char *key){
     return hashval % SIZE;
 }
  
-void insert(char *name, int len, int type, int lineno){
+void insert(char *name, int len, int type, int declaracao, int lineno){
     unsigned int hashval = hash(name);
     list_t *token = hash_table[hashval];
 
@@ -28,6 +28,7 @@ void insert(char *name, int len, int type, int lineno){
         strcpy(token->nome_token, name);  
         /* add to hashtable */
         token->tipo_token = type;
+        token->declaracao = declaracao;
         token->lines = (RefList*) malloc(sizeof(RefList));
         token->lines->lineno = lineno;
         token->lines->next = NULL;
@@ -57,19 +58,21 @@ list_t *lookup(char *name){ /* return symbol if found or NULL if not found */
 /* print to stdout by default */ 
 void tabsimb_dump(FILE * of){  
   int i;
-  fprintf(of,"------------ ------ ------------\n");
-  fprintf(of,"Name         Type   Line Numbers\n");
-  fprintf(of,"------------ ------ -------------\n");
+  fprintf(of,"------------ ------- ----------- ------------\n");
+  fprintf(of,"Name         Type    Declaration Line Numbers\n");
+  fprintf(of,"------------ ------- ----------- ------------\n");
   for (i=0; i < SIZE; ++i){ 
     if (hash_table[i] != NULL){ 
         list_t *token = hash_table[i];
         while (token != NULL){ 
             RefList *linhas = token->lines;
             fprintf(of,"%-12s ",token->nome_token);
-            if (token->tipo_token == TIPO_INT) fprintf(of,"%-7s","inteiro");
-            else if (token->tipo_token == TIPO_REAL) fprintf(of,"%-7s","real");
-            else if (token->tipo_token == TIPO_LITERAL) fprintf(of,"%-7s","literal");
+            if (token->tipo_token == TIPO_INT) fprintf(of,"%-8s","inteiro");
+            else if (token->tipo_token == TIPO_REAL) fprintf(of,"%-8s","real");
+            else if (token->tipo_token == TIPO_LITERAL) fprintf(of,"%-8s","literal");
             else fprintf(of,"%-7s","undef"); // if UNDEF or 0
+            if (token->declaracao == PARAMETRO) fprintf(of,"%-10s","parametro");
+            if (token->declaracao == VARIAVEL) fprintf(of,"%-10s","variavel");
             while (linhas != NULL){
                 fprintf(of,"%4d ",linhas->lineno);
                 linhas = linhas->next;
@@ -79,4 +82,15 @@ void tabsimb_dump(FILE * of){
         }
     }
   }
+}
+
+list_t **get_hash_table() {
+    return hash_table;
+}
+
+list_t *get_hash_table_entry(int index) {
+    if (index >= 0 && index < SIZE) {
+        return hash_table[index];
+    }
+    return NULL;
 }

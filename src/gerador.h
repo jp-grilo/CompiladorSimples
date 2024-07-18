@@ -1,0 +1,1 @@
+void iniciaGerador(); //inicia o output

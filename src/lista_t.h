@@ -6,6 +6,9 @@
 #define MAXCONTENTSIZE 300
 
 
+/* parametro ou variável */
+#define PARAMETRO 0
+#define VARIAVEL 1
 
 /* tipos de token */
 #define INDEF 0
@@ -22,12 +25,12 @@ typedef struct RefList{
     int type;
 }RefList;
 
-
 // struct that represents a list node
 typedef struct list_t{
     
     char nome_token[MAXIDSIZE];
     int tipo_token;
+    int declaracao;
     /* armazenamento de possíveis valores */
     int token_ival; double token_fval; char *token_sval;
     RefList *lines;
@@ -41,6 +44,8 @@ static list_t **hash_table;
 // Function Declarations
 void init_hash_table(); // initialize hash table
 unsigned int hash(char *key); // hash function 
-void insert(char *name, int len, int type, int lineno); // insert entry
+void insert(char *name, int len, int type, int declaracao, int lineno); // insert entry
 list_t *lookup(char *name); // search for entry
 void tabsimb_dump(FILE *of); // dump file
+list_t **get_hash_table();
+list_t *get_hash_table_entry(int index);

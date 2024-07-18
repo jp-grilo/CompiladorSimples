@@ -74,10 +74,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include "lista_t.c"
+#include "gerador.h"
 
 extern FILE *yyin;
 extern FILE *yyout;
-extern FILE *pout;
 
 extern int lineno;
 extern int yylex();
@@ -1932,16 +1932,18 @@ yyreturn:
 
 void yyerror(){}
 
-void resultado ()
+int resultado ()
 {
-    if (temErro == 0)
+    if (temErro == 0){
         printf("\n\n------------------------ Programa aceito! ------------------------\n");
-    else
-        printf("\n\n------------------------ Programa rejeitado! ------------------------\n");
+        return 1;
+    } 
+    printf("\n\n------------------------ Programa rejeitado! ------------------------\n");
+    return 0;
 }
 
 void parser_log(char *producao){
-    printf("%s\t\tnro linha: %d\n", producao, lineno);
+    //printf("%s\t\tnro linha: %d\n", producao, lineno);
 }
 
 int main (){
@@ -1962,9 +1964,9 @@ int main (){
     tabsimb_dump(yyout);
     fclose(yyout); 	
     
-    resultado();
-	return flag;
+    if ( resultado() ) 
+        iniciaGerador();
+	
+    return flag;
 
-    fclose(pout);
-    return 0;
 }

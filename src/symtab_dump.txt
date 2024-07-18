@@ -1,9 +1,9 @@
------------- ------ ------------
-Name         Type   Line Numbers
------------- ------ -------------
-potencia     inteiro   4   10   14   18   20   20   21   23   23   27   29   29 
-avulso       inteiro   6 
-bbbbb        literal   7 
-valor        real      5   11   15   19   19   22   28 
-resultado    real      5   12   22   22   28   28   30   36 
-aaaaaa       literal   7 
+------------ ------- ----------- ------------
+Name         Type    Declaration Line Numbers
+------------ ------- ----------- ------------
+potencia     inteiro variavel     9   13   17   21   23   23   24   26   26   30   32   32 
+avulso       inteiro parametro    4 
+bbbbb        literal parametro    5 
+valor        real    variavel    10   14   18   22   22   25   31 
+resultado    real    variavel    10   15   25   25   31   31   33   39 
+aaaaaa       literal parametro    5 
