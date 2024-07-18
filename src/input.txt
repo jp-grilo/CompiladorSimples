@@ -3,6 +3,8 @@ inicioprog
 iniciovars
       inteiro potencia;
       real valor, resultado;
+	  inteiro avulso;
+	  literal aaaaaa, bbbbb;
 fimvars
 
 potencia = 3;

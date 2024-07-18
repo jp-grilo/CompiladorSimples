@@ -14,6 +14,8 @@ extern int yylex();
 void yyerror();
 void parser_log(char *producao);
 
+int temErro = 0;
+
 %}
 
 /* token definition */
@@ -22,20 +24,20 @@ void parser_log(char *producao);
 %token INTEIRO REAL LITERAL
 %token NUMERO STRING IDENTIFICADOR
 %token OP_RELACIONAL SOMA SUB MULT DIV ATRIBUICAO
-%token ABRE_PAR FECHA_PAR VIRGULA PONTO_E_VIRG VAZIO
-%token COMENTARIO ERROR
+%token ABRE_PAR FECHA_PAR VIRGULA PONTO_E_VIRG 
+%token VAZIO COMENTARIO ERROR
 
 /* expression priorities and rules */
-%left '+' '-'
-%left '*' '/'
+%left SOMA SUB
+%left MULT DIV
 %right UMINUS
 
 %%
 
 PROGRAMA:
-    INICIOPROG LISTA_PARAM FIMPROG             { parser_log("PROGRAMA -> INICIOPROG LISTA_PARAM FIMPROG"); printf("\n\n------------------------ Programa aceito! ------------------------\n"); }
+    INICIOPROG LISTA_PARAM FIMPROG             { parser_log("PROGRAMA -> INICIOPROG LISTA_PARAM FIMPROG"); }
     | 
-    error { parser_log("\nPROGRAMA -> error"); }
+    error { temErro= 1;  parser_log("\nPROGRAMA -> error"); }
 ;
 
 LISTA_PARAM:
@@ -43,7 +45,7 @@ LISTA_PARAM:
     |
     LISTA_VAR                                   { parser_log("LISTA_PARAM -> LISTA_VAR"); }
     | 
-    error { parser_log("\nLISTA_PARAM -> error"); }
+    error { temErro= 1;  parser_log("\nLISTA_PARAM -> error"); }
 ;
 
 LISTA_VAR:
@@ -51,7 +53,7 @@ LISTA_VAR:
     |
     CODIGO                                      { parser_log("LISTA_VAR -> CODIGO"); }
     | 
-    error { parser_log("\nLISTA_VAR -> error"); }
+    error { temErro= 1;  parser_log("\nLISTA_VAR -> error"); }
 ;
 
 DECLARA_VAR:
@@ -59,7 +61,7 @@ DECLARA_VAR:
     |
 
     | 
-    error { parser_log("\nDECLARA_VAR -> error"); }
+    error { temErro= 1;  parser_log("\nDECLARA_VAR -> error"); }
 ;
 
 NOMES:
@@ -67,7 +69,7 @@ NOMES:
     |
     IDENTIFICADOR                               { parser_log("NOMES -> IDENTIFICADOR"); }
     | 
-    error { parser_log("\nNOMES -> error"); }
+    error { temErro= 1;  parser_log("\nNOMES -> error"); }
 ;
 
 TIPO_VAR:
@@ -77,7 +79,7 @@ TIPO_VAR:
     |
     LITERAL                                     { parser_log("TIPO_VAR -> LITERAL"); }
     | 
-    error { parser_log("\nTIPO_VAR -> error"); }
+    error { temErro= 1;  parser_log("\nTIPO_VAR -> error"); }
 ;
 
 CODIGO:
@@ -85,7 +87,7 @@ CODIGO:
     |
 
     | 
-    error { parser_log("\nCODIGO -> error"); }
+    error { temErro= 1;  parser_log("\nCODIGO -> error"); }
 ;
 
 COMANDO:
@@ -97,23 +99,17 @@ COMANDO:
     |
     ENQUANTO CONDICAO FACA CODIGO FIM_ENQUANTO { parser_log("COMANDO -> ENQUANTO CONDICAO FACA CODIGO FIM_ENQUANTO"); }
     | 
-    error { parser_log("\nCOMANDO -> error"); }
+    error { temErro= 1;  parser_log("\nCOMANDO -> error"); }
 ;
 
 CORPO_ESCREVA:
-    STRING  { parser_log("CORPO_ESCREVA -> STRING"); }
-    |
-    IDENTIFICADOR { parser_log("CORPO_ESCREVA -> IDENTIFICADOR"); }
-    |
     EXPRESSAO { parser_log("CORPO_ESCREVA -> EXPRESSAO"); }
-    | 
-    error { parser_log("\nCORPO_ESCREVA -> error"); }
 ;
 
 CONDICAO:
     ABRE_PAR ID_OR_NUMBER OP_RELACIONAL ID_OR_NUMBER FECHA_PAR { parser_log("CONDICAO -> ABRE_PAR ID_OR_NUMBER OP_RELACIONAL IDENTIFICADOR FECHA_PAR"); }
     | 
-    error { parser_log("\nCONDICAO -> error"); }
+    error { temErro= 1;  parser_log("\nCONDICAO -> error"); }
 ;
 
 EXPRESSAO : 
@@ -129,13 +125,13 @@ EXPRESSAO :
     | 
     SUB EXPRESSAO %prec UMINUS { $$ = -$2; parser_log("EXPRESSAO -> '-' EXPRESSAO \%prec UMINUS");}
     | 
-    IDENTIFICADOR   {parser_log("ID_OR_NUMBER_OR_STRING -> IDENTIFICADOR");}
+    IDENTIFICADOR   {parser_log("EXPRESSAO -> IDENTIFICADOR");}
     |
-    NUMERO          {parser_log("ID_OR_NUMBER_OR_STRING -> NUMERO");}
+    NUMERO          {parser_log("EXPRESSAO -> NUMERO");}
     |
-    STRING          {parser_log("ID_OR_NUMBER_OR_STRING -> STRING");}
+    STRING          {parser_log("EXPRESSAO -> STRING");}
     |
-    error { parser_log("\nEXPRESSAO -> error"); }
+    error { temErro= 1;  parser_log("\nEXPRESSAO -> error"); }
 ;
 
 ID_OR_NUMBER:
@@ -143,24 +139,26 @@ ID_OR_NUMBER:
     |
     NUMERO          {parser_log("ID_OR_NUMBER -> NUMERO");}
     |
-    error           { parser_log("\nID_OR_NUMBER_OR_STRING -> error"); }
+    error { temErro= 1;  parser_log("\nID_OR_NUMBER_OR_STRING -> error"); }
 ;
 
 %%
 
-void yyerror (char *producao)
-{
+void yyerror(){}
 
+void resultado ()
+{
+    if (temErro == 0)
+        printf("\n\n------------------------ Programa aceito! ------------------------\n");
+    else
+        printf("\n\n------------------------ Programa rejeitado! ------------------------\n");
 }
 
 void parser_log(char *producao){
     printf("%s\t\tnro linha: %d\n", producao, lineno);
-    //FILE *pout;
-    //pout = fopen("printf.txt", "a") ;
-    //fprintf(pout, "%s\n", producao);
 }
 
-int main (int argc, char *argv[]){
+int main (){
     // apagando log anterior
     remove("printf.txt");
     
@@ -177,7 +175,8 @@ int main (int argc, char *argv[]){
     yyout = fopen("symtab_dump.txt", "w") ;
     tabsimb_dump(yyout);
     fclose(yyout); 	
- 
+    
+    resultado();
 	return flag;
 
     fclose(pout);

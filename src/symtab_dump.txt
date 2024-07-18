@@ -1,6 +1,9 @@
 ------------ ------ ------------
 Name         Type   Line Numbers
 ------------ ------ -------------
-potencia     undef     4    8   12   16   18   18   19   21   21   25   27   27 
-valor        undef     5    9   13   17   17   20   26 
-resultado    undef     5   10   20   20   26   26   28   34 
+potencia     inteiro   4   10   14   18   20   20   21   23   23   27   29   29 
+avulso       inteiro   6 
+bbbbb        literal   7 
+valor        real      5   11   15   19   19   22   28 
+resultado    real      5   12   22   22   28   28   30   36 
+aaaaaa       literal   7 

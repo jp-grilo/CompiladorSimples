@@ -13,6 +13,7 @@
     void yyerror();
     void ret_print(char *token_type);
     int lineno = 1;     // número da linha
+    int type;
 %}
 
 /* Define os lexemas */
@@ -53,13 +54,13 @@ COMENTARIO          \{({L}|{D}|{S}|" "|\t)*\}
 "faca"                  {   ret_print("FACA"); return FACA ;}
 "fimenquanto"           {   ret_print("FIM_ENQUANTO"); return FIM_ENQUANTO ;}
 
-"inteiro"               { ret_print("INTEIRO"); return INTEIRO; }
-"real"                  { ret_print("REAL"); return REAL; }
-"literal"               { ret_print("LITERAL"); return LITERAL; }
+"inteiro"               { type=1; ret_print("INTEIRO"); return INTEIRO; }
+"real"                  { type=2; ret_print("REAL"); return REAL; }
+"literal"               { type=3; ret_print("LITERAL"); return LITERAL; }
 
 {NUMERO}                { ret_print("NUMERO"); return NUMERO; }
 {LITERAL}               { ret_print("STRING"); return STRING; }
-{IDENTIFICADOR}         { insert(yytext, strlen(yytext), INDEF, lineno);
+{IDENTIFICADOR}         { insert(yytext, strlen(yytext), type, lineno);
                         ret_print("IDENTIFICADOR"); return IDENTIFICADOR; }
 {OP_RELACIONAL}         { ret_print("OP_RELACIONAL"); return OP_RELACIONAL; }
 {SOMA}                  { ret_print("SOMA"); return SOMA; }

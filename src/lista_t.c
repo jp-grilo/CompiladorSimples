@@ -66,9 +66,9 @@ void tabsimb_dump(FILE * of){
         while (token != NULL){ 
             RefList *linhas = token->lines;
             fprintf(of,"%-12s ",token->nome_token);
-            if (token->tipo_token == TIPO_INT) fprintf(of,"%-7s","int");
+            if (token->tipo_token == TIPO_INT) fprintf(of,"%-7s","inteiro");
             else if (token->tipo_token == TIPO_REAL) fprintf(of,"%-7s","real");
-            else if (token->tipo_token == TIPO_LITERAL) fprintf(of,"%-7s","string");
+            else if (token->tipo_token == TIPO_LITERAL) fprintf(of,"%-7s","literal");
             else fprintf(of,"%-7s","undef"); // if UNDEF or 0
             while (linhas != NULL){
                 fprintf(of,"%4d ",linhas->lineno);
