@@ -11,7 +11,7 @@ extern FILE *yyout;
 extern int lineno;
 extern int yylex();
 
-void yyerror();
+void yyerror(char *producao);
 void parser_log(char *producao);
 
 int temErro = 0;
@@ -37,7 +37,7 @@ int temErro = 0;
 PROGRAMA:
     INICIOPROG LISTA_PARAM FIMPROG             { parser_log("PROGRAMA -> INICIOPROG LISTA_PARAM FIMPROG"); }
     | 
-    error { temErro= 1;  parser_log("\nPROGRAMA -> error"); }
+    error { temErro= 1;  yyerror("\nPROGRAMA -> error"); }
 ;
 
 LISTA_PARAM:
@@ -45,7 +45,7 @@ LISTA_PARAM:
     |
     LISTA_VAR                                   { parser_log("LISTA_PARAM -> LISTA_VAR"); }
     | 
-    error { temErro= 1;  parser_log("\nLISTA_PARAM -> error"); }
+    error { temErro= 1;  yyerror("\nLISTA_PARAM -> error"); }
 ;
 
 LISTA_VAR:
@@ -53,7 +53,7 @@ LISTA_VAR:
     |
     CODIGO                                      { parser_log("LISTA_VAR -> CODIGO"); }
     | 
-    error { temErro= 1;  parser_log("\nLISTA_VAR -> error"); }
+    error { temErro= 1;  yyerror("\nLISTA_VAR -> error"); }
 ;
 
 DECLARA_VAR:
@@ -61,7 +61,7 @@ DECLARA_VAR:
     |
 
     | 
-    error { temErro= 1;  parser_log("\nDECLARA_VAR -> error"); }
+    error { temErro= 1;  yyerror("\nDECLARA_VAR -> error"); }
 ;
 
 NOMES:
@@ -69,7 +69,7 @@ NOMES:
     |
     IDENTIFICADOR                               { parser_log("NOMES -> IDENTIFICADOR"); }
     | 
-    error { temErro= 1;  parser_log("\nNOMES -> error"); }
+    error { temErro= 1;  yyerror("\nNOMES -> error"); }
 ;
 
 TIPO_VAR:
@@ -79,7 +79,7 @@ TIPO_VAR:
     |
     LITERAL                                     { parser_log("TIPO_VAR -> LITERAL"); }
     | 
-    error { temErro= 1;  parser_log("\nTIPO_VAR -> error"); }
+    error { temErro= 1;  yyerror("\nTIPO_VAR -> error"); }
 ;
 
 CODIGO:
@@ -105,7 +105,7 @@ CORPO_ESCREVA:
 CONDICAO:
     ABRE_PAR ID_OR_NUMBER OP_RELACIONAL ID_OR_NUMBER FECHA_PAR { parser_log("CONDICAO -> ABRE_PAR ID_OR_NUMBER OP_RELACIONAL IDENTIFICADOR FECHA_PAR"); }
     | 
-    error { temErro= 1;  parser_log("\nCONDICAO -> error"); }
+    error { temErro= 1;  yyerror("\nCONDICAO -> error"); }
 ;
 
 EXPRESSAO : 
@@ -127,7 +127,7 @@ EXPRESSAO :
     |
     STRING          {parser_log("EXPRESSAO -> STRING");}
     |
-    error { temErro= 1;  parser_log("\nEXPRESSAO -> error"); }
+    error { temErro= 1;  yyerror("\nEXPRESSAO -> error"); }
 ;
 
 ID_OR_NUMBER:
@@ -135,12 +135,18 @@ ID_OR_NUMBER:
     |
     NUMERO          {parser_log("ID_OR_NUMBER -> NUMERO");}
     |
-    error { temErro= 1;  parser_log("\nID_OR_NUMBER_OR_STRING -> error"); }
+    error { temErro= 1;  yyerror("\nID_OR_NUMBER_OR_STRING -> error"); }
 ;
 
 %%
 
-void yyerror(){}
+void yyerror(char *producao){
+    printf("%s\t\tnro linha: %d\n", producao, lineno);
+}
+
+void parser_log(char *producao){
+    //printf("%s\t\tnro linha: %d\n", producao, lineno);
+}
 
 int resultado ()
 {
@@ -150,10 +156,6 @@ int resultado ()
     } 
     printf("\n\n------------------------ Programa rejeitado! ------------------------\n");
     return 0;
-}
-
-void parser_log(char *producao){
-    //printf("%s\t\tnro linha: %d\n", producao, lineno);
 }
 
 int main (){
