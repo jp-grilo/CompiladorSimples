@@ -12,6 +12,7 @@ void iniciaGerador() {
 
 void geraParametros() {
     FILE *geradorout;
+    int first_param = 0; // Flag para controlar a impressão da vírgula
     geradorout = fopen("codigo_gerado.txt", "a");
     if (geradorout == NULL) {
         perror("Erro ao abrir o arquivo");
@@ -20,13 +21,12 @@ void geraParametros() {
     fprintf(geradorout, "@main( ");
     for (int tamanho = 0; tamanho < SIZE; ++tamanho) {
         list_t *token = get_hash_table_entry(tamanho);
-        int first_param = 1; // Flag para controlar a impressão da vírgula
         while (token != NULL) {
             if (token->declaracao == PARAMETRO) { // Verificação se é parâmetro para impressão no @main()
-                if (!first_param) {
+                if (first_param) {
                     fprintf(geradorout, ", ");
                 }
-                first_param = 0;
+                first_param++;
                 fprintf(geradorout, "%s: ", token->nome_token);
                 if (token->tipo_token == TIPO_INT) fprintf(geradorout, "int");
                 else if (token->tipo_token == TIPO_REAL) fprintf(geradorout, "real");

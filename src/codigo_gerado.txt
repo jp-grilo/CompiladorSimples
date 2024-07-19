@@ -1,4 +1,4 @@
-@main( avulso: intbbbbb: charaaaaaa: char) {
+@main( avulso: int, bbbbb: char, aaaaaa: char) {
 potencia: int = const -1;
 valor: real = const -1.0;
 resultado: real = const -1.0;
