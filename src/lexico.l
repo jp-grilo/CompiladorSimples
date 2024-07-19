@@ -24,7 +24,8 @@ D    [0-9]
 S    [~\`\!\@\#\$\%\^\&\*\(\)\_\-\+\\\/\[\]\|\‘\?\>\<\.\,\:\;]
 
 /* Regras para os lexemas fornecidos */
-NUMERO              {D}+(\.{D}+)?((E|e)(\+|\-)?{D}+)?
+INTEGER             {D}+
+DOUBLE              {D}+(\.{D}+)((E|e)(\+|\-)?{D}+)?
 LITERAL             \"({L}|{D}|{S}|" "|\t)*\"
 IDENTIFICADOR       {L}({L}|{D}|_)*
 OP_RELACIONAL       \<|\>|\>\=|\<\=|\=\=|\<\>
@@ -60,7 +61,8 @@ COMENTARIO          \{({L}|{D}|{S}|" "|\t)*\}
 "real"                  {   type=TIPO_REAL; ret_print("REAL"); return REAL; }
 "literal"               {   type=TIPO_LITERAL; ret_print("LITERAL"); return LITERAL; }
 
-{NUMERO}                {   ret_print("NUMERO"); return NUMERO; }
+{INTEGER}                {   ret_print("INTEGER"); return INTEGER; }
+{DOUBLE}                {   ret_print("DOUBLE"); return DOUBLE; }
 {LITERAL}               {   ret_print("STRING"); return STRING; }
 {IDENTIFICADOR}         {   insert(yytext, strlen(yytext), type, declaracao, lineno);
                             ret_print("IDENTIFICADOR"); return IDENTIFICADOR; }

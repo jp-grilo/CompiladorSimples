@@ -3,3 +3,6 @@
 #include <string.h>
 #include "semantico.h"
 
+void verificaTipo(){
+    
+}

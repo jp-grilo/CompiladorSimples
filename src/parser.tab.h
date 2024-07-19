@@ -55,30 +55,45 @@
      INTEIRO = 271,
      REAL = 272,
      LITERAL = 273,
-     NUMERO = 274,
-     STRING = 275,
-     IDENTIFICADOR = 276,
-     OP_RELACIONAL = 277,
-     SOMA = 278,
-     SUB = 279,
-     MULT = 280,
-     DIV = 281,
-     ATRIBUICAO = 282,
-     ABRE_PAR = 283,
-     FECHA_PAR = 284,
-     VIRGULA = 285,
-     PONTO_E_VIRG = 286,
-     VAZIO = 287,
-     COMENTARIO = 288,
-     ERROR = 289,
-     UMINUS = 290
+     INTEGER = 274,
+     DOUBLE = 275,
+     STRING = 276,
+     IDENTIFICADOR = 277,
+     OP_RELACIONAL = 278,
+     SOMA = 279,
+     SUB = 280,
+     MULT = 281,
+     DIV = 282,
+     ATRIBUICAO = 283,
+     ABRE_PAR = 284,
+     FECHA_PAR = 285,
+     VIRGULA = 286,
+     PONTO_E_VIRG = 287,
+     VAZIO = 288,
+     COMENTARIO = 289,
+     ERROR = 290,
+     UMINUS = 291
    };
 #endif
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
+typedef union YYSTYPE
+{
+
+/* Line 1676 of yacc.c  */
+#line 22 "parser.y"
+
+    int intval;
+    double realval;
+    char *strval;
+
+
+
+/* Line 1676 of yacc.c  */
+#line 96 "parser.tab.h"
+} YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

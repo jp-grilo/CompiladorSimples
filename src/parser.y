@@ -4,6 +4,7 @@
 #include <string.h>
 #include "lista_t.c"
 #include "gerador.h"
+#include "semantico.h"
 
 extern FILE *yyin;
 extern FILE *yyout;
@@ -18,11 +19,17 @@ int temErro = 0;
 
 %}
 
+%union {
+    int intval;
+    double realval;
+    char *strval;
+}
+
 /* token definition */
 %token INICIOPROG FIMPROG INICIOARGS FIMARGS INICIOVARS FIMVARS
 %token ESCREVA SE ENTAO FIM_SE ENQUANTO FACA FIM_ENQUANTO
 %token INTEIRO REAL LITERAL
-%token NUMERO STRING IDENTIFICADOR
+%token INTEGER DOUBLE STRING IDENTIFICADOR
 %token OP_RELACIONAL SOMA SUB MULT DIV ATRIBUICAO
 %token ABRE_PAR FECHA_PAR VIRGULA PONTO_E_VIRG 
 %token VAZIO COMENTARIO ERROR
@@ -89,7 +96,11 @@ CODIGO:
 ;
 
 COMANDO:
-    IDENTIFICADOR ATRIBUICAO EXPRESSAO PONTO_E_VIRG { parser_log("COMANDO -> IDENTIFICADOR ATRIBUICAO EXPRESSAO PONTO_E_VIRG"); }
+    IDENTIFICADOR ATRIBUICAO EXPRESSAO PONTO_E_VIRG { 
+        parser_log("COMANDO -> IDENTIFICADOR ATRIBUICAO EXPRESSAO PONTO_E_VIRG"); 
+
+    
+    }
     |
     ESCREVA CORPO_ESCREVA PONTO_E_VIRG { parser_log("COMANDO -> ESCREVA CORPO_ESCREVA PONTO_E_VIRG"); }
     |
@@ -117,13 +128,15 @@ EXPRESSAO :
     | 
     EXPRESSAO DIV EXPRESSAO { parser_log("EXPRESSAO -> EXPRESSAO DIV EXPRESSAO");}
     | 
-    ABRE_PAR EXPRESSAO FECHA_PAR { $$ = $2; parser_log("EXPRESSAO -> ABRE_PAR EXPRESSAO FECHA_PAR");}
+    ABRE_PAR EXPRESSAO FECHA_PAR { parser_log("EXPRESSAO -> ABRE_PAR EXPRESSAO FECHA_PAR");}
     | 
-    SUB EXPRESSAO %prec UMINUS { $$ = -$2; parser_log("EXPRESSAO -> '-' EXPRESSAO \%prec UMINUS");}
+    SUB EXPRESSAO %prec UMINUS { parser_log("EXPRESSAO -> '-' EXPRESSAO \%prec UMINUS");}
     | 
     IDENTIFICADOR   {parser_log("EXPRESSAO -> IDENTIFICADOR");}
     |
-    NUMERO          {parser_log("EXPRESSAO -> NUMERO");}
+    INTEGER          {parser_log("EXPRESSAO -> INTEGER");}
+    |
+    DOUBLE          {parser_log("EXPRESSAO -> DOUBLE");}
     |
     STRING          {parser_log("EXPRESSAO -> STRING");}
     |
@@ -133,7 +146,9 @@ EXPRESSAO :
 ID_OR_NUMBER:
     IDENTIFICADOR   {parser_log("ID_OR_NUMBER -> IDENTIFICADOR");}
     |
-    NUMERO          {parser_log("ID_OR_NUMBER -> NUMERO");}
+    INTEGER          {parser_log("ID_OR_NUMBER -> INTEGER");}
+    |
+    DOUBLE          {parser_log("EXPRESSAO -> DOUBLE");}
     |
     error { temErro= 1;  yyerror("\nID_OR_NUMBER_OR_STRING -> error"); }
 ;
