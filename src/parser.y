@@ -86,8 +86,6 @@ CODIGO:
     COMANDO CODIGO                              { parser_log("CODIGO -> COMANDO CODIGO"); }
     |
 
-    | 
-    error { temErro= 1;  parser_log("\nCODIGO -> error"); }
 ;
 
 COMANDO:
@@ -98,8 +96,6 @@ COMANDO:
     SE CONDICAO ENTAO CODIGO FIM_SE { parser_log("COMANDO -> SE CONDICAO ENTAO CODIGO FIM_SE"); }
     |
     ENQUANTO CONDICAO FACA CODIGO FIM_ENQUANTO { parser_log("COMANDO -> ENQUANTO CONDICAO FACA CODIGO FIM_ENQUANTO"); }
-    | 
-    error { temErro= 1;  parser_log("\nCOMANDO -> error"); }
 ;
 
 CORPO_ESCREVA:
