@@ -48,15 +48,11 @@ typedef struct expressoes
     int val_int_elem_esquerdo, val_int_elem_direito;
     double val_real_elem_esquerdo, val_real_elem_direito;
 
-    struct expressoes *next;
     } expressoes;
-
-static expressoes **lista_expr;
 
 // Estrutura para armazenar um lexema
 typedef struct lexemas {
     char lexema[MAXIDSIZE];
-    struct lexemas *next;
 } lexemas;
 
 // Funções para tabela de simbolos
@@ -68,13 +64,16 @@ void tabsimb_dump(FILE *of); // Imprime o conteúdo da tabela de símbolos em um
 list_t **get_hash_table(); // Retorna a tabela hash inteira.
 list_t *get_hash_table_entry(int index); // Retorna uma entrada específica da tabela hash.
 
- // Funções para lista de expressões
+// Funções para lista de expressões
 void init_lista_expr(); // Inicializa a lista de expressões.
-// void inserir_expressao(expressoes *expr); // Insere uma nova expressão na lista.
-// expressoes *buscar_expressao(int num_expressao); // Busca uma expressão específica na lista.
+void insert_expr(int index, int num_expressao, int tipo_elem_esquerdo, int tipo_elem_direito, 
+                 int val_int_elem_esquerdo, int val_int_elem_direito, 
+                 double val_real_elem_esquerdo, double val_real_elem_direito); // Insere uma nova expressão na lista.
+expressoes* lookup_expr(int index); // Busca uma expressão específica na lista.
+void dump_lista_expr(int declarados); // Imprime o conteúdo da lista de expressões.
 
 // Funções para lista de lexemas
-void init_lista_lex();            // Inicializa a lista de lexemas
-void insert_lex(int index, const char* lexema); // Insere um novo lexema na lista na posição especificada
-char* lookup_lex(int index);      // Retorna o lexema na posição especificada
-void dump_lista_lex(int declarados);            // Imprime o conteúdo da lista de lexemas
+void init_lista_lex(); // Inicializa a lista de lexemas.
+void insert_lex(int index, const char* lexema); // Insere um novo lexema na lista na posição especificada.
+char* lookup_lex(int index); // Retorna o lexema na posição especificada.
+void dump_lista_lex(int declarados); // Imprime o conteúdo da lista de lexemas.

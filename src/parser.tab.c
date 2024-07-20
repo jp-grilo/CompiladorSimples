@@ -1992,7 +1992,7 @@ int main (){
     tabsimb_dump(yyout);
     fclose(yyout); 	
     
-    //dump_lista_lex();
+    //dump_lista_lex(num_lexema);
     if ( resultado() ) 
         iniciaGerador();
 	

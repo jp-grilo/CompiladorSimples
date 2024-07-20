@@ -92,48 +92,79 @@ list_t *get_hash_table_entry(int index) {
     return NULL;
 }
 
-void init_lista_expr(){
-    int i; 
-    lista_expr = malloc(SIZE * sizeof(expressoes*));
-    for(i = 0; i < SIZE; i++) lista_expr[i] = NULL;
+
+static expressoes *lista_expr[SIZE];  // Lista global e estática
+
+// Inicializa a lista de expressões
+void init_lista_expr() {
+    for (int i = 0; i < SIZE; i++) {
+        lista_expr[i] = NULL;
+    }
 }
 
-// void insert_expr(int index, int num_expressao, int tipo_elem_esquerdo, int tipo_elem_direito, 
-//                  int val_int_elem_esquerdo, int val_int_elem_direito, 
-//                  double val_real_elem_esquerdo, double val_real_elem_direito) {
-//     expressoes *new_expr = malloc(sizeof(expressoes));
-//     // new_expr->num_expressao = num_expressao;
-//     // new_expr->tipo_elem_esquerdo = tipo_elem_esquerdo;
-//     // new_expr->tipo_elem_direito = tipo_elem_direito;
-//     // new_expr->val_int_elem_esquerdo = val_int_elem_esquerdo;
-//     // new_expr->val_int_elem_direito = val_int_elem_direito;
-//     // new_expr->val_real_elem_esquerdo = val_real_elem_esquerdo;
-//     // new_expr->val_real_elem_direito = val_real_elem_direito;
-//     // new_expr->next = lista_expr[index];
-//     // lista_expr[index] = new_expr;
-// }
+// Insere uma nova expressão na lista na posição especificada
+void insert_expr(int index, int num_expressao, int tipo_elem_esquerdo, int tipo_elem_direito, 
+                 int val_int_elem_esquerdo, int val_int_elem_direito, 
+                 double val_real_elem_esquerdo, double val_real_elem_direito) {
+    if (index < 0 || index >= SIZE) {
+        fprintf(stderr, "Índice %d fora dos limites.\n", index);
+        return;
+    }
 
-// expressoes* lookup_expr(int index, int num_expressao) {
-//     expressoes *current = lista_expr[index];
-//     while (current != NULL) {
-//         if (current->num_expressao == num_expressao) {
-//             return current;
-//         }
-//         current = current->next;
-//     }
-//     return NULL; // Not found
-// }
+    // Aloca memória para a nova expressão
+    expressoes *nova_expr = (expressoes*) malloc(sizeof(expressoes));
+    if (nova_expr == NULL) {
+        fprintf(stderr, "Falha na alocação de memória.\n");
+        return;
+    }
+
+    // Preenche a nova estrutura de expressão
+    nova_expr->num_expressao = num_expressao;
+    nova_expr->tipo_elem_esquerdo = tipo_elem_esquerdo;
+    nova_expr->tipo_elem_direito = tipo_elem_direito;
+    nova_expr->val_int_elem_esquerdo = val_int_elem_esquerdo;
+    nova_expr->val_int_elem_direito = val_int_elem_direito;
+    nova_expr->val_real_elem_esquerdo = val_real_elem_esquerdo;
+    nova_expr->val_real_elem_direito = val_real_elem_direito;
+
+    // Substitui o conteúdo da posição especificada
+    free(lista_expr[index]); // Libera o antigo valor se houver
+    lista_expr[index] = nova_expr;
+}
+
+// Busca uma expressão específica na lista
+expressoes* lookup_expr(int index) {
+    if (index < 0 || index >= SIZE) {
+        fprintf(stderr, "Índice %d fora dos limites.\n", index);
+        return NULL;
+    }
+
+    return lista_expr[index];
+}
+
+// Imprime o conteúdo da lista de expressões
+void dump_lista_expr(int declarados) {
+    for (int i = 0; i < declarados; i++) {
+        if (lista_expr[i] != NULL) {
+            printf("Posição %d: Expressão %d\n", i, lista_expr[i]->num_expressao);
+            printf("  Tipo Esquerdo: %d, Tipo Direito: %d\n", lista_expr[i]->tipo_elem_esquerdo, lista_expr[i]->tipo_elem_direito);
+            printf("  Valor Int Esquerdo: %d, Valor Int Direito: %d\n", lista_expr[i]->val_int_elem_esquerdo, lista_expr[i]->val_int_elem_direito);
+            printf("  Valor Real Esquerdo: %lf, Valor Real Direito: %lf\n", lista_expr[i]->val_real_elem_esquerdo, lista_expr[i]->val_real_elem_direito);
+        } else {
+            printf("Posição %d: Vazia\n", i);
+        }
+    }
+}
 
 static lexemas *lista_lex[SIZE];  // Lista global e estática
 
-// Inicializa a lista de lexemas
+
 void init_lista_lex() {
     for (int i = 0; i < SIZE; i++) {
         lista_lex[i] = NULL;
     }
 }
 
-// Insere um novo lexema na lista na posição especificada
 void insert_lex(int index, const char* lexema) {
 
     if (index < 0 || index >= SIZE) {
@@ -154,7 +185,7 @@ void insert_lex(int index, const char* lexema) {
     lista_lex[index] = novo_lexema;
 }
 
-// Retorna o lexema na posição especificada
+
 char* lookup_lex(int index) {
     if (index < 0 || index >= SIZE) {
         fprintf(stderr, "Índice %d fora dos limites.\n", index);
