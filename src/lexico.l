@@ -15,7 +15,9 @@
     
     int type;
     int declaracao;
-    int lineno = 1;     // número da linha
+    int lineno=1;     // número da linha
+    int index_lexema=0;
+    char *lexema;
 %}
 
 /* Define os lexemas */
@@ -61,11 +63,38 @@ COMENTARIO          \{({L}|{D}|{S}|" "|\t)*\}
 "real"                  {   type=TIPO_REAL; ret_print("REAL"); return REAL; }
 "literal"               {   type=TIPO_LITERAL; ret_print("LITERAL"); return LITERAL; }
 
-{INTEGER}                {   ret_print("INTEGER"); return INTEGER; }
-{DOUBLE}                {   ret_print("DOUBLE"); return DOUBLE; }
-{LITERAL}               {   ret_print("STRING"); return STRING; }
-{IDENTIFICADOR}         {   insert(yytext, strlen(yytext), type, declaracao, lineno);
-                            ret_print("IDENTIFICADOR"); return IDENTIFICADOR; }
+{INTEGER}                {  
+                            ret_print("INTEGER");
+                            insert(yytext, strlen(yytext), TIPO_INT, INDEF, lineno);
+                            insert_lex(index_lexema++, yytext);
+                            //printf("Valor int expr: %s\t\tlinha: %d\n", yytext, lineno);
+                            return INTEGER; 
+                        }
+
+{DOUBLE}                {   
+                            ret_print("DOUBLE"); 
+                            insert(yytext, strlen(yytext), TIPO_REAL, INDEF, lineno);
+                            insert_lex(index_lexema++, yytext);
+                            //printf("Valor real expr: %s\t\tlinha: %d\n", yytext, lineno);
+                            return DOUBLE; 
+                        }
+
+{LITERAL}               {   
+                            ret_print("STRING");
+                            insert(yytext, strlen(yytext), TIPO_LITERAL, INDEF, lineno);
+                            insert_lex(index_lexema++, yytext);
+                            //printf("Valor str expr: %s\t\tlinha: %d\n", yytext, lineno);
+                            return STRING; 
+                        }
+
+{IDENTIFICADOR}         {   
+                            ret_print("IDENTIFICADOR"); 
+                            insert(yytext, strlen(yytext), type, declaracao, lineno);
+                            insert_lex(index_lexema++, yytext);
+                            //printf("Valor id expr: %s\t\tlinha: %d\n", yytext, lineno);
+                            return IDENTIFICADOR; 
+                        }
+
 {OP_RELACIONAL}         {   ret_print("OP_RELACIONAL"); return OP_RELACIONAL; }
 {SOMA}                  {   ret_print("SOMA"); return SOMA; }
 {SUB}                   {   ret_print("SUB"); return SUB; }

@@ -83,16 +83,14 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 22 "parser.y"
+#line 24 "parser.y"
 
-    int intval;
-    double realval;
-    char *strval;
+    char *tokenval;  // Ajuste o nome do tipo aqui para corresponder ao arquivo .l
 
 
 
 /* Line 1676 of yacc.c  */
-#line 96 "parser.tab.h"
+#line 94 "parser.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

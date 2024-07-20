@@ -1,9 +1,18 @@
------------- ------- ----------- ------------
-Name         Type    Declaration Line Numbers
------------- ------- ----------- ------------
-potencia     inteiro variavel     9   13   17   21   23   23   24   26   26   30   32   32 
-avulso       inteiro parametro    4 
-bbbbb        literal parametro    5 
-valor        real    variavel    10   14   18   22   22   25   31 
-resultado    real    variavel    10   15   25   25   31   31   33   39 
-aaaaaa       literal parametro    5 
+------------ ------- -----------
+Name         Type    Declaration
+------------ ------- -----------
+potencia     inteiro variavel  
+pliteral     literal parametro 
+sliteral     literal parametro 
+avulso       inteiro parametro 
+"Este valor eh grande\n" literal parametro 
+0            inteiro parametro 
+1            inteiro parametro 
+"Resultado: " literal parametro 
+3            inteiro parametro 
+"\n"         literal parametro 
+valor        real    variavel  
+resultado    real    variavel  
+1.0          real    parametro 
+5.0          real    parametro 
+1000         inteiro parametro 

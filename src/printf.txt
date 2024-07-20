@@ -4,9 +4,9 @@ INTEIRO	 ->	 inteiro linha 4
 IDENTIFICADOR	 ->	 avulso linha 4
 PONTO_E_VIRG	 ->	 ; linha 4
 LITERAL	 ->	 literal linha 5
-IDENTIFICADOR	 ->	 aaaaaa linha 5
+IDENTIFICADOR	 ->	 pliteral linha 5
 VIRGULA	 ->	 , linha 5
-IDENTIFICADOR	 ->	 bbbbb linha 5
+IDENTIFICADOR	 ->	 sliteral linha 5
 PONTO_E_VIRG	 ->	 ; linha 5
 FIMARGS	 ->	 fimargs linha 6
 INICIOVARS	 ->	 iniciovars linha 8

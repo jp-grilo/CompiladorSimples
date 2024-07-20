@@ -2,7 +2,7 @@ inicioprog
 
 inicioargs
 	inteiro avulso;	
-	literal aaaaaa, bbbbb;
+	literal pliteral, sliteral;
 fimargs
 
 iniciovars

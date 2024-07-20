@@ -81,17 +81,19 @@ extern FILE *yyin;
 extern FILE *yyout;
 
 extern int lineno;
+extern char *lexema;
 extern int yylex();
 
 void yyerror(char *producao);
 void parser_log(char *producao);
 
 int temErro = 0;
+int num_lexema=0;
 
 
 
 /* Line 189 of yacc.c  */
-#line 95 "parser.tab.c"
+#line 97 "parser.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -162,11 +164,9 @@ typedef union YYSTYPE
 {
 
 /* Line 214 of yacc.c  */
-#line 22 "parser.y"
+#line 24 "parser.y"
 
-    int intval;
-    double realval;
-    char *strval;
+    char *tokenval;  // Ajuste o nome do tipo aqui para corresponder ao arquivo .l
 
 
 
@@ -485,10 +485,10 @@ static const yytype_int8 yyrhs[] =
 static const yytype_uint8 yyrline[] =
 {
        0,    45,    45,    47,    51,    53,    55,    59,    61,    63,
-      67,    68,    71,    75,    77,    79,    83,    85,    87,    89,
-      93,    94,    99,   105,   107,   109,   113,   117,   119,   123,
-     125,   127,   129,   131,   133,   135,   137,   139,   141,   143,
-     147,   149,   151,   153
+      67,    68,    71,    75,    80,    85,    89,    91,    93,    95,
+      99,   100,   105,   111,   113,   115,   119,   123,   125,   129,
+     131,   133,   135,   137,   139,   141,   144,   147,   150,   153,
+     157,   159,   161,   163
 };
 #endif
 
@@ -1516,62 +1516,68 @@ yyreduce:
 
 /* Line 1455 of yacc.c  */
 #line 75 "parser.y"
-    { parser_log("NOMES -> IDENTIFICADOR VIRGULA NOMES"); ;}
+    { 
+        printf("Parser val id: %s\t\tlinha: %d\n", lookup_lex(num_lexema++), lineno);
+        parser_log("NOMES -> IDENTIFICADOR VIRGULA NOMES"); 
+    ;}
     break;
 
   case 14:
 
 /* Line 1455 of yacc.c  */
-#line 77 "parser.y"
-    { parser_log("NOMES -> IDENTIFICADOR"); ;}
+#line 80 "parser.y"
+    { 
+        printf("Parser val id: %s\t\tlinha: %d\n", lookup_lex(num_lexema++), lineno); 
+        parser_log("NOMES -> IDENTIFICADOR"); 
+    ;}
     break;
 
   case 15:
 
 /* Line 1455 of yacc.c  */
-#line 79 "parser.y"
+#line 85 "parser.y"
     { temErro= 1;  yyerror("\nNOMES -> error"); ;}
     break;
 
   case 16:
 
 /* Line 1455 of yacc.c  */
-#line 83 "parser.y"
+#line 89 "parser.y"
     { parser_log("TIPO_VAR -> INTEIRO"); ;}
     break;
 
   case 17:
 
 /* Line 1455 of yacc.c  */
-#line 85 "parser.y"
+#line 91 "parser.y"
     { parser_log("TIPO_VAR -> REAL"); ;}
     break;
 
   case 18:
 
 /* Line 1455 of yacc.c  */
-#line 87 "parser.y"
+#line 93 "parser.y"
     { parser_log("TIPO_VAR -> LITERAL"); ;}
     break;
 
   case 19:
 
 /* Line 1455 of yacc.c  */
-#line 89 "parser.y"
+#line 95 "parser.y"
     { temErro= 1;  yyerror("\nTIPO_VAR -> error"); ;}
     break;
 
   case 20:
 
 /* Line 1455 of yacc.c  */
-#line 93 "parser.y"
+#line 99 "parser.y"
     { parser_log("CODIGO -> COMANDO CODIGO"); ;}
     break;
 
   case 22:
 
 /* Line 1455 of yacc.c  */
-#line 99 "parser.y"
+#line 105 "parser.y"
     { 
         parser_log("COMANDO -> IDENTIFICADOR ATRIBUICAO EXPRESSAO PONTO_E_VIRG"); 
 
@@ -1582,154 +1588,158 @@ yyreduce:
   case 23:
 
 /* Line 1455 of yacc.c  */
-#line 105 "parser.y"
+#line 111 "parser.y"
     { parser_log("COMANDO -> ESCREVA CORPO_ESCREVA PONTO_E_VIRG"); ;}
     break;
 
   case 24:
 
 /* Line 1455 of yacc.c  */
-#line 107 "parser.y"
+#line 113 "parser.y"
     { parser_log("COMANDO -> SE CONDICAO ENTAO CODIGO FIM_SE"); ;}
     break;
 
   case 25:
 
 /* Line 1455 of yacc.c  */
-#line 109 "parser.y"
+#line 115 "parser.y"
     { parser_log("COMANDO -> ENQUANTO CONDICAO FACA CODIGO FIM_ENQUANTO"); ;}
     break;
 
   case 26:
 
 /* Line 1455 of yacc.c  */
-#line 113 "parser.y"
+#line 119 "parser.y"
     { parser_log("CORPO_ESCREVA -> EXPRESSAO"); ;}
     break;
 
   case 27:
 
 /* Line 1455 of yacc.c  */
-#line 117 "parser.y"
+#line 123 "parser.y"
     { parser_log("CONDICAO -> ABRE_PAR ID_OR_NUMBER OP_RELACIONAL IDENTIFICADOR FECHA_PAR"); ;}
     break;
 
   case 28:
 
 /* Line 1455 of yacc.c  */
-#line 119 "parser.y"
+#line 125 "parser.y"
     { temErro= 1;  yyerror("\nCONDICAO -> error"); ;}
     break;
 
   case 29:
 
 /* Line 1455 of yacc.c  */
-#line 123 "parser.y"
+#line 129 "parser.y"
     {  parser_log("EXPRESSAO -> EXPRESSAO SOMA EXPRESSAO"); ;}
     break;
 
   case 30:
 
 /* Line 1455 of yacc.c  */
-#line 125 "parser.y"
+#line 131 "parser.y"
     {  parser_log("EXPRESSAO -> EXPRESSAO SUB EXPRESSAO");;}
     break;
 
   case 31:
 
 /* Line 1455 of yacc.c  */
-#line 127 "parser.y"
+#line 133 "parser.y"
     { parser_log("EXPRESSAO -> EXPRESSAO MULT EXPRESSAO");;}
     break;
 
   case 32:
 
 /* Line 1455 of yacc.c  */
-#line 129 "parser.y"
+#line 135 "parser.y"
     { parser_log("EXPRESSAO -> EXPRESSAO DIV EXPRESSAO");;}
     break;
 
   case 33:
 
 /* Line 1455 of yacc.c  */
-#line 131 "parser.y"
+#line 137 "parser.y"
     { parser_log("EXPRESSAO -> ABRE_PAR EXPRESSAO FECHA_PAR");;}
     break;
 
   case 34:
 
 /* Line 1455 of yacc.c  */
-#line 133 "parser.y"
+#line 139 "parser.y"
     { parser_log("EXPRESSAO -> '-' EXPRESSAO \%prec UMINUS");;}
     break;
 
   case 35:
 
 /* Line 1455 of yacc.c  */
-#line 135 "parser.y"
-    {parser_log("EXPRESSAO -> IDENTIFICADOR");;}
+#line 141 "parser.y"
+    { printf("Parser val id expr: %s\t\tlinha: %d\n", lookup_lex(num_lexema++), lineno);  
+                        parser_log("EXPRESSAO -> IDENTIFICADOR");;}
     break;
 
   case 36:
 
 /* Line 1455 of yacc.c  */
-#line 137 "parser.y"
-    {parser_log("EXPRESSAO -> INTEGER");;}
+#line 144 "parser.y"
+    { printf("Parser val inteiro expr: %s\t\tlinha: %d\n", lookup_lex(num_lexema++), lineno);  
+                        parser_log("EXPRESSAO -> INTEGER");;}
     break;
 
   case 37:
 
 /* Line 1455 of yacc.c  */
-#line 139 "parser.y"
-    {parser_log("EXPRESSAO -> DOUBLE");;}
+#line 147 "parser.y"
+    { printf("Parser val real expr: %s\t\tlinha: %d\n", lookup_lex(num_lexema++), lineno);  
+                        parser_log("EXPRESSAO -> DOUBLE");;}
     break;
 
   case 38:
 
 /* Line 1455 of yacc.c  */
-#line 141 "parser.y"
-    {parser_log("EXPRESSAO -> STRING");;}
+#line 150 "parser.y"
+    { printf("Parser val string expr: %s\t\tlinha: %d\n", lookup_lex(num_lexema++), lineno);  
+                        parser_log("EXPRESSAO -> STRING");;}
     break;
 
   case 39:
 
 /* Line 1455 of yacc.c  */
-#line 143 "parser.y"
+#line 153 "parser.y"
     { temErro= 1;  yyerror("\nEXPRESSAO -> error"); ;}
     break;
 
   case 40:
 
 /* Line 1455 of yacc.c  */
-#line 147 "parser.y"
+#line 157 "parser.y"
     {parser_log("ID_OR_NUMBER -> IDENTIFICADOR");;}
     break;
 
   case 41:
 
 /* Line 1455 of yacc.c  */
-#line 149 "parser.y"
+#line 159 "parser.y"
     {parser_log("ID_OR_NUMBER -> INTEGER");;}
     break;
 
   case 42:
 
 /* Line 1455 of yacc.c  */
-#line 151 "parser.y"
+#line 161 "parser.y"
     {parser_log("EXPRESSAO -> DOUBLE");;}
     break;
 
   case 43:
 
 /* Line 1455 of yacc.c  */
-#line 153 "parser.y"
+#line 163 "parser.y"
     { temErro= 1;  yyerror("\nID_OR_NUMBER_OR_STRING -> error"); ;}
     break;
 
 
 
 /* Line 1455 of yacc.c  */
-#line 1733 "parser.tab.c"
+#line 1743 "parser.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1941,7 +1951,7 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 156 "parser.y"
+#line 166 "parser.y"
 
 
 void yyerror(char *producao){
@@ -1966,8 +1976,10 @@ int main (){
     // apagando log anterior
     remove("printf.txt");
     
-    // initialize symbol table
+    // iniciando tabelas
     init_hash_table();
+    init_lista_expr();
+    init_lista_lex();
 
     // parsing
 	int flag;
@@ -1980,6 +1992,7 @@ int main (){
     tabsimb_dump(yyout);
     fclose(yyout); 	
     
+    //dump_lista_lex();
     if ( resultado() ) 
         iniciaGerador();
 	

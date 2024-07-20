@@ -51,21 +51,22 @@ void insert(char *name, int len, int type, int declaracao, int lineno){
 list_t *lookup(char *name){ /* return symbol if found or NULL if not found */
     unsigned int hashval = hash(name);
     list_t *token = hash_table[hashval];
-    while ((token != NULL) && (strcmp(name,token->nome_token) != 0)) token = token->next;
+    while ((token != NULL) && (strcmp(name,token->nome_token) != 0)) 
+        token = token->next;
     return token; // NULL is not found
 }
  
 /* print to stdout by default */ 
 void tabsimb_dump(FILE * of){  
   int i;
-  fprintf(of,"------------ ------- ----------- ------------\n");
-  fprintf(of,"Name         Type    Declaration Line Numbers\n");
-  fprintf(of,"------------ ------- ----------- ------------\n");
+  fprintf(of,"------------ ------- -----------\n");
+  fprintf(of,"Name         Type    Declaration\n");
+  fprintf(of,"------------ ------- -----------\n");
   for (i=0; i < SIZE; ++i){ 
     if (hash_table[i] != NULL){ 
         list_t *token = hash_table[i];
         while (token != NULL){ 
-            RefList *linhas = token->lines;
+
             fprintf(of,"%-12s ",token->nome_token);
             if (token->tipo_token == TIPO_INT) fprintf(of,"%-8s","inteiro");
             else if (token->tipo_token == TIPO_REAL) fprintf(of,"%-8s","real");
@@ -73,10 +74,6 @@ void tabsimb_dump(FILE * of){
             else fprintf(of,"%-7s","undef"); // if UNDEF or 0
             if (token->declaracao == PARAMETRO) fprintf(of,"%-10s","parametro");
             if (token->declaracao == VARIAVEL) fprintf(of,"%-10s","variavel");
-            while (linhas != NULL){
-                fprintf(of,"%4d ",linhas->lineno);
-                linhas = linhas->next;
-            }
             fprintf(of,"\n");
             token = token->next;
         }
@@ -93,4 +90,90 @@ list_t *get_hash_table_entry(int index) {
         return hash_table[index];
     }
     return NULL;
+}
+
+void init_lista_expr(){
+    int i; 
+    lista_expr = malloc(SIZE * sizeof(expressoes*));
+    for(i = 0; i < SIZE; i++) lista_expr[i] = NULL;
+}
+
+// void insert_expr(int index, int num_expressao, int tipo_elem_esquerdo, int tipo_elem_direito, 
+//                  int val_int_elem_esquerdo, int val_int_elem_direito, 
+//                  double val_real_elem_esquerdo, double val_real_elem_direito) {
+//     expressoes *new_expr = malloc(sizeof(expressoes));
+//     // new_expr->num_expressao = num_expressao;
+//     // new_expr->tipo_elem_esquerdo = tipo_elem_esquerdo;
+//     // new_expr->tipo_elem_direito = tipo_elem_direito;
+//     // new_expr->val_int_elem_esquerdo = val_int_elem_esquerdo;
+//     // new_expr->val_int_elem_direito = val_int_elem_direito;
+//     // new_expr->val_real_elem_esquerdo = val_real_elem_esquerdo;
+//     // new_expr->val_real_elem_direito = val_real_elem_direito;
+//     // new_expr->next = lista_expr[index];
+//     // lista_expr[index] = new_expr;
+// }
+
+// expressoes* lookup_expr(int index, int num_expressao) {
+//     expressoes *current = lista_expr[index];
+//     while (current != NULL) {
+//         if (current->num_expressao == num_expressao) {
+//             return current;
+//         }
+//         current = current->next;
+//     }
+//     return NULL; // Not found
+// }
+
+static lexemas *lista_lex[SIZE];  // Lista global e estática
+
+// Inicializa a lista de lexemas
+void init_lista_lex() {
+    for (int i = 0; i < SIZE; i++) {
+        lista_lex[i] = NULL;
+    }
+}
+
+// Insere um novo lexema na lista na posição especificada
+void insert_lex(int index, const char* lexema) {
+
+    if (index < 0 || index >= SIZE) {
+        fprintf(stderr, "Índice %d fora dos limites.\n", index);
+        return;
+    }
+
+    // Aloca memória para o novo lexema
+    lexemas *novo_lexema = (lexemas*) malloc(sizeof(lexemas));
+    if (novo_lexema == NULL) {
+        fprintf(stderr, "Falha na alocação de memória.\n");
+        return;
+    }
+
+    // Copia o lexema para a nova estrutura
+    strcpy(novo_lexema->lexema, lexema);
+    // Insere o novo lexema na posição especificada
+    lista_lex[index] = novo_lexema;
+}
+
+// Retorna o lexema na posição especificada
+char* lookup_lex(int index) {
+    if (index < 0 || index >= SIZE) {
+        fprintf(stderr, "Índice %d fora dos limites.\n", index);
+        return NULL;
+    }
+
+    if (lista_lex[index] != NULL) {
+        return lista_lex[index]->lexema;
+    }
+
+    return NULL; // Não encontrado
+}
+
+void dump_lista_lex(int declarados) {
+    for (int i = 0; i < declarados; i++) {
+        if (lista_lex[i] != NULL) {
+            printf("Posição %d: %s\n", i, lista_lex[i]->lexema);
+        } else {
+            printf("Posição %d: Vazia\n", i);
+        }
+    }
 }

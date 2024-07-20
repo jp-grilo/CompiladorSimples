@@ -10,26 +10,26 @@ extern FILE *yyin;
 extern FILE *yyout;
 
 extern int lineno;
+extern char *lexema;
 extern int yylex();
 
 void yyerror(char *producao);
 void parser_log(char *producao);
 
 int temErro = 0;
+int num_lexema=0;
 
 %}
 
 %union {
-    int intval;
-    double realval;
-    char *strval;
+    char *tokenval;  // Ajuste o nome do tipo aqui para corresponder ao arquivo .l
 }
 
 /* token definition */
 %token INICIOPROG FIMPROG INICIOARGS FIMARGS INICIOVARS FIMVARS
 %token ESCREVA SE ENTAO FIM_SE ENQUANTO FACA FIM_ENQUANTO
 %token INTEIRO REAL LITERAL
-%token INTEGER DOUBLE STRING IDENTIFICADOR
+%token <tokenval> INTEGER DOUBLE STRING IDENTIFICADOR
 %token OP_RELACIONAL SOMA SUB MULT DIV ATRIBUICAO
 %token ABRE_PAR FECHA_PAR VIRGULA PONTO_E_VIRG 
 %token VAZIO COMENTARIO ERROR
@@ -72,9 +72,15 @@ DECLARA_VAR:
 ;
 
 NOMES:
-    IDENTIFICADOR VIRGULA NOMES                 { parser_log("NOMES -> IDENTIFICADOR VIRGULA NOMES"); }
+    IDENTIFICADOR VIRGULA NOMES                 { 
+        printf("Parser val id: %s\t\tlinha: %d\n", lookup_lex(num_lexema++), lineno);
+        parser_log("NOMES -> IDENTIFICADOR VIRGULA NOMES"); 
+    }
     |
-    IDENTIFICADOR                               { parser_log("NOMES -> IDENTIFICADOR"); }
+    IDENTIFICADOR                               { 
+        printf("Parser val id: %s\t\tlinha: %d\n", lookup_lex(num_lexema++), lineno); 
+        parser_log("NOMES -> IDENTIFICADOR"); 
+    }
     | 
     error { temErro= 1;  yyerror("\nNOMES -> error"); }
 ;
@@ -132,13 +138,17 @@ EXPRESSAO :
     | 
     SUB EXPRESSAO %prec UMINUS { parser_log("EXPRESSAO -> '-' EXPRESSAO \%prec UMINUS");}
     | 
-    IDENTIFICADOR   {parser_log("EXPRESSAO -> IDENTIFICADOR");}
+    IDENTIFICADOR   { printf("Parser val id expr: %s\t\tlinha: %d\n", lookup_lex(num_lexema++), lineno);  
+                        parser_log("EXPRESSAO -> IDENTIFICADOR");}
     |
-    INTEGER          {parser_log("EXPRESSAO -> INTEGER");}
+    INTEGER          { printf("Parser val inteiro expr: %s\t\tlinha: %d\n", lookup_lex(num_lexema++), lineno);  
+                        parser_log("EXPRESSAO -> INTEGER");}
     |
-    DOUBLE          {parser_log("EXPRESSAO -> DOUBLE");}
+    DOUBLE          { printf("Parser val real expr: %s\t\tlinha: %d\n", lookup_lex(num_lexema++), lineno);  
+                        parser_log("EXPRESSAO -> DOUBLE");}
     |
-    STRING          {parser_log("EXPRESSAO -> STRING");}
+    STRING          { printf("Parser val string expr: %s\t\tlinha: %d\n", lookup_lex(num_lexema++), lineno);  
+                        parser_log("EXPRESSAO -> STRING");}
     |
     error { temErro= 1;  yyerror("\nEXPRESSAO -> error"); }
 ;
@@ -177,8 +187,10 @@ int main (){
     // apagando log anterior
     remove("printf.txt");
     
-    // initialize symbol table
+    // iniciando tabelas
     init_hash_table();
+    init_lista_expr();
+    init_lista_lex();
 
     // parsing
 	int flag;
@@ -191,6 +203,7 @@ int main (){
     tabsimb_dump(yyout);
     fclose(yyout); 	
     
+    //dump_lista_lex(num_lexema);
     if ( resultado() ) 
         iniciaGerador();
 	
