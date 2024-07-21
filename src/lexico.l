@@ -65,7 +65,6 @@ COMENTARIO          \{({L}|{D}|{S}|" "|\t)*\}
 
 {INTEGER}                {  
                             ret_print("INTEGER");
-                            //printf("Valor int expr: %s\t\tlinha: %d\n", yytext, lineno);
                             insert(yytext, strlen(yytext), TIPO_INT, INDEF, lineno);
                             yylval.val.str_val = malloc(yyleng * sizeof(char));
 				            strcpy(yylval.val.str_val, yytext); 
@@ -74,7 +73,6 @@ COMENTARIO          \{({L}|{D}|{S}|" "|\t)*\}
 
 {DOUBLE}                {   
                             ret_print("DOUBLE"); 
-                            //printf("Valor real expr: %s\t\tlinha: %d\n", yytext, lineno);
                             insert(yytext, strlen(yytext), TIPO_REAL, INDEF, lineno);
                             yylval.val.str_val = malloc(yyleng * sizeof(char));
 				            strcpy(yylval.val.str_val, yytext); 
@@ -83,7 +81,6 @@ COMENTARIO          \{({L}|{D}|{S}|" "|\t)*\}
 
 {LITERAL}               {   
                             ret_print("STRING");
-                            //printf("Valor str expr: %s\t\tlinha: %d\n", yytext, lineno);
                             insert(yytext, strlen(yytext), TIPO_LITERAL, INDEF, lineno);
                             yylval.val.str_val = malloc(yyleng * sizeof(char));
 				            strcpy(yylval.val.str_val, yytext);  
@@ -92,7 +89,6 @@ COMENTARIO          \{({L}|{D}|{S}|" "|\t)*\}
 
 {IDENTIFICADOR}         {   
                             ret_print("IDENTIFICADOR"); 
-                            //printf("Valor id expr: %s\t\tlinha: %d\n", yytext, lineno);
                             insert(yytext, strlen(yytext), type, declaracao, lineno);
                             yylval.item_tabela = lookup(yytext);
                             return IDENTIFICADOR; 

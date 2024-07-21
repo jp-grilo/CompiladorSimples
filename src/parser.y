@@ -61,7 +61,7 @@ int num_lexema=0;
 PROGRAMA:
     INICIOPROG LISTA_PARAM FIMPROG             { parser_log("PROGRAMA -> INICIOPROG LISTA_PARAM FIMPROG"); }
     | 
-    error { temErro= 1;  yyerror("\nPROGRAMA -> error"); }
+    error { temErro= 1; yyerror("-  Erro na inicializacao ou finalizacao do codigo"); }
 ;
 
 LISTA_PARAM:
@@ -69,7 +69,7 @@ LISTA_PARAM:
     |
     LISTA_VAR                                   { parser_log("LISTA_PARAM -> LISTA_VAR"); }
     | 
-    error { temErro= 1;  yyerror("\nLISTA_PARAM -> error"); }
+    error { temErro= 1;  yyerror("-  Erro na estrutura de declaracao de argumentos"); }
 ;
 
 LISTA_VAR:
@@ -77,7 +77,7 @@ LISTA_VAR:
     |
     CODIGO                                      { parser_log("LISTA_VAR -> CODIGO"); }
     | 
-    error { temErro= 1;  yyerror("\nLISTA_VAR -> error"); }
+    error { temErro= 1;  yyerror("-  Erro na estrutura de declaracao de variaveis"); }
 ;
 
 DECLARA_VAR:
@@ -85,7 +85,7 @@ DECLARA_VAR:
     |
 
     | 
-    error { temErro= 1;  yyerror("\nDECLARA_VAR -> error"); }
+    error { temErro= 1;  yyerror("-  Erro na declaracao dos identificadores"); }
 ;
 
 NOMES:
@@ -100,7 +100,7 @@ NOMES:
         parser_log("NOMES -> IDENTIFICADOR"); 
     }
     | 
-    error { temErro= 1;  yyerror("\nNOMES -> error"); }
+    error { temErro= 1;  yyerror("-  Erro na declaracao dos identificadores"); }
 ;
 
 TIPO_VAR:
@@ -119,7 +119,7 @@ TIPO_VAR:
         parser_log("TIPO_VAR -> INTEIRO");
         }
     | 
-    error { temErro= 1;  yyerror("\nTIPO_VAR -> error"); }
+    error { temErro= 1;  yyerror("-  Tipo invalido na declaracao dos identificadores"); }
 ;
 
 CODIGO:
@@ -130,13 +130,13 @@ CODIGO:
 
 COMANDO:
     IDENTIFICADOR ATRIBUICAO EXPRESSAO PONTO_E_VIRG { 
-        parser_log("COMANDO -> IDENTIFICADOR ATRIBUICAO EXPRESSAO PONTO_E_VIRG"); 
-        if( ($1->tipo_token == TIPO_LITERAL && $3 != TIPO_LITERAL) || 
+        if( ($1->tipo_token == TIPO_LITERAL && ($3 == TIPO_REAL || $3 == TIPO_INT)) || 
             ( ($1->tipo_token == TIPO_REAL || $1->tipo_token == TIPO_INT) && $3 == TIPO_LITERAL) 
         ){
             temErro=1;
             printf("ERRO:\n  - A atribuicao contem conflito de tipo.\n   Variavel: %s, Expressao: %s, na linha %d.\n", return_type($1->tipo_token), return_type($3), lineno);
         }
+        parser_log("COMANDO -> IDENTIFICADOR ATRIBUICAO EXPRESSAO PONTO_E_VIRG"); 
     }
     |
     ESCREVA EXPRESSAO PONTO_E_VIRG { 
@@ -144,21 +144,17 @@ COMANDO:
     }
     |
     SE CONDICAO ENTAO CODIGO FIM_SE {
-
         parser_log("COMANDO -> SE CONDICAO ENTAO CODIGO FIM_SE"); 
     }
     |
     ENQUANTO CONDICAO FACA CODIGO FIM_ENQUANTO { 
-
         parser_log("COMANDO -> ENQUANTO CONDICAO FACA CODIGO FIM_ENQUANTO");
     }
 ;
 
 CONDICAO:
     ABRE_PAR ID_OR_NUMBER OP_RELACIONAL ID_OR_NUMBER FECHA_PAR {
-        
-        parser_log("CONDICAO -> ABRE_PAR ID_OR_NUMBER OP_RELACIONAL IDENTIFICADOR FECHA_PAR");
-    
+        parser_log("COMANDO -> IDENTIFICADOR ATRIBUICAO EXPRESSAO PONTO_E_VIRG"); 
     }
     | 
     error { temErro=1;  yyerror("\nCONDICAO -> error"); }
@@ -230,44 +226,50 @@ EXPRESSAO :
     | 
     IDENTIFICADOR {
         $$ = $1->tipo_token;
-        //printf("Id expr: %s\t\ttipo associado: %d\n", $1->nome_token, $$);  
         parser_log("EXPRESSAO -> IDENTIFICADOR");
-        }
+    }
     |
     INTEGER {
         $$ = type_lookup($1.str_val); 
-        //printf("Int expr: %s\t\ttipo associado: %d\n", $1.int_val, $$);  
         parser_log("EXPRESSAO -> INTEGER");
-        }
+    }
     |
     DOUBLE { 
         $$ = type_lookup($1.str_val);
-        //printf("Real expr: %s\t\ttipo associado: %d\n", $1.str_val, $$);  
         parser_log("EXPRESSAO -> DOUBLE");
-        }
+    }
     |
     STRING {
         $$ = type_lookup($1.str_val);
         //printf("Str expr: %s\t\ttipo associado: %d\n", $1.str_val, $$);  
         parser_log("EXPRESSAO -> STRING");}
     |
-    error { temErro= 1;  yyerror("\nEXPRESSAO -> error"); }
+    error { temErro= 1;  yyerror("-  Expressão invalida"); }
 ;
 
 ID_OR_NUMBER:
-    IDENTIFICADOR   {parser_log("ID_OR_NUMBER -> IDENTIFICADOR");}
+    IDENTIFICADOR {
+        $$ = $1->tipo_token;
+        parser_log("EXPRESSAO -> IDENTIFICADOR");
+    }
     |
-    INTEGER          {parser_log("ID_OR_NUMBER -> INTEGER");}
+    INTEGER {
+        $$ = type_lookup($1.str_val); 
+        parser_log("EXPRESSAO -> INTEGER");
+    }
     |
-    DOUBLE          {parser_log("EXPRESSAO -> DOUBLE");}
+    DOUBLE { 
+        $$ = type_lookup($1.str_val);
+        parser_log("EXPRESSAO -> DOUBLE");
+    }
     |
-    error { temErro= 1;  yyerror("\nID_OR_NUMBER_OR_STRING -> error"); }
+    error { temErro= 1;  yyerror("-  Elemento da comparacao invalido"); }
 ;
 
 %%
 
 void yyerror(char *producao){
-    printf("%s\t\tnro linha: %d\n", producao, lineno);
+    printf("%s. \tLinha: %d\n", producao, lineno);
 }
 
 void parser_log(char *producao){
@@ -277,10 +279,10 @@ void parser_log(char *producao){
 int resultado ()
 {
     if (temErro == 0){
-        printf("\n\n------------------------ Programa aceito! ------------------------\n");
+        printf("\n------------------------ Programa aceito! ------------------------\n");
         return 1;
     } 
-    printf("\n\n------------------------ Programa rejeitado! ------------------------\n");
+    printf("\n------------------------ Programa rejeitado! ------------------------\n");
     return 0;
 }
 
