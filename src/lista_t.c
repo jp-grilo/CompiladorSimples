@@ -106,47 +106,77 @@ list_t *get_hash_table_entry(int index) {
     return NULL;
 }
 
-// Variável global para a lista de quadruplas
 list_expressoes *lista_expressoes = NULL;
 
-// Inicializa a lista de quadruplas
-void init_lista_expressoes() {
-    lista_expressoes = NULL;  // Inicializa a lista como vazia
-}
-
-// Insere uma nova quadrupla na lista
-void insere_expressao(char *operacao, char *arg1, char *arg2, char *resultado) {
-    // Aloca memória para a nova quadrupla
-    list_expressoes *nova_quadrupla = (list_expressoes*) malloc(sizeof(list_expressoes));
-    
-    // Preenche os campos da quadrupla
-    nova_quadrupla->operacao = strdup(operacao);
-    nova_quadrupla->arg1 = strdup(arg1);
-    nova_quadrupla->arg2 = strdup(arg2);
-    nova_quadrupla->resultado = strdup(resultado);
-    
-    // Insere a nova quadrupla no início da lista
-    nova_quadrupla->next = lista_expressoes;
-    lista_expressoes = nova_quadrupla;
-}
-
-// Consulta uma quadrupla na lista
-list_expressoes* consulta_expressao(char *resultado) {
-    list_expressoes *current = lista_expressoes;
-    while (current != NULL) {
-        if (strcmp(current->resultado, resultado) == 0) {
-            return current;
-        }
-        current = current->next;
+list_expressoes* criar_expressoes(char *operacao, char *arg1, char *arg2, int resultado, int tipo_associado) {
+    list_expressoes* nova_exp = (list_expressoes*)malloc(sizeof(list_expressoes));
+    if (nova_exp == NULL) {
+        fprintf(stderr, "Erro ao alocar memória para list_expressoes\n");
+        exit(1);
     }
-    return NULL;  // Retorna NULL se não encontrar a quadrupla
+
+    // Aloca e copia as strings para os campos operacao, arg1 e arg2
+    nova_exp->operacao = (operacao != NULL) ? strdup(operacao) : NULL;
+    nova_exp->arg1 = (arg1 != NULL) ? strdup(arg1) : NULL;
+    nova_exp->arg2 = (arg2 != NULL) ? strdup(arg2) : NULL;
+    nova_exp->resultado = resultado;
+    nova_exp->tipo_associado = tipo_associado;
+    nova_exp->next = NULL;
+
+    return nova_exp;
 }
 
-// Realiza o dump de todas as quadruplas na lista
-void dump_lista_expressoes() {
-    list_expressoes *current = lista_expressoes;
-    while (current != NULL) {
-        printf("Operacao: %s, Arg1: %s, Arg2: %s, Resultado: %s\n", current->operacao, current->arg1, current->arg2, current->resultado);
-        current = current->next;
+void adicionar_expressoes(char *operacao, char *arg1, char *arg2, int resultado, int tipo_associado) {
+    list_expressoes *nova_exp = criar_expressoes(operacao, arg1, arg2, resultado, tipo_associado);
+    if (lista_expressoes == NULL) {
+        lista_expressoes = nova_exp;
+    } else {
+        list_expressoes *atual = lista_expressoes;
+        while (atual->next != NULL) {
+            atual = atual->next;
+        }
+        atual->next = nova_exp;
+    }
+}
+
+list_expressoes* buscar_expressoes_por_resultado(int resultado) {
+    list_expressoes *atual = lista_expressoes;
+
+    while (atual != NULL) {
+        if (atual->resultado == resultado) {
+            return atual; // Retorna o ponteiro para a quadrupla encontrada
+        }
+        atual = atual->next;
+    }
+    return NULL; // Retorna NULL se não encontrar a quadrupla
+}
+
+void liberar_lista() {
+    list_expressoes *atual = lista_expressoes;
+    list_expressoes *proximo;
+
+    while (atual != NULL) {
+        proximo = atual->next;
+        free(atual->operacao);
+        free(atual->arg1);
+        free(atual->arg2);
+        free(atual);
+        atual = proximo;
+    }
+
+    lista_expressoes = NULL; // Define o ponteiro global para NULL após liberar
+}
+
+void dump_lista(void) {
+    list_expressoes *atual = lista_expressoes;
+
+    while (atual != NULL) {
+        printf("Operacao: %s, Arg1: %s, Arg2: %s, Resultado: %d, Tipo Associado: %d\n",
+               atual->operacao ? atual->operacao : "NULL",
+               atual->arg1 ? atual->arg1 : "NULL",
+               atual->arg2 ? atual->arg2 : "NULL",
+               atual->resultado,
+               atual->tipo_associado);
+        atual = atual->next;
     }
 }

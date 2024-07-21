@@ -32,7 +32,7 @@ typedef struct RefList{
     int type;
 }RefList;
 
-// struct that represents a list node
+/* Struct de um token da tabela de símbolos */ 
 typedef struct list_t{
     char nome_token[MAXIDSIZE];
     int tipo_token;
@@ -44,33 +44,55 @@ typedef struct list_t{
     struct list_t *next;
 }list_t;
  
-/* the hash table */
+/* Hash da tabela de símbolos */
 static list_t **hash_table;
  
 
 // Funções para tabela de simbolos
-void init_hash_table(); // Inicializa a tabela hash.
-unsigned int hash(char *key); // Calcula o índice hash para uma chave dada.
-void insert(char *name, int len, int type, int declaracao, int lineno); // Insere um símbolo na tabela hash.
-list_t *lookup(char *name); // Procura por um símbolo na tabela hash.
-int type_lookup(char *name); // Procura por um símbolo na tabela hash e retorna o seu tipo.
-char *return_type(int type); // Retorna o tipo em formato de string.
-void tabsimb_dump(FILE *OUTTABELA); // Imprime o conteúdo da tabela de símbolos em um arquivo.
-list_t **get_hash_table(); // Retorna a tabela hash inteira.
-list_t *get_hash_table_entry(int index); // Retorna uma entrada específica da tabela hash.
+// Inicializa a tabela hash.
+void init_hash_table(); 
+// Calcula o índice hash para uma chave dada.
+unsigned int hash(char *key); 
+// Insere um símbolo na tabela hash.
+void insert(char *name, int len, int type, int declaracao, int lineno); 
+// Procura por um símbolo na tabela hash.
+list_t *lookup(char *name); 
+// Procura por um símbolo na tabela hash e retorna o seu tipo.
+int type_lookup(char *name); 
+// Retorna o tipo em formato de string.
+char *return_type(int type); 
+// Imprime o conteúdo da tabela de símbolos em um arquivo.
+void tabsimb_dump(FILE *OUTTABELA); 
+// Retorna a tabela hash inteira.
+list_t **get_hash_table(); 
+// Retorna uma entrada específica da tabela hash.
+list_t *get_hash_table_entry(int index); 
+
 
 // Definição da estrutura de uma quadrupla
 typedef struct list_expressoes {
     char *operacao;
     char *arg1;
     char *arg2;
-    char *resultado;
+    int resultado;
     int tipo_associado;
-    // Ponteiro para a próxima ocorrência de quadrupla
     struct list_expressoes *next;
 } list_expressoes;
 
-void init_lista_expressoes(); // Inicializa a lista de quadruplas.
-void insere_expressao(char *operacao, char *arg1, char *arg2, char *resultado); // Insere uma nova quadrupla na lista.
-list_expressoes* consulta_expressao(char *resultado); // Consulta uma quadrupla na lista.
-void dump_lista_expressoes(); // Realiza o dump de todas as quadruplas na lista.
+// Ponteiro global para a lista de quadruplas
+extern list_expressoes *lista_expressoes;
+
+// Função para criar e inicializar uma nova quadrupla
+list_expressoes* criar_expressoes(char *operacao, char *arg1, char *arg2, int resultado, int tipo_associado);
+
+// Função para adicionar uma nova quadrupla ao final da lista
+void adicionar_expressoes(char *operacao, char *arg1, char *arg2, int resultado, int tipo_associado);
+
+// Função para encontrar uma quadrupla na lista com base no resultado
+list_expressoes* buscar_expressoes_por_resultado(int resultado);
+
+// Função para liberar a memória alocada para a lista
+void liberar_lista();
+
+// Função para imprimir todas as quadruplas da lista
+void dump_lista();
