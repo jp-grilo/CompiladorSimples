@@ -115,7 +115,7 @@ list_expressoes* criar_expressoes(char *operacao, char *arg1, char *arg2, int re
         exit(1);
     }
 
-    // Aloca e copia as strings para os campos operacao, arg1 e arg2
+    // Aloca e copia as strings para os campos operacao, arg1 e arg2, tratando casos de NULL
     nova_exp->operacao = (operacao != NULL) ? strdup(operacao) : NULL;
     nova_exp->arg1 = (arg1 != NULL) ? strdup(arg1) : NULL;
     nova_exp->arg2 = (arg2 != NULL) ? strdup(arg2) : NULL;
@@ -167,7 +167,7 @@ void liberar_lista() {
     lista_expressoes = NULL; // Define o ponteiro global para NULL após liberar
 }
 
-void dump_lista(void) {
+void dump_lista() {
     list_expressoes *atual = lista_expressoes;
 
     while (atual != NULL) {

@@ -15,9 +15,10 @@ extern int yylex();
 
 void yyerror(char *producao);
 void parser_log(char *producao);
+int analise_passou();
 
 int temErro = 0;
-int tipo_lexema;
+int numExpressao=0;
 FILE *PARSEROUT;
 
 %}
@@ -298,7 +299,7 @@ void parser_log(char *producao){
     fprintf(PARSEROUT, "%s\t linha %d\n", producao, lineno);
 }
 
-int resultado (){
+int analise_passou (){
     if (temErro == 0){
         printf("\n------------------------ Programa aceito! ------------------------\n");
         return 1;
@@ -311,23 +312,25 @@ int main (){
     // apagando logs anteriores
     remove("OUTLEX.txt");
     remove("OUTPARSER.txt");
+    remove("OUT_GERADO.txt");
+    remove("OUT_TABSIMB.txt");
+
     // iniciando tabelas
     init_hash_table();
 
     // parsing
-	int flag;
 	yyin = fopen("input.txt", "r");
-	flag = yyparse();
+    yyparse();
 
     // symbol table dump
     yyout = fopen("OUT_TABSIMB.txt", "w") ;
     tabsimb_dump(yyout);
-    if ( resultado() ) 
+    if ( analise_passou() ) 
         iniciaGerador();
 	
 	fclose(yyin);
     fclose(yyout); 	
     fclose(PARSEROUT);
     fclose(LEXOUT);
-    return flag;
+    return temErro;
 }
