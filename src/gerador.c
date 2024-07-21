@@ -5,7 +5,7 @@
 #include "gerador.h"
 
 void iniciaGerador() {
-    remove("codigo_gerado.txt");
+    remove("OUT_GERADO.txt");
     geraParametros();
     geraVariaveis();
 }
@@ -13,7 +13,7 @@ void iniciaGerador() {
 void geraParametros() {
     FILE *geradorout;
     int first_param = 0; // Flag para controlar a impressão da vírgula
-    geradorout = fopen("codigo_gerado.txt", "a");
+    geradorout = fopen("OUT_GERADO.txt", "a");
     if (geradorout == NULL) {
         perror("Erro ao abrir o arquivo");
         return;
@@ -41,7 +41,7 @@ void geraParametros() {
 
 void geraVariaveis() {
     FILE *geradorout;
-    geradorout = fopen("codigo_gerado.txt", "a");
+    geradorout = fopen("OUT_GERADO.txt", "a");
     if (geradorout == NULL) {
         perror("Erro ao abrir o arquivo");
         return;

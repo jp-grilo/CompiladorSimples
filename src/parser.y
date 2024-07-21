@@ -8,6 +8,7 @@
 
 extern FILE *yyin;
 extern FILE *yyout;
+extern FILE *LEXOUT;
 
 extern int lineno;
 extern char *lexema;
@@ -18,33 +19,51 @@ void parser_log(char *producao);
 
 int temErro = 0;
 int num_lexema=0;
+FILE *PARSEROUT;
 
 %}
 
-%union {
-    char *tokenval;  // Ajuste o nome do tipo aqui para corresponder ao arquivo .l
+%union{
+	// Diferentes tipos de valores
+	Valores val;   
+	
+	// Token da tabela de simbolos
+	list_t* item_tabela;
+ 
+	// Tipo associado
+	int tipo_associado;
+
 }
 
-/* token definition */
-%token INICIOPROG FIMPROG INICIOARGS FIMARGS INICIOVARS FIMVARS
-%token ESCREVA SE ENTAO FIM_SE ENQUANTO FACA FIM_ENQUANTO
-%token INTEIRO REAL LITERAL
-%token <tokenval> INTEGER DOUBLE STRING IDENTIFICADOR
-%token OP_RELACIONAL SOMA SUB MULT DIV ATRIBUICAO
-%token ABRE_PAR FECHA_PAR VIRGULA PONTO_E_VIRG 
-%token VAZIO COMENTARIO ERROR
+/* definição dos tokens */
+%token<item_tabela> IDENTIFICADOR
+%token<val> INTEIRO REAL LITERAL
+%token<val> INTEGER DOUBLE STRING
+%token<val> INICIOPROG FIMPROG INICIOARGS FIMARGS INICIOVARS FIMVARS
+%token<val> ESCREVA SE ENTAO FIM_SE ENQUANTO FACA FIM_ENQUANTO
+%token<val> OP_RELACIONAL SOMA SUB MULT DIV ATRIBUICAO
+%token<val> ABRE_PAR FECHA_PAR VIRGULA PONTO_E_VIRG 
+%token<val> VAZIO COMENTARIO ERROR
 
-/* expression priorities and rules */
-%left SOMA SUB
+
+/* prioridade */
+%right ATRIBUICAO
+%left OP_RELACIONAL
+%left SOMA SUB 
 %left MULT DIV
 %right UMINUS
+%left ABRE_PAR FECHA_PAR
+
+/* definição de não terminais */
+%type<tipo_associado> TIPO_VAR EXPRESSAO ID_OR_NUMBER
+
 
 %%
 
 PROGRAMA:
     INICIOPROG LISTA_PARAM FIMPROG             { parser_log("PROGRAMA -> INICIOPROG LISTA_PARAM FIMPROG"); }
     | 
-    error { temErro= 1;  yyerror("\nPROGRAMA -> error"); }
+    error { temErro= 1; yyerror("-  Erro na inicializacao ou finalizacao do codigo"); }
 ;
 
 LISTA_PARAM:
@@ -52,7 +71,7 @@ LISTA_PARAM:
     |
     LISTA_VAR                                   { parser_log("LISTA_PARAM -> LISTA_VAR"); }
     | 
-    error { temErro= 1;  yyerror("\nLISTA_PARAM -> error"); }
+    error { temErro= 1;  yyerror("-  Erro na estrutura de declaracao de argumentos"); }
 ;
 
 LISTA_VAR:
@@ -60,7 +79,7 @@ LISTA_VAR:
     |
     CODIGO                                      { parser_log("LISTA_VAR -> CODIGO"); }
     | 
-    error { temErro= 1;  yyerror("\nLISTA_VAR -> error"); }
+    error { temErro= 1;  yyerror("-  Erro na estrutura de declaracao de variaveis"); }
 ;
 
 DECLARA_VAR:
@@ -68,31 +87,38 @@ DECLARA_VAR:
     |
 
     | 
-    error { temErro= 1;  yyerror("\nDECLARA_VAR -> error"); }
+    error { temErro= 1;  yyerror("-  Erro na declaracao dos identificadores"); }
 ;
 
 NOMES:
-    IDENTIFICADOR VIRGULA NOMES                 { 
-        printf("Parser val id: %s\t\tlinha: %d\n", lookup_lex(num_lexema++), lineno);
+    IDENTIFICADOR VIRGULA NOMES { 
         parser_log("NOMES -> IDENTIFICADOR VIRGULA NOMES"); 
     }
     |
-    IDENTIFICADOR                               { 
-        printf("Parser val id: %s\t\tlinha: %d\n", lookup_lex(num_lexema++), lineno); 
+    IDENTIFICADOR { 
         parser_log("NOMES -> IDENTIFICADOR"); 
     }
     | 
-    error { temErro= 1;  yyerror("\nNOMES -> error"); }
+    error { temErro= 1;  yyerror("-  Erro na declaracao dos identificadores"); }
 ;
 
 TIPO_VAR:
-    INTEIRO                                     { parser_log("TIPO_VAR -> INTEIRO"); }
+    INTEIRO {
+        $$ = TIPO_INT;
+        parser_log("TIPO_VAR -> INTEIRO");
+        }
     |
-    REAL                                        { parser_log("TIPO_VAR -> REAL"); }
+    REAL {
+        $$ = TIPO_REAL;
+        parser_log("TIPO_VAR -> INTEIRO");
+        }
     |
-    LITERAL                                     { parser_log("TIPO_VAR -> LITERAL"); }
+    LITERAL {
+        $$ = TIPO_LITERAL;
+        parser_log("TIPO_VAR -> INTEIRO");
+        }
     | 
-    error { temErro= 1;  yyerror("\nTIPO_VAR -> error"); }
+    error { temErro= 1;  yyerror("-  Tipo invalido na declaracao dos identificadores"); }
 ;
 
 CODIGO:
@@ -103,110 +129,185 @@ CODIGO:
 
 COMANDO:
     IDENTIFICADOR ATRIBUICAO EXPRESSAO PONTO_E_VIRG { 
+        if( ($1->tipo_token == TIPO_LITERAL && ($3 == TIPO_REAL || $3 == TIPO_INT)) || 
+            ( ($1->tipo_token == TIPO_REAL || $1->tipo_token == TIPO_INT) && $3 == TIPO_LITERAL) 
+        ){
+            temErro=1;
+            printf("ERRO:\n  - A atribuicao contem conflito de tipo.\n   Variavel: %s, Expressao: %s, na linha %d.\n", return_type($1->tipo_token), return_type($3), lineno);
+        }
         parser_log("COMANDO -> IDENTIFICADOR ATRIBUICAO EXPRESSAO PONTO_E_VIRG"); 
-
-    
     }
     |
-    ESCREVA CORPO_ESCREVA PONTO_E_VIRG { parser_log("COMANDO -> ESCREVA CORPO_ESCREVA PONTO_E_VIRG"); }
+    ESCREVA EXPRESSAO PONTO_E_VIRG { 
+        parser_log("COMANDO -> ESCREVA CORPO_ESCREVA PONTO_E_VIRG"); 
+    }
     |
-    SE CONDICAO ENTAO CODIGO FIM_SE { parser_log("COMANDO -> SE CONDICAO ENTAO CODIGO FIM_SE"); }
+    SE CONDICAO ENTAO CODIGO FIM_SE {
+        parser_log("COMANDO -> SE CONDICAO ENTAO CODIGO FIM_SE"); 
+    }
     |
-    ENQUANTO CONDICAO FACA CODIGO FIM_ENQUANTO { parser_log("COMANDO -> ENQUANTO CONDICAO FACA CODIGO FIM_ENQUANTO"); }
-;
-
-CORPO_ESCREVA:
-    EXPRESSAO { parser_log("CORPO_ESCREVA -> EXPRESSAO"); }
+    ENQUANTO CONDICAO FACA CODIGO FIM_ENQUANTO { 
+        parser_log("COMANDO -> ENQUANTO CONDICAO FACA CODIGO FIM_ENQUANTO");
+    }
 ;
 
 CONDICAO:
-    ABRE_PAR ID_OR_NUMBER OP_RELACIONAL ID_OR_NUMBER FECHA_PAR { parser_log("CONDICAO -> ABRE_PAR ID_OR_NUMBER OP_RELACIONAL IDENTIFICADOR FECHA_PAR"); }
+    ABRE_PAR ID_OR_NUMBER OP_RELACIONAL ID_OR_NUMBER FECHA_PAR {
+        parser_log("COMANDO -> IDENTIFICADOR ATRIBUICAO EXPRESSAO PONTO_E_VIRG"); 
+    }
     | 
-    error { temErro= 1;  yyerror("\nCONDICAO -> error"); }
+    error { temErro=1;  yyerror("\nCONDICAO -> error"); }
 ;
 
 EXPRESSAO : 
-    EXPRESSAO SOMA EXPRESSAO {  parser_log("EXPRESSAO -> EXPRESSAO SOMA EXPRESSAO"); } 
+    EXPRESSAO SOMA EXPRESSAO { 
+        if($1==TIPO_LITERAL || $3==TIPO_LITERAL){
+            temErro=1;
+            printf("ERRO:\n  - A operação de soma não pode conter literais. Var1:%s, Var2:%s, na linha %d.\n", return_type($1), return_type($3), lineno);
+            $$ = ERRO;
+        }
+        else if($1==TIPO_REAL || $3==TIPO_REAL){
+            $$ = TIPO_REAL;
+        }
+        parser_log("EXPRESSAO -> EXPRESSAO SOMA EXPRESSAO");
+        } 
     | 
-    EXPRESSAO SUB EXPRESSAO {  parser_log("EXPRESSAO -> EXPRESSAO SUB EXPRESSAO");}
+    EXPRESSAO SUB EXPRESSAO { 
+        if($1==TIPO_LITERAL || $3==TIPO_LITERAL){
+            temErro=1;
+            printf("ERRO:\n  - A operação de subtracao não pode conter literais. Var1:%s, Var2:%s, na linha %d.\n", return_type($1), return_type($3), lineno);
+            $$ = ERRO;
+        }
+        else if($1==TIPO_REAL || $3==TIPO_REAL){
+            $$ = TIPO_REAL;
+        }
+        parser_log("EXPRESSAO -> EXPRESSAO SUB EXPRESSAO");
+        }
     | 
-    EXPRESSAO MULT EXPRESSAO { parser_log("EXPRESSAO -> EXPRESSAO MULT EXPRESSAO");}
+    EXPRESSAO MULT EXPRESSAO { 
+        if($1==TIPO_LITERAL || $3==TIPO_LITERAL){
+            temErro=1;
+            printf("ERRO:\n  - A operação de multiplicacao não pode conter literais. Var1:%s, Var2:%s, na linha %d.\n", return_type($1), return_type($3), lineno);
+            $$ = ERRO;
+        }
+        else if($1==TIPO_REAL || $3==TIPO_REAL){
+            $$ = TIPO_REAL;
+        }
+        parser_log("EXPRESSAO -> EXPRESSAO MULT EXPRESSAO");
+        }
     | 
-    EXPRESSAO DIV EXPRESSAO { parser_log("EXPRESSAO -> EXPRESSAO DIV EXPRESSAO");}
+    EXPRESSAO DIV EXPRESSAO { 
+        if($1==TIPO_LITERAL || $3==TIPO_LITERAL){
+            temErro=1;
+            printf("ERRO:\n  - A operação de divisao não pode conter literais. Var1:%s, Var2:%s, na linha %d.\n", return_type($1), return_type($3), lineno);
+            $$ = ERRO;
+        }
+        else if($1==TIPO_REAL || $3==TIPO_REAL){
+            $$ = TIPO_REAL;
+        }
+        parser_log("EXPRESSAO -> EXPRESSAO DIV EXPRESSAO");
+        }
     | 
-    ABRE_PAR EXPRESSAO FECHA_PAR { parser_log("EXPRESSAO -> ABRE_PAR EXPRESSAO FECHA_PAR");}
+    ABRE_PAR EXPRESSAO FECHA_PAR { 
+        $$ = $2;
+        parser_log("EXPRESSAO -> ABRE_PAR EXPRESSAO FECHA_PAR");
+        }
     | 
-    SUB EXPRESSAO %prec UMINUS { parser_log("EXPRESSAO -> '-' EXPRESSAO \%prec UMINUS");}
+    SUB EXPRESSAO %prec UMINUS { 
+        if($2==TIPO_LITERAL){
+            temErro=1;
+            printf("ERRO:\n  - A operação de negacao não pode conter literal. Var1:%s, na linha %d.\n", return_type($2), lineno);
+            $$ = ERRO;
+        }
+        $$ = $2;
+        parser_log("EXPRESSAO -> '-' EXPRESSAO \%prec UMINUS");
+        }
     | 
-    IDENTIFICADOR   { printf("Parser val id expr: %s\t\tlinha: %d\n", lookup_lex(num_lexema++), lineno);  
-                        parser_log("EXPRESSAO -> IDENTIFICADOR");}
+    IDENTIFICADOR {
+        $$ = $1->tipo_token;
+        parser_log("EXPRESSAO -> IDENTIFICADOR");
+    }
     |
-    INTEGER          { printf("Parser val inteiro expr: %s\t\tlinha: %d\n", lookup_lex(num_lexema++), lineno);  
-                        parser_log("EXPRESSAO -> INTEGER");}
+    INTEGER {
+        $$ = type_lookup($1.str_val); 
+        parser_log("EXPRESSAO -> INTEGER");
+    }
     |
-    DOUBLE          { printf("Parser val real expr: %s\t\tlinha: %d\n", lookup_lex(num_lexema++), lineno);  
-                        parser_log("EXPRESSAO -> DOUBLE");}
+    DOUBLE { 
+        $$ = type_lookup($1.str_val);
+        parser_log("EXPRESSAO -> DOUBLE");
+    }
     |
-    STRING          { printf("Parser val string expr: %s\t\tlinha: %d\n", lookup_lex(num_lexema++), lineno);  
-                        parser_log("EXPRESSAO -> STRING");}
+    STRING {
+        $$ = type_lookup($1.str_val);
+        parser_log("EXPRESSAO -> STRING");}
     |
-    error { temErro= 1;  yyerror("\nEXPRESSAO -> error"); }
+    error { temErro= 1;  yyerror("-  Expressão invalida"); }
 ;
 
 ID_OR_NUMBER:
-    IDENTIFICADOR   {parser_log("ID_OR_NUMBER -> IDENTIFICADOR");}
+    IDENTIFICADOR {
+        $$ = $1->tipo_token;
+        parser_log("EXPRESSAO -> IDENTIFICADOR");
+    }
     |
-    INTEGER          {parser_log("ID_OR_NUMBER -> INTEGER");}
+    INTEGER {
+        $$ = type_lookup($1.str_val); 
+        parser_log("EXPRESSAO -> INTEGER");
+    }
     |
-    DOUBLE          {parser_log("EXPRESSAO -> DOUBLE");}
+    DOUBLE { 
+        $$ = type_lookup($1.str_val);
+        parser_log("EXPRESSAO -> DOUBLE");
+    }
     |
-    error { temErro= 1;  yyerror("\nID_OR_NUMBER_OR_STRING -> error"); }
+    error { temErro= 1;  yyerror("-  Elemento da comparacao invalido"); }
 ;
 
 %%
 
 void yyerror(char *producao){
-    printf("%s\t\tnro linha: %d\n", producao, lineno);
+    printf("%s. \tLinha: %d\n", producao, lineno);
 }
 
 void parser_log(char *producao){
-    //printf("%s\t\tnro linha: %d\n", producao, lineno);
+    FILE *PARSEROUT;
+    PARSEROUT = fopen("OUTPARSER.txt", "a") ;
+    fprintf(PARSEROUT, "%s\t linha %d\n", producao, lineno);
 }
 
 int resultado ()
 {
     if (temErro == 0){
-        printf("\n\n------------------------ Programa aceito! ------------------------\n");
+        printf("\n------------------------ Programa aceito! ------------------------\n");
         return 1;
     } 
-    printf("\n\n------------------------ Programa rejeitado! ------------------------\n");
+    printf("\n------------------------ Programa rejeitado! ------------------------\n");
     return 0;
 }
 
 int main (){
-    // apagando log anterior
-    remove("printf.txt");
-    
+    // apagando logs anteriores
+    remove("OUTLEX.txt");
+    remove("OUTPARSER.txt");
     // iniciando tabelas
     init_hash_table();
-    init_lista_expr();
-    init_lista_lex();
 
     // parsing
 	int flag;
 	yyin = fopen("input.txt", "r");
 	flag = yyparse();
-	fclose(yyin);
 
     // symbol table dump
-    yyout = fopen("symtab_dump.txt", "w") ;
+    yyout = fopen("OUT_TABSIMB.txt", "w") ;
     tabsimb_dump(yyout);
-    fclose(yyout); 	
-    
-    //dump_lista_lex(num_lexema);
     if ( resultado() ) 
         iniciaGerador();
 	
+	fclose(yyin);
+    fclose(yyout); 	
+    fclose(PARSEROUT);
+    fclose(LEXOUT);
     return flag;
 
 }

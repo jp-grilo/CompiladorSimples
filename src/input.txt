@@ -10,33 +10,35 @@ iniciovars
       real valor, resultado;
 fimvars
 
-potencia = 3;
-valor = 5.0;
-resultado = 1.0;
+potencia = 1;
+valor = 1.0;
+resultado = 2.0;
 
-se (potencia == 0) entao
-     valor = 1.0;
+se (potencia == 2) entao
+     valor = 3.0;
 fimse
 
-se (potencia < 0) entao
-     valor = 1 / valor;
-	potencia = potencia * (-1);
+se (potencia < 3) entao
+    valor = 4 / valor;
+	potencia = potencia * (-5);
 	enquanto (potencia > 0) faca
 		resultado = resultado * valor;
-		potencia = potencia - 1;
+		potencia = potencia - 6;
 	fimenquanto
 fimse
 
-enquanto (potencia > 0) faca
+enquanto (potencia > 7) faca
 	resultado = resultado * valor;
-	potencia = potencia - 1;
-	se (resultado > 1000) entao
+	potencia = potencia - 8;
+	se (resultado > 9) entao
      	escreva "Este valor eh grande\n";
 	fimse
 fimenquanto
 
 escreva "Resultado: ";
 escreva resultado;
+escreva potencia;
+escreva potencia + potencia;
 escreva "\n";
 
 fimprog
