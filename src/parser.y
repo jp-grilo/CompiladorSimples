@@ -4,7 +4,6 @@
 #include <string.h>
 #include "lista_t.c"
 #include "gerador.h"
-#include "semantico.h"
 
 extern FILE *yyin;
 extern FILE *yyout;
@@ -18,7 +17,7 @@ void yyerror(char *producao);
 void parser_log(char *producao);
 
 int temErro = 0;
-int num_lexema=0;
+int tipo_lexema;
 FILE *PARSEROUT;
 
 %}
@@ -32,6 +31,9 @@ FILE *PARSEROUT;
  
 	// Tipo associado
 	int tipo_associado;
+
+    // Quadruplas da tabela de expressoes
+    list_expressoes* expressao;
 
 }
 
@@ -55,8 +57,8 @@ FILE *PARSEROUT;
 %left ABRE_PAR FECHA_PAR
 
 /* definição de não terminais */
-%type<tipo_associado> TIPO_VAR EXPRESSAO ID_OR_NUMBER
-
+%type<tipo_associado> TIPO_VAR ID_OR_NUMBER
+%type<expressao> EXPRESSAO 
 
 %%
 
@@ -129,11 +131,10 @@ CODIGO:
 
 COMANDO:
     IDENTIFICADOR ATRIBUICAO EXPRESSAO PONTO_E_VIRG { 
-        if( ($1->tipo_token == TIPO_LITERAL && ($3 == TIPO_REAL || $3 == TIPO_INT)) || 
-            ( ($1->tipo_token == TIPO_REAL || $1->tipo_token == TIPO_INT) && $3 == TIPO_LITERAL) 
-        ){
-            temErro=1;
-            printf("ERRO:\n  - A atribuicao contem conflito de tipo.\n   Variavel: %s, Expressao: %s, na linha %d.\n", return_type($1->tipo_token), return_type($3), lineno);
+        if (($1->tipo_token == TIPO_LITERAL && ($3->tipo_associado == TIPO_REAL || $3->tipo_associado == TIPO_INT)) || 
+            (($1->tipo_token == TIPO_REAL || $1->tipo_token == TIPO_INT) && $3->tipo_associado == TIPO_LITERAL)) {
+            temErro = 1;
+            printf("ERRO:\n  - A atribuição contém conflito de tipo.\n   Variável: %s, Expressão: %s, na linha %d.\n", return_type($1->tipo_token), return_type($3->tipo_associado), lineno);
         }
         parser_log("COMANDO -> IDENTIFICADOR ATRIBUICAO EXPRESSAO PONTO_E_VIRG"); 
     }
@@ -161,104 +162,125 @@ CONDICAO:
 
 EXPRESSAO : 
     EXPRESSAO SOMA EXPRESSAO { 
-        if($1==TIPO_LITERAL || $3==TIPO_LITERAL){
-            temErro=1;
-            printf("ERRO:\n  - A operação de soma não pode conter literais. Var1:%s, Var2:%s, na linha %d.\n", return_type($1), return_type($3), lineno);
-            $$ = ERRO;
+        $$ = (list_expressoes*) malloc(sizeof(list_expressoes));
+        if($1->tipo_associado == TIPO_LITERAL || $3->tipo_associado == TIPO_LITERAL){
+            temErro = 1;
+            printf("ERRO:\n  - A operação de soma não pode conter literais. \n   Var1: %s, Var2: %s, na linha %d.\n", return_type($1->tipo_associado), return_type($3->tipo_associado), lineno);
+            $$->tipo_associado = ERRO;
         }
-        else if($1==TIPO_REAL || $3==TIPO_REAL){
-            $$ = TIPO_REAL;
+        else if($1->tipo_associado == TIPO_REAL || $3->tipo_associado == TIPO_REAL){
+            $$->tipo_associado = TIPO_REAL;
+        } else {
+            $$->tipo_associado = TIPO_INT;
         }
         parser_log("EXPRESSAO -> EXPRESSAO SOMA EXPRESSAO");
-        } 
+    } 
     | 
     EXPRESSAO SUB EXPRESSAO { 
-        if($1==TIPO_LITERAL || $3==TIPO_LITERAL){
-            temErro=1;
-            printf("ERRO:\n  - A operação de subtracao não pode conter literais. Var1:%s, Var2:%s, na linha %d.\n", return_type($1), return_type($3), lineno);
-            $$ = ERRO;
+        $$ = (list_expressoes*) malloc(sizeof(list_expressoes));
+        if($1->tipo_associado == TIPO_LITERAL || $3->tipo_associado == TIPO_LITERAL){
+            temErro = 1;
+            printf("ERRO:\n  - A operação de subtração não pode conter literais. \n   Var1: %s, Var2: %s, na linha %d.\n", return_type($1->tipo_associado), return_type($3->tipo_associado), lineno);
+            $$->tipo_associado = ERRO;
         }
-        else if($1==TIPO_REAL || $3==TIPO_REAL){
-            $$ = TIPO_REAL;
+        else if($1->tipo_associado == TIPO_REAL || $3->tipo_associado == TIPO_REAL){
+            $$->tipo_associado = TIPO_REAL;
+        } else {
+            $$->tipo_associado = TIPO_INT;
         }
         parser_log("EXPRESSAO -> EXPRESSAO SUB EXPRESSAO");
-        }
+    }
     | 
     EXPRESSAO MULT EXPRESSAO { 
-        if($1==TIPO_LITERAL || $3==TIPO_LITERAL){
-            temErro=1;
-            printf("ERRO:\n  - A operação de multiplicacao não pode conter literais. Var1:%s, Var2:%s, na linha %d.\n", return_type($1), return_type($3), lineno);
-            $$ = ERRO;
+        $$ = (list_expressoes*) malloc(sizeof(list_expressoes));
+        if($1->tipo_associado == TIPO_LITERAL || $3->tipo_associado == TIPO_LITERAL){
+            temErro = 1;
+            printf("ERRO:\n  - A operação de multiplicação não pode conter literais. \n   Var1: %s, Var2: %s, na linha %d.\n", return_type($1->tipo_associado), return_type($3->tipo_associado), lineno);
+            $$->tipo_associado = ERRO;
         }
-        else if($1==TIPO_REAL || $3==TIPO_REAL){
-            $$ = TIPO_REAL;
+        else if($1->tipo_associado == TIPO_REAL || $3->tipo_associado == TIPO_REAL){
+            $$->tipo_associado = TIPO_REAL;
+        } else {
+            $$->tipo_associado = TIPO_INT;
         }
         parser_log("EXPRESSAO -> EXPRESSAO MULT EXPRESSAO");
-        }
+    }
     | 
     EXPRESSAO DIV EXPRESSAO { 
-        if($1==TIPO_LITERAL || $3==TIPO_LITERAL){
-            temErro=1;
-            printf("ERRO:\n  - A operação de divisao não pode conter literais. Var1:%s, Var2:%s, na linha %d.\n", return_type($1), return_type($3), lineno);
-            $$ = ERRO;
+        $$ = (list_expressoes*) malloc(sizeof(list_expressoes));
+        if($1->tipo_associado == TIPO_LITERAL || $3->tipo_associado == TIPO_LITERAL){
+            temErro = 1;
+            printf("ERRO:\n  - A operação de divisão não pode conter literais. \n   Var1: %s, Var2: %s, na linha %d.\n", return_type($1->tipo_associado), return_type($3->tipo_associado), lineno);
+            $$->tipo_associado = ERRO;
         }
-        else if($1==TIPO_REAL || $3==TIPO_REAL){
-            $$ = TIPO_REAL;
+        else if($1->tipo_associado == TIPO_REAL || $3->tipo_associado == TIPO_REAL){
+            $$->tipo_associado = TIPO_REAL;
+        } else {
+            $$->tipo_associado = TIPO_INT;
         }
         parser_log("EXPRESSAO -> EXPRESSAO DIV EXPRESSAO");
-        }
+    }
     | 
     ABRE_PAR EXPRESSAO FECHA_PAR { 
-        $$ = $2;
+        $$ = (list_expressoes*) malloc(sizeof(list_expressoes));
+        $$->tipo_associado = $2->tipo_associado;
         parser_log("EXPRESSAO -> ABRE_PAR EXPRESSAO FECHA_PAR");
-        }
+    }
     | 
     SUB EXPRESSAO %prec UMINUS { 
-        if($2==TIPO_LITERAL){
-            temErro=1;
-            printf("ERRO:\n  - A operação de negacao não pode conter literal. Var1:%s, na linha %d.\n", return_type($2), lineno);
-            $$ = ERRO;
+        $$ = (list_expressoes*) malloc(sizeof(list_expressoes));
+        if($2->tipo_associado == TIPO_LITERAL){
+            temErro = 1;
+            printf("ERRO:\n  - A operação de negação não pode conter literal.\n   Var1: %s, na linha %d.\n", return_type($2->tipo_associado), lineno);
+            $$->tipo_associado = ERRO;
         }
-        $$ = $2;
+        else {
+            $$->tipo_associado = $2->tipo_associado;
+        }
         parser_log("EXPRESSAO -> '-' EXPRESSAO \%prec UMINUS");
-        }
+    }
     | 
     IDENTIFICADOR {
-        $$ = $1->tipo_token;
+        $$ = (list_expressoes*) malloc(sizeof(list_expressoes));
+        $$->tipo_associado = $1->tipo_token;
         parser_log("EXPRESSAO -> IDENTIFICADOR");
     }
     |
     INTEGER {
-        $$ = type_lookup($1.str_val); 
+        $$ = (list_expressoes*) malloc(sizeof(list_expressoes));
+        $$->tipo_associado = type_lookup($1.str_val);
         parser_log("EXPRESSAO -> INTEGER");
     }
     |
     DOUBLE { 
-        $$ = type_lookup($1.str_val);
+        $$ = (list_expressoes*) malloc(sizeof(list_expressoes));
+        $$->tipo_associado = type_lookup($1.str_val);
         parser_log("EXPRESSAO -> DOUBLE");
     }
     |
     STRING {
-        $$ = type_lookup($1.str_val);
-        parser_log("EXPRESSAO -> STRING");}
+        $$ = (list_expressoes*) malloc(sizeof(list_expressoes));
+        $$->tipo_associado = type_lookup($1.str_val);
+        parser_log("EXPRESSAO -> STRING");
+    }
     |
-    error { temErro= 1;  yyerror("-  Expressão invalida"); }
+    error { 
+        temErro = 1;  
+        yyerror("- Expressão inválida"); 
+    }
 ;
 
 ID_OR_NUMBER:
     IDENTIFICADOR {
-        $$ = $1->tipo_token;
-        parser_log("EXPRESSAO -> IDENTIFICADOR");
+        parser_log("ID_OR_NUMBER -> IDENTIFICADOR");
     }
     |
     INTEGER {
-        $$ = type_lookup($1.str_val); 
-        parser_log("EXPRESSAO -> INTEGER");
+        parser_log("ID_OR_NUMBER -> INTEGER");
     }
     |
     DOUBLE { 
-        $$ = type_lookup($1.str_val);
-        parser_log("EXPRESSAO -> DOUBLE");
+        parser_log("ID_OR_NUMBER -> DOUBLE");
     }
     |
     error { temErro= 1;  yyerror("-  Elemento da comparacao invalido"); }
@@ -276,8 +298,7 @@ void parser_log(char *producao){
     fprintf(PARSEROUT, "%s\t linha %d\n", producao, lineno);
 }
 
-int resultado ()
-{
+int resultado (){
     if (temErro == 0){
         printf("\n------------------------ Programa aceito! ------------------------\n");
         return 1;
@@ -309,5 +330,4 @@ int main (){
     fclose(PARSEROUT);
     fclose(LEXOUT);
     return flag;
-
 }

@@ -72,24 +72,23 @@ char *return_type(int type){
 }
 
 /* print to stdout by default */ 
-void tabsimb_dump(FILE * of){  
-  int i;
-  fprintf(of,"------------ ------- -----------\n");
-  fprintf(of,"Name         Type    Declaration\n");
-  fprintf(of,"------------ ------- -----------\n");
-  for (i=0; i < SIZE; ++i){ 
-    if (hash_table[i] != NULL){ 
-        list_t *token = hash_table[i];
+void tabsimb_dump(FILE * OUTTABELA){  
+  fprintf(OUTTABELA,"------------ ------- -----------\n");
+  fprintf(OUTTABELA,"Name         Type    Declaration\n");
+  fprintf(OUTTABELA,"------------ ------- -----------\n");
+  for (int index=0; index < SIZE; ++index){ 
+    if (hash_table[index] != NULL){ 
+        list_t *token = hash_table[index];
         while (token != NULL){ 
 
-            fprintf(of,"%-12s ",token->nome_token);
-            if (token->tipo_token == TIPO_INT) fprintf(of,"%-8s","inteiro");
-            else if (token->tipo_token == TIPO_REAL) fprintf(of,"%-8s","real");
-            else if (token->tipo_token == TIPO_LITERAL) fprintf(of,"%-8s","string");
-            else fprintf(of,"%-7s","undef"); // if UNDEF or 0
-            if (token->declaracao == PARAMETRO) fprintf(of,"%-10s","parametro");
-            if (token->declaracao == VARIAVEL) fprintf(of,"%-10s","variavel");
-            fprintf(of,"\n");
+            fprintf(OUTTABELA,"%-12s ",token->nome_token);
+            if (token->tipo_token == TIPO_INT) fprintf(OUTTABELA,"%-8s","inteiro");
+            else if (token->tipo_token == TIPO_REAL) fprintf(OUTTABELA,"%-8s","real");
+            else if (token->tipo_token == TIPO_LITERAL) fprintf(OUTTABELA,"%-8s","string");
+            else fprintf(OUTTABELA,"%-7s","undef"); // if UNDEF or 0
+            if (token->declaracao == PARAMETRO) fprintf(OUTTABELA,"%-10s","parametro");
+            if (token->declaracao == VARIAVEL) fprintf(OUTTABELA,"%-10s","variavel");
+            fprintf(OUTTABELA,"\n");
             token = token->next;
         }
     }
@@ -107,3 +106,47 @@ list_t *get_hash_table_entry(int index) {
     return NULL;
 }
 
+// Variável global para a lista de quadruplas
+list_expressoes *lista_expressoes = NULL;
+
+// Inicializa a lista de quadruplas
+void init_lista_expressoes() {
+    lista_expressoes = NULL;  // Inicializa a lista como vazia
+}
+
+// Insere uma nova quadrupla na lista
+void insere_expressao(char *operacao, char *arg1, char *arg2, char *resultado) {
+    // Aloca memória para a nova quadrupla
+    list_expressoes *nova_quadrupla = (list_expressoes*) malloc(sizeof(list_expressoes));
+    
+    // Preenche os campos da quadrupla
+    nova_quadrupla->operacao = strdup(operacao);
+    nova_quadrupla->arg1 = strdup(arg1);
+    nova_quadrupla->arg2 = strdup(arg2);
+    nova_quadrupla->resultado = strdup(resultado);
+    
+    // Insere a nova quadrupla no início da lista
+    nova_quadrupla->next = lista_expressoes;
+    lista_expressoes = nova_quadrupla;
+}
+
+// Consulta uma quadrupla na lista
+list_expressoes* consulta_expressao(char *resultado) {
+    list_expressoes *current = lista_expressoes;
+    while (current != NULL) {
+        if (strcmp(current->resultado, resultado) == 0) {
+            return current;
+        }
+        current = current->next;
+    }
+    return NULL;  // Retorna NULL se não encontrar a quadrupla
+}
+
+// Realiza o dump de todas as quadruplas na lista
+void dump_lista_expressoes() {
+    list_expressoes *current = lista_expressoes;
+    while (current != NULL) {
+        printf("Operacao: %s, Arg1: %s, Arg2: %s, Resultado: %s\n", current->operacao, current->arg1, current->arg2, current->resultado);
+        current = current->next;
+    }
+}

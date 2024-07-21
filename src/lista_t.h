@@ -55,6 +55,22 @@ void insert(char *name, int len, int type, int declaracao, int lineno); // Inser
 list_t *lookup(char *name); // Procura por um símbolo na tabela hash.
 int type_lookup(char *name); // Procura por um símbolo na tabela hash e retorna o seu tipo.
 char *return_type(int type); // Retorna o tipo em formato de string.
-void tabsimb_dump(FILE *of); // Imprime o conteúdo da tabela de símbolos em um arquivo.
+void tabsimb_dump(FILE *OUTTABELA); // Imprime o conteúdo da tabela de símbolos em um arquivo.
 list_t **get_hash_table(); // Retorna a tabela hash inteira.
 list_t *get_hash_table_entry(int index); // Retorna uma entrada específica da tabela hash.
+
+// Definição da estrutura de uma quadrupla
+typedef struct list_expressoes {
+    char *operacao;
+    char *arg1;
+    char *arg2;
+    char *resultado;
+    int tipo_associado;
+    // Ponteiro para a próxima ocorrência de quadrupla
+    struct list_expressoes *next;
+} list_expressoes;
+
+void init_lista_expressoes(); // Inicializa a lista de quadruplas.
+void insere_expressao(char *operacao, char *arg1, char *arg2, char *resultado); // Insere uma nova quadrupla na lista.
+list_expressoes* consulta_expressao(char *resultado); // Consulta uma quadrupla na lista.
+void dump_lista_expressoes(); // Realiza o dump de todas as quadruplas na lista.
