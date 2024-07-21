@@ -30,13 +30,12 @@ Para compilar e executar o compilador, siga os passos abaixo:
     ```
 3. Navegue até o diretório do projeto:
     ```bash
-    cd seu-repositorio
+    cd seu-repositorio/src
     ```
 4. Execute o compilador:
     ```bash
-    flex lexico.l
-    gcc lex.yy.c -o lexico
-    ./lexico
+    make
+    ./parser
     ```
 ---
 
