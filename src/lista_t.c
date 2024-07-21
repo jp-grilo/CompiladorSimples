@@ -73,21 +73,27 @@ char *return_type(int type){
 
 /* print to stdout by default */ 
 void tabsimb_dump(FILE * OUTTABELA){  
-  fprintf(OUTTABELA,"------------ ------- -----------\n");
-  fprintf(OUTTABELA,"Name         Type    Declaration\n");
-  fprintf(OUTTABELA,"------------ ------- -----------\n");
+  fprintf(OUTTABELA,"-------------- ------------ -----------\n");
+  fprintf(OUTTABELA,"Name           Type         Declaration\n");
+  fprintf(OUTTABELA,"-------------- ------------ -----------\n");
   for (int index=0; index < SIZE; ++index){ 
     if (hash_table[index] != NULL){ 
         list_t *token = hash_table[index];
         while (token != NULL){ 
-
-            fprintf(OUTTABELA,"%-12s ",token->nome_token);
-            if (token->tipo_token == TIPO_INT) fprintf(OUTTABELA,"%-8s","inteiro");
-            else if (token->tipo_token == TIPO_REAL) fprintf(OUTTABELA,"%-8s","real");
-            else if (token->tipo_token == TIPO_LITERAL) fprintf(OUTTABELA,"%-8s","string");
+            // Print nome
+            fprintf(OUTTABELA,"%-14s ",token->nome_token);
+            // Print tipo
+            if (token->tipo_token == TIPO_INT) fprintf(OUTTABELA,"%-13s","inteiro");
+            else if (token->tipo_token == TIPO_REAL) fprintf(OUTTABELA,"%-13s","real");
+            else if (token->tipo_token == TIPO_LITERAL) fprintf(OUTTABELA,"%-13s","string");
+            else if (token->tipo_token == CONST_INT) fprintf(OUTTABELA,"%-13s","const int");
+            else if (token->tipo_token == CONST_REAL) fprintf(OUTTABELA,"%-13s","const real");
+            else if (token->tipo_token == CONST_LITERAL) fprintf(OUTTABELA,"%-13s","const lit");
             else fprintf(OUTTABELA,"%-7s","undef"); // if UNDEF or 0
+            // Print declaracao
             if (token->declaracao == PARAMETRO) fprintf(OUTTABELA,"%-10s","parametro");
-            if (token->declaracao == VARIAVEL) fprintf(OUTTABELA,"%-10s","variavel");
+            else if (token->declaracao == VARIAVEL) fprintf(OUTTABELA,"%-10s","variavel");
+            else if (token->declaracao == CONSTANTE) fprintf(OUTTABELA,"%-10s","constante");
             fprintf(OUTTABELA,"\n");
             token = token->next;
         }
@@ -179,4 +185,18 @@ void dump_lista() {
                atual->tipo_associado);
         atual = atual->next;
     }
+}
+
+// Função para imprimir um elemento específico da lista
+void dump_expr_element(const list_expressoes *element) {
+    if (element == NULL) {
+        printf("Elemento é NULL.\n");
+        return;
+    }
+    printf("Elemento:\n");
+    printf("Operacao: %s\n", element->operacao ? element->operacao : "NULL");
+    printf("Arg1: %s\n", element->arg1 ? element->arg1 : "NULL");
+    printf("Arg2: %s\n", element->arg2 ? element->arg2 : "NULL");
+    printf("Resultado: %d\n", element->resultado);
+    printf("Tipo Associado: %d\n\n", element->tipo_associado);
 }

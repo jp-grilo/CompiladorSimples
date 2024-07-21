@@ -10,12 +10,16 @@
 /* parametro ou variável */
 #define PARAMETRO 1
 #define VARIAVEL 2
+#define CONSTANTE 3
 
 /* tipos de token */
 #define INDEF 0
 #define TIPO_INT 1
 #define TIPO_REAL 2
 #define TIPO_LITERAL 3
+#define CONST_INT 10
+#define CONST_REAL 20
+#define CONST_LITERAL 30
 
 
 /* Tipos de valores */
@@ -46,7 +50,19 @@ typedef struct list_t{
  
 /* Hash da tabela de símbolos */
 static list_t **hash_table;
- 
+
+// Definição da estrutura de uma quadrupla
+typedef struct list_expressoes {
+    char *operacao;
+    char *arg1;
+    char *arg2;
+    int resultado;
+    int tipo_associado;
+    struct list_expressoes *next;
+} list_expressoes;
+
+// Ponteiro global para a lista de quadruplas
+extern list_expressoes *lista_expressoes;
 
 // Funções para tabela de simbolos
 // Inicializa a tabela hash.
@@ -68,20 +84,6 @@ list_t **get_hash_table();
 // Retorna uma entrada específica da tabela hash.
 list_t *get_hash_table_entry(int index); 
 
-
-// Definição da estrutura de uma quadrupla
-typedef struct list_expressoes {
-    char *operacao;
-    char *arg1;
-    char *arg2;
-    int resultado;
-    int tipo_associado;
-    struct list_expressoes *next;
-} list_expressoes;
-
-// Ponteiro global para a lista de quadruplas
-extern list_expressoes *lista_expressoes;
-
 // Função para criar e inicializar uma nova quadrupla
 list_expressoes* criar_expressoes(char *operacao, char *arg1, char *arg2, int resultado, int tipo_associado);
 
@@ -96,3 +98,7 @@ void liberar_lista();
 
 // Função para imprimir todas as quadruplas da lista
 void dump_lista();
+
+// Função para imprimir um elemento específico da lista
+
+void dump_expr_element(const list_expressoes *element);

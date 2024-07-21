@@ -4,10 +4,15 @@
 #include "lista_t.h"
 #include "gerador.h"
 
+int flag_gerador=0;
+int numero_constante=0;;
+
 void iniciaGerador() {
-    remove("OUT_GERADO.txt");
+    if(flag_gerador) return;
     geraParametros();
     geraVariaveis();
+    geraConstantes();
+    flag_gerador++;
 }
 
 void geraParametros() {
@@ -58,5 +63,36 @@ void geraVariaveis() {
             token = token->next;
         }
     }
+    fclose(geradorout);
+}
+
+void geraConstantes(){
+    FILE *geradorout;
+    geradorout = fopen("OUT_GERADO.txt", "a");
+    if (geradorout == NULL) {
+        perror("Erro ao abrir o arquivo");
+        return;
+    }
+    char *nome_constante = (char *)malloc(10 * sizeof(char));
+    list_t **tabela = get_hash_table();
+
+            
+    for (int index=0; index < SIZE; ++index){ 
+    if (tabela[index] != NULL){ 
+        list_t *token = tabela[index];
+        while (token != NULL){ 
+            if(token->declaracao==CONSTANTE){
+                sprintf(nome_constante, "%s%d", "AUX", numero_constante);
+                if(token->tipo_token==CONST_INT)
+                    fprintf(geradorout, "%s: int = const %s;\n", nome_constante, token->nome_token);
+                else if(token->tipo_token==CONST_REAL)
+                    fprintf(geradorout, "%s: float = constf %s;\n", nome_constante, token->nome_token);
+                numero_constante++;
+            }
+            token = token->next;
+        }
+    }
+  }
+    free(nome_constante);
     fclose(geradorout);
 }

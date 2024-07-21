@@ -10,13 +10,15 @@ iniciovars
       real valor, resultado;
 fimvars
 
+se (potencia == 2) entao
+     valor = 3.0;
+fimse
+
 potencia = 1;
 valor = 1.0;
 resultado = 2.0;
 
-se (potencia == 2) entao
-     valor = 3.0;
-fimse
+
 
 se (potencia < 3) entao
     valor = 4 / valor;

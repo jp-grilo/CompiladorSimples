@@ -18,7 +18,8 @@ void parser_log(char *producao);
 int analise_passou();
 
 int temErro = 0;
-int numExpressao=0;
+int numExpressao = 0;
+
 FILE *PARSEROUT;
 
 %}
@@ -64,13 +65,19 @@ FILE *PARSEROUT;
 %%
 
 PROGRAMA:
-    INICIOPROG LISTA_PARAM FIMPROG             { parser_log("PROGRAMA -> INICIOPROG LISTA_PARAM FIMPROG"); }
+    INICIOPROG LISTA_PARAM{
+        iniciaGerador();
+        iniciaGerador();
+        parser_log("PROGRAMA -> INICIOPROG LISTA_PARAM"); 
+    }
     | 
     error { temErro= 1; yyerror("-  Erro na inicializacao ou finalizacao do codigo"); }
 ;
 
 LISTA_PARAM:
-    INICIOARGS DECLARA_VAR FIMARGS LISTA_VAR    { parser_log("LISTA_PARAM -> INICIOARGS DECLARA_VAR FIMARGS LISTA_VAR"); }
+    INICIOARGS DECLARA_VAR FIMARGS LISTA_VAR{     
+        parser_log("LISTA_PARAM -> INICIOARGS DECLARA_VAR FIMARGS LISTA_VAR");
+    }
     |
     LISTA_VAR                                   { parser_log("LISTA_PARAM -> LISTA_VAR"); }
     | 
@@ -78,10 +85,9 @@ LISTA_PARAM:
 ;
 
 LISTA_VAR:
-    INICIOVARS DECLARA_VAR FIMVARS CODIGO       { parser_log("LISTA_VAR -> INICIOVARS DECLARA_VAR FIMVARS CODIGO"); }
+    INICIOVARS DECLARA_VAR FIMVARS CODIGO {
+        parser_log("LISTA_VAR -> INICIOVARS DECLARA_VAR FIMVARS CODIGO"); }
     |
-    CODIGO                                      { parser_log("LISTA_VAR -> CODIGO"); }
-    | 
     error { temErro= 1;  yyerror("-  Erro na estrutura de declaracao de variaveis"); }
 ;
 
@@ -94,7 +100,7 @@ DECLARA_VAR:
 ;
 
 NOMES:
-    IDENTIFICADOR VIRGULA NOMES { 
+    IDENTIFICADOR VIRGULA NOMES {
         parser_log("NOMES -> IDENTIFICADOR VIRGULA NOMES"); 
     }
     |
@@ -125,9 +131,11 @@ TIPO_VAR:
 ;
 
 CODIGO:
-    COMANDO CODIGO                              { parser_log("CODIGO -> COMANDO CODIGO"); }
+    COMANDO CODIGO
     |
 
+    |
+    FIMPROG { parser_log("CODIGO -> FIMPROG"); }
 ;
 
 COMANDO:
@@ -236,32 +244,57 @@ EXPRESSAO :
             $$->tipo_associado = ERRO;
         }
         else {
+            $$->operacao = "MINUS";
+            $$->arg1 = $2->arg1;
+            $$->arg2 = NULL; // Não há argumento 2 para esse caso
+            $$->resultado = numExpressao++;
             $$->tipo_associado = $2->tipo_associado;
+            //dump_expr_element($$);
         }
         parser_log("EXPRESSAO -> '-' EXPRESSAO \%prec UMINUS");
     }
     | 
     IDENTIFICADOR {
         $$ = (list_expressoes*) malloc(sizeof(list_expressoes));
+        $$->operacao = "=";
+        $$->arg1 = $1->nome_token;
+        $$->arg2 = NULL; // Não há argumento 2 para esse caso
+        $$->resultado = numExpressao++;
         $$->tipo_associado = $1->tipo_token;
+          
         parser_log("EXPRESSAO -> IDENTIFICADOR");
     }
     |
     INTEGER {
         $$ = (list_expressoes*) malloc(sizeof(list_expressoes));
+        $$->operacao = "=";
+        $$->arg1 = $1.str_val; // str_val é um char*
+        $$->arg2 = NULL; // Não há argumento 2 para esse caso
+        $$->resultado = numExpressao++;
         $$->tipo_associado = type_lookup($1.str_val);
+        
         parser_log("EXPRESSAO -> INTEGER");
     }
     |
     DOUBLE { 
         $$ = (list_expressoes*) malloc(sizeof(list_expressoes));
+        $$->operacao = "=";
+        $$->arg1 = $1.str_val; // str_val é um char*
+        $$->arg2 = NULL; // Não há argumento 2 para esse caso
+        $$->resultado = numExpressao++;
         $$->tipo_associado = type_lookup($1.str_val);
+          
         parser_log("EXPRESSAO -> DOUBLE");
     }
     |
     STRING {
         $$ = (list_expressoes*) malloc(sizeof(list_expressoes));
+        $$->operacao = "=";
+        $$->arg1 = $1.str_val; // str_val é um char*
+        $$->arg2 = NULL; // Não há argumento 2 para esse caso
+        $$->resultado = numExpressao++;
         $$->tipo_associado = type_lookup($1.str_val);
+          
         parser_log("EXPRESSAO -> STRING");
     }
     |
@@ -273,14 +306,17 @@ EXPRESSAO :
 
 ID_OR_NUMBER:
     IDENTIFICADOR {
+          
         parser_log("ID_OR_NUMBER -> IDENTIFICADOR");
     }
     |
     INTEGER {
+          
         parser_log("ID_OR_NUMBER -> INTEGER");
     }
     |
-    DOUBLE { 
+    DOUBLE {
+          
         parser_log("ID_OR_NUMBER -> DOUBLE");
     }
     |
@@ -308,12 +344,21 @@ int analise_passou (){
     return 0;
 }
 
-int main (){
+void limpa_logs(int passou){
+
     // apagando logs anteriores
-    remove("OUTLEX.txt");
-    remove("OUTPARSER.txt");
-    remove("OUT_GERADO.txt");
-    remove("OUT_TABSIMB.txt");
+    if(passou==0){
+        remove("OUTLEX.txt");
+        remove("OUTPARSER.txt");
+        remove("OUT_GERADO.txt");
+        remove("OUT_TABSIMB.txt");
+    } else {
+        remove("OUT_GERADO.txt");
+    }
+}
+
+int main (){
+    limpa_logs(0);
 
     // iniciando tabelas
     init_hash_table();
@@ -325,9 +370,9 @@ int main (){
     // symbol table dump
     yyout = fopen("OUT_TABSIMB.txt", "w") ;
     tabsimb_dump(yyout);
-    if ( analise_passou() ) 
-        iniciaGerador();
-	
+
+    if (!analise_passou()) limpa_logs(1);
+
 	fclose(yyin);
     fclose(yyout); 	
     fclose(PARSEROUT);

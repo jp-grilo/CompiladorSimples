@@ -66,7 +66,7 @@ COMENTARIO          \{({L}|{D}|{S}|" "|\t)*\}
 
 {INTEGER}                {  
                             ret_print("INTEGER");
-                            insert(yytext, strlen(yytext), TIPO_INT, INDEF, lineno);
+                            insert(yytext, strlen(yytext), CONST_INT, CONSTANTE, lineno);
                             yylval.val.str_val = malloc(yyleng * sizeof(char));
 				            strcpy(yylval.val.str_val, yytext); 
                             return INTEGER; 
@@ -74,7 +74,7 @@ COMENTARIO          \{({L}|{D}|{S}|" "|\t)*\}
 
 {DOUBLE}                {   
                             ret_print("DOUBLE"); 
-                            insert(yytext, strlen(yytext), TIPO_REAL, INDEF, lineno);
+                            insert(yytext, strlen(yytext), CONST_REAL, CONSTANTE, lineno);
                             yylval.val.str_val = malloc(yyleng * sizeof(char));
 				            strcpy(yylval.val.str_val, yytext); 
                             return DOUBLE; 
@@ -82,7 +82,7 @@ COMENTARIO          \{({L}|{D}|{S}|" "|\t)*\}
 
 {LITERAL}               {   
                             ret_print("STRING");
-                            insert(yytext, strlen(yytext), TIPO_LITERAL, INDEF, lineno);
+                            insert(yytext, strlen(yytext), CONST_LITERAL, CONSTANTE, lineno);
                             yylval.val.str_val = malloc(yyleng * sizeof(char));
 				            strcpy(yylval.val.str_val, yytext);  
                             return STRING; 
