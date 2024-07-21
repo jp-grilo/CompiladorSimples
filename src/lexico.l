@@ -47,9 +47,9 @@ COMENTARIO          \{({L}|{D}|{S}|" "|\t)*\}
 
 "inicioprog"            {   ret_print("INICIOPROG"); return INICIOPROG ; }
 "fimprog"               {   ret_print("FIMPROG"); return FIMPROG ;}
-"inicioargs"            {   declaracao=0; ret_print("INICIOARGS"); return INICIOARGS ;}
+"inicioargs"            {   declaracao=PARAMETRO; ret_print("INICIOARGS"); return INICIOARGS ;}
 "fimargs"               {   ret_print("FIMARGS"); return FIMARGS ;}
-"iniciovars"            {   declaracao=1; ret_print("INICIOVARS"); return INICIOVARS ;}
+"iniciovars"            {   declaracao=VARIAVEL; ret_print("INICIOVARS"); return INICIOVARS ;}
 "fimvars"               {   ret_print("FIMVARS"); return FIMVARS ;}
 "escreva"               {   ret_print("ESCREVA"); return ESCREVA ;}
 "se"                    {   ret_print("SE"); return SE ;}
@@ -65,33 +65,34 @@ COMENTARIO          \{({L}|{D}|{S}|" "|\t)*\}
 
 {INTEGER}                {  
                             ret_print("INTEGER");
-                            insert(yytext, strlen(yytext), TIPO_INT, INDEF, lineno);
-                            insert_lex(index_lexema++, yytext);
                             //printf("Valor int expr: %s\t\tlinha: %d\n", yytext, lineno);
+                            insert(yytext, strlen(yytext), TIPO_INT, INDEF, lineno);
+                            yylval.val.int_val = atoi(yytext);
                             return INTEGER; 
                         }
 
 {DOUBLE}                {   
                             ret_print("DOUBLE"); 
-                            insert(yytext, strlen(yytext), TIPO_REAL, INDEF, lineno);
-                            insert_lex(index_lexema++, yytext);
                             //printf("Valor real expr: %s\t\tlinha: %d\n", yytext, lineno);
+                            insert(yytext, strlen(yytext), TIPO_REAL, INDEF, lineno);
+                            yylval.val.real_val = atof(yytext);
                             return DOUBLE; 
                         }
 
 {LITERAL}               {   
                             ret_print("STRING");
-                            insert(yytext, strlen(yytext), TIPO_LITERAL, INDEF, lineno);
-                            insert_lex(index_lexema++, yytext);
                             //printf("Valor str expr: %s\t\tlinha: %d\n", yytext, lineno);
+                            insert(yytext, strlen(yytext), TIPO_LITERAL, INDEF, lineno);
+                            yylval.val.str_val = malloc(yyleng * sizeof(char));
+				            strcpy(yylval.val.str_val, yytext);  
                             return STRING; 
                         }
 
 {IDENTIFICADOR}         {   
                             ret_print("IDENTIFICADOR"); 
-                            insert(yytext, strlen(yytext), type, declaracao, lineno);
-                            insert_lex(index_lexema++, yytext);
                             //printf("Valor id expr: %s\t\tlinha: %d\n", yytext, lineno);
+                            insert(yytext, strlen(yytext), type, declaracao, lineno);
+                            yylval.item_tabela = lookup(yytext);
                             return IDENTIFICADOR; 
                         }
 

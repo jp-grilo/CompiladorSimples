@@ -2,17 +2,24 @@
 Name         Type    Declaration
 ------------ ------- -----------
 potencia     inteiro variavel  
-pliteral     literal parametro 
-sliteral     literal parametro 
+pliteral     string  parametro 
+sliteral     string  parametro 
 avulso       inteiro parametro 
-"Este valor eh grande\n" literal parametro 
-0            inteiro parametro 
-1            inteiro parametro 
-"Resultado: " literal parametro 
-3            inteiro parametro 
-"\n"         literal parametro 
+"Este valor eh grande\n" string  
+0            inteiro 
+1            inteiro 
+"Resultado: " string  
+2            inteiro 
+3            inteiro 
+4            inteiro 
+5            inteiro 
+6            inteiro 
+7            inteiro 
+8            inteiro 
+9            inteiro 
+"\n"         string  
 valor        real    variavel  
 resultado    real    variavel  
-1.0          real    parametro 
-5.0          real    parametro 
-1000         inteiro parametro 
+1.0          real    
+2.0          real    
+3.0          real    

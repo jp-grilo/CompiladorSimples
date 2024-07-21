@@ -39,26 +39,26 @@
    /* Put the tokens into the symbol table, so that GDB and other debuggers
       know about them.  */
    enum yytokentype {
-     INICIOPROG = 258,
-     FIMPROG = 259,
-     INICIOARGS = 260,
-     FIMARGS = 261,
-     INICIOVARS = 262,
-     FIMVARS = 263,
-     ESCREVA = 264,
-     SE = 265,
-     ENTAO = 266,
-     FIM_SE = 267,
-     ENQUANTO = 268,
-     FACA = 269,
-     FIM_ENQUANTO = 270,
-     INTEIRO = 271,
-     REAL = 272,
-     LITERAL = 273,
-     INTEGER = 274,
-     DOUBLE = 275,
-     STRING = 276,
-     IDENTIFICADOR = 277,
+     IDENTIFICADOR = 258,
+     INTEIRO = 259,
+     REAL = 260,
+     LITERAL = 261,
+     INTEGER = 262,
+     DOUBLE = 263,
+     STRING = 264,
+     INICIOPROG = 265,
+     FIMPROG = 266,
+     INICIOARGS = 267,
+     FIMARGS = 268,
+     INICIOVARS = 269,
+     FIMVARS = 270,
+     ESCREVA = 271,
+     SE = 272,
+     ENTAO = 273,
+     FIM_SE = 274,
+     ENQUANTO = 275,
+     FACA = 276,
+     FIM_ENQUANTO = 277,
      OP_RELACIONAL = 278,
      SOMA = 279,
      SUB = 280,
@@ -85,12 +85,23 @@ typedef union YYSTYPE
 /* Line 1676 of yacc.c  */
 #line 24 "parser.y"
 
-    char *tokenval;  // Ajuste o nome do tipo aqui para corresponder ao arquivo .l
+	// different types of values
+	Valores val;   
+	
+	// structures
+	list_t* item_tabela;
+	
+    TipoToken tipo;
+ 
+	// for declarations
+	int tipo_var;
+	int tipo_const;
+
 
 
 
 /* Line 1676 of yacc.c  */
-#line 94 "parser.tab.h"
+#line 105 "parser.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

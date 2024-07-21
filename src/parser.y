@@ -21,23 +21,43 @@ int num_lexema=0;
 
 %}
 
-%union {
-    char *tokenval;  // Ajuste o nome do tipo aqui para corresponder ao arquivo .l
+%union{
+	// different types of values
+	Valores val;   
+	
+	// structures
+	list_t* item_tabela;
+	
+    TipoToken tipo;
+ 
+	// for declarations
+	int tipo_var;
+	int tipo_const;
+
 }
 
-/* token definition */
-%token INICIOPROG FIMPROG INICIOARGS FIMARGS INICIOVARS FIMVARS
-%token ESCREVA SE ENTAO FIM_SE ENQUANTO FACA FIM_ENQUANTO
-%token INTEIRO REAL LITERAL
-%token <tokenval> INTEGER DOUBLE STRING IDENTIFICADOR
-%token OP_RELACIONAL SOMA SUB MULT DIV ATRIBUICAO
-%token ABRE_PAR FECHA_PAR VIRGULA PONTO_E_VIRG 
-%token VAZIO COMENTARIO ERROR
+/* definição dos tokens */
+%token<item_tabela> IDENTIFICADOR
+%token<val> INTEIRO REAL LITERAL
+%token<val> INTEGER DOUBLE STRING
+%token<val> INICIOPROG FIMPROG INICIOARGS FIMARGS INICIOVARS FIMVARS
+%token<val> ESCREVA SE ENTAO FIM_SE ENQUANTO FACA FIM_ENQUANTO
+%token<val> OP_RELACIONAL SOMA SUB MULT DIV ATRIBUICAO
+%token<val> ABRE_PAR FECHA_PAR VIRGULA PONTO_E_VIRG 
+%token<val> VAZIO COMENTARIO ERROR
 
-/* expression priorities and rules */
-%left SOMA SUB
+
+/* prioridade */
+%right ATRIBUICAO
+%left OP_RELACIONAL
+%left SOMA SUB 
 %left MULT DIV
 %right UMINUS
+%left ABRE_PAR FECHA_PAR
+
+/* definição de não terminais */
+%type<tipo_var> TIPO_VAR
+
 
 %%
 
@@ -72,13 +92,14 @@ DECLARA_VAR:
 ;
 
 NOMES:
-    IDENTIFICADOR VIRGULA NOMES                 { 
-        printf("Parser val id: %s\t\tlinha: %d\n", lookup_lex(num_lexema++), lineno);
+    IDENTIFICADOR VIRGULA NOMES { 
+
+        printf("Dec id: %s\t\tlinha: %d\n", $1->nome_token, lineno);
         parser_log("NOMES -> IDENTIFICADOR VIRGULA NOMES"); 
     }
     |
-    IDENTIFICADOR                               { 
-        printf("Parser val id: %s\t\tlinha: %d\n", lookup_lex(num_lexema++), lineno); 
+    IDENTIFICADOR { 
+        printf("Dec id: %s\t\tlinha: %d\n", $1->nome_token, lineno); 
         parser_log("NOMES -> IDENTIFICADOR"); 
     }
     | 
@@ -86,11 +107,20 @@ NOMES:
 ;
 
 TIPO_VAR:
-    INTEIRO                                     { parser_log("TIPO_VAR -> INTEIRO"); }
+    INTEIRO {
+        $$ = TIPO_INT;
+        parser_log("TIPO_VAR -> INTEIRO");
+        }
     |
-    REAL                                        { parser_log("TIPO_VAR -> REAL"); }
+    REAL {
+        $$ = TIPO_REAL;
+        parser_log("TIPO_VAR -> INTEIRO");
+        }
     |
-    LITERAL                                     { parser_log("TIPO_VAR -> LITERAL"); }
+    LITERAL {
+        $$ = TIPO_LITERAL;
+        parser_log("TIPO_VAR -> INTEIRO");
+        }
     | 
     error { temErro= 1;  yyerror("\nTIPO_VAR -> error"); }
 ;
@@ -138,17 +168,24 @@ EXPRESSAO :
     | 
     SUB EXPRESSAO %prec UMINUS { parser_log("EXPRESSAO -> '-' EXPRESSAO \%prec UMINUS");}
     | 
-    IDENTIFICADOR   { printf("Parser val id expr: %s\t\tlinha: %d\n", lookup_lex(num_lexema++), lineno);  
-                        parser_log("EXPRESSAO -> IDENTIFICADOR");}
+    IDENTIFICADOR {
+        printf("Id expr: %s\t\tlinha: %d\n", $1->nome_token, lineno);  
+        parser_log("EXPRESSAO -> IDENTIFICADOR");
+        }
     |
-    INTEGER          { printf("Parser val inteiro expr: %s\t\tlinha: %d\n", lookup_lex(num_lexema++), lineno);  
-                        parser_log("EXPRESSAO -> INTEGER");}
+    INTEGER { 
+        printf("Int expr: %d\t\tlinha: %d\n", $1.int_val, lineno);  
+        parser_log("EXPRESSAO -> INTEGER");
+        }
     |
-    DOUBLE          { printf("Parser val real expr: %s\t\tlinha: %d\n", lookup_lex(num_lexema++), lineno);  
-                        parser_log("EXPRESSAO -> DOUBLE");}
+    DOUBLE { 
+        printf("Real expr: %f\t\tlinha: %d\n", $1.real_val, lineno);  
+        parser_log("EXPRESSAO -> DOUBLE");
+        }
     |
-    STRING          { printf("Parser val string expr: %s\t\tlinha: %d\n", lookup_lex(num_lexema++), lineno);  
-                        parser_log("EXPRESSAO -> STRING");}
+    STRING {
+        printf("Str expr: %s\t\tlinha: %d\n", $1.str_val, lineno);  
+        parser_log("EXPRESSAO -> STRING");}
     |
     error { temErro= 1;  yyerror("\nEXPRESSAO -> error"); }
 ;

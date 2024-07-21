@@ -55,6 +55,14 @@ list_t *lookup(char *name){ /* return symbol if found or NULL if not found */
         token = token->next;
     return token; // NULL is not found
 }
+
+char *type_lookup(char *name){ /* return symbol if found or NULL if not found */
+    unsigned int hashval = hash(name);
+    list_t *token = hash_table[hashval];
+    while ((token != NULL) && (strcmp(name,token->nome_token) != 0)) 
+        token = token->next;
+    return token->nome_token; // NULL is not found
+}
  
 /* print to stdout by default */ 
 void tabsimb_dump(FILE * of){  
@@ -70,7 +78,7 @@ void tabsimb_dump(FILE * of){
             fprintf(of,"%-12s ",token->nome_token);
             if (token->tipo_token == TIPO_INT) fprintf(of,"%-8s","inteiro");
             else if (token->tipo_token == TIPO_REAL) fprintf(of,"%-8s","real");
-            else if (token->tipo_token == TIPO_LITERAL) fprintf(of,"%-8s","literal");
+            else if (token->tipo_token == TIPO_LITERAL) fprintf(of,"%-8s","string");
             else fprintf(of,"%-7s","undef"); // if UNDEF or 0
             if (token->declaracao == PARAMETRO) fprintf(of,"%-10s","parametro");
             if (token->declaracao == VARIAVEL) fprintf(of,"%-10s","variavel");

@@ -71,26 +71,26 @@ Terminals, with rules where they appear
 
 $end (0) 0
 error (256) 2 5 8 11 14 18 27 38 42
-INICIOPROG (258) 1
-FIMPROG (259) 1
-INICIOARGS (260) 3
-FIMARGS (261) 3
-INICIOVARS (262) 6
-FIMVARS (263) 6
-ESCREVA (264) 22
-SE (265) 23
-ENTAO (266) 23
-FIM_SE (267) 23
-ENQUANTO (268) 24
-FACA (269) 24
-FIM_ENQUANTO (270) 24
-INTEIRO (271) 15
-REAL (272) 16
-LITERAL (273) 17
-INTEGER (274) 35 40
-DOUBLE (275) 36 41
-STRING (276) 37
-IDENTIFICADOR (277) 12 13 21 34 39
+IDENTIFICADOR (258) 12 13 21 34 39
+INTEIRO (259) 15
+REAL (260) 16
+LITERAL (261) 17
+INTEGER (262) 35 40
+DOUBLE (263) 36 41
+STRING (264) 37
+INICIOPROG (265) 1
+FIMPROG (266) 1
+INICIOARGS (267) 3
+FIMARGS (268) 3
+INICIOVARS (269) 6
+FIMVARS (270) 6
+ESCREVA (271) 22
+SE (272) 23
+ENTAO (273) 23
+FIM_SE (274) 23
+ENQUANTO (275) 24
+FACA (276) 24
+FIM_ENQUANTO (277) 24
 OP_RELACIONAL (278) 26
 SOMA (279) 28
 SUB (280) 29 33
@@ -160,12 +160,12 @@ state 2
     1 PROGRAMA: INICIOPROG . LISTA_PARAM FIMPROG
 
     error          shift, and go to state 4
-    INICIOARGS     shift, and go to state 5
-    INICIOVARS     shift, and go to state 6
-    ESCREVA        shift, and go to state 7
-    SE             shift, and go to state 8
-    ENQUANTO       shift, and go to state 9
-    IDENTIFICADOR  shift, and go to state 10
+    IDENTIFICADOR  shift, and go to state 5
+    INICIOARGS     shift, and go to state 6
+    INICIOVARS     shift, and go to state 7
+    ESCREVA        shift, and go to state 8
+    SE             shift, and go to state 9
+    ENQUANTO       shift, and go to state 10
 
     FIMPROG  reduce using rule 20 (CODIGO)
 
@@ -194,75 +194,75 @@ state 4
 
 state 5
 
-    3 LISTA_PARAM: INICIOARGS . DECLARA_VAR FIMARGS LISTA_VAR
+   21 COMANDO: IDENTIFICADOR . ATRIBUICAO EXPRESSAO PONTO_E_VIRG
 
-    error    shift, and go to state 16
-    INTEIRO  shift, and go to state 17
-    REAL     shift, and go to state 18
-    LITERAL  shift, and go to state 19
-
-    FIMARGS  reduce using rule 10 (DECLARA_VAR)
-
-    DECLARA_VAR  go to state 20
-    TIPO_VAR     go to state 21
+    ATRIBUICAO  shift, and go to state 16
 
 
 state 6
 
-    6 LISTA_VAR: INICIOVARS . DECLARA_VAR FIMVARS CODIGO
+    3 LISTA_PARAM: INICIOARGS . DECLARA_VAR FIMARGS LISTA_VAR
 
-    error    shift, and go to state 16
-    INTEIRO  shift, and go to state 17
-    REAL     shift, and go to state 18
-    LITERAL  shift, and go to state 19
+    error    shift, and go to state 17
+    INTEIRO  shift, and go to state 18
+    REAL     shift, and go to state 19
+    LITERAL  shift, and go to state 20
 
-    FIMVARS  reduce using rule 10 (DECLARA_VAR)
+    FIMARGS  reduce using rule 10 (DECLARA_VAR)
 
-    DECLARA_VAR  go to state 22
-    TIPO_VAR     go to state 21
+    DECLARA_VAR  go to state 21
+    TIPO_VAR     go to state 22
 
 
 state 7
 
-   22 COMANDO: ESCREVA . CORPO_ESCREVA PONTO_E_VIRG
+    6 LISTA_VAR: INICIOVARS . DECLARA_VAR FIMVARS CODIGO
 
-    error          shift, and go to state 23
-    INTEGER        shift, and go to state 24
-    DOUBLE         shift, and go to state 25
-    STRING         shift, and go to state 26
-    IDENTIFICADOR  shift, and go to state 27
-    SUB            shift, and go to state 28
-    ABRE_PAR       shift, and go to state 29
+    error    shift, and go to state 17
+    INTEIRO  shift, and go to state 18
+    REAL     shift, and go to state 19
+    LITERAL  shift, and go to state 20
 
-    CORPO_ESCREVA  go to state 30
-    EXPRESSAO      go to state 31
+    FIMVARS  reduce using rule 10 (DECLARA_VAR)
+
+    DECLARA_VAR  go to state 23
+    TIPO_VAR     go to state 22
 
 
 state 8
 
-   23 COMANDO: SE . CONDICAO ENTAO CODIGO FIM_SE
+   22 COMANDO: ESCREVA . CORPO_ESCREVA PONTO_E_VIRG
 
-    error     shift, and go to state 32
-    ABRE_PAR  shift, and go to state 33
+    error          shift, and go to state 24
+    IDENTIFICADOR  shift, and go to state 25
+    INTEGER        shift, and go to state 26
+    DOUBLE         shift, and go to state 27
+    STRING         shift, and go to state 28
+    SUB            shift, and go to state 29
+    ABRE_PAR       shift, and go to state 30
 
-    CONDICAO  go to state 34
+    CORPO_ESCREVA  go to state 31
+    EXPRESSAO      go to state 32
 
 
 state 9
 
-   24 COMANDO: ENQUANTO . CONDICAO FACA CODIGO FIM_ENQUANTO
+   23 COMANDO: SE . CONDICAO ENTAO CODIGO FIM_SE
 
-    error     shift, and go to state 32
-    ABRE_PAR  shift, and go to state 33
+    error     shift, and go to state 33
+    ABRE_PAR  shift, and go to state 34
 
     CONDICAO  go to state 35
 
 
 state 10
 
-   21 COMANDO: IDENTIFICADOR . ATRIBUICAO EXPRESSAO PONTO_E_VIRG
+   24 COMANDO: ENQUANTO . CONDICAO FACA CODIGO FIM_ENQUANTO
 
-    ATRIBUICAO  shift, and go to state 36
+    error     shift, and go to state 33
+    ABRE_PAR  shift, and go to state 34
+
+    CONDICAO  go to state 36
 
 
 state 11
@@ -290,10 +290,10 @@ state 14
 
    19 CODIGO: COMANDO . CODIGO
 
-    ESCREVA        shift, and go to state 7
-    SE             shift, and go to state 8
-    ENQUANTO       shift, and go to state 9
-    IDENTIFICADOR  shift, and go to state 10
+    IDENTIFICADOR  shift, and go to state 5
+    ESCREVA        shift, and go to state 8
+    SE             shift, and go to state 9
+    ENQUANTO       shift, and go to state 10
 
     $default  reduce using rule 20 (CODIGO)
 
@@ -310,6 +310,21 @@ state 15
 
 state 16
 
+   21 COMANDO: IDENTIFICADOR ATRIBUICAO . EXPRESSAO PONTO_E_VIRG
+
+    error          shift, and go to state 24
+    IDENTIFICADOR  shift, and go to state 25
+    INTEGER        shift, and go to state 26
+    DOUBLE         shift, and go to state 27
+    STRING         shift, and go to state 28
+    SUB            shift, and go to state 29
+    ABRE_PAR       shift, and go to state 30
+
+    EXPRESSAO  go to state 39
+
+
+state 17
+
    11 DECLARA_VAR: error .
    18 TIPO_VAR: error .
 
@@ -318,124 +333,124 @@ state 16
     $default       reduce using rule 11 (DECLARA_VAR)
 
 
-state 17
+state 18
 
    15 TIPO_VAR: INTEIRO .
 
     $default  reduce using rule 15 (TIPO_VAR)
 
 
-state 18
+state 19
 
    16 TIPO_VAR: REAL .
 
     $default  reduce using rule 16 (TIPO_VAR)
 
 
-state 19
+state 20
 
    17 TIPO_VAR: LITERAL .
 
     $default  reduce using rule 17 (TIPO_VAR)
 
 
-state 20
+state 21
 
     3 LISTA_PARAM: INICIOARGS DECLARA_VAR . FIMARGS LISTA_VAR
 
-    FIMARGS  shift, and go to state 39
-
-
-state 21
-
-    9 DECLARA_VAR: TIPO_VAR . NOMES PONTO_E_VIRG DECLARA_VAR
-
-    error          shift, and go to state 40
-    IDENTIFICADOR  shift, and go to state 41
-
-    NOMES  go to state 42
+    FIMARGS  shift, and go to state 40
 
 
 state 22
 
-    6 LISTA_VAR: INICIOVARS DECLARA_VAR . FIMVARS CODIGO
+    9 DECLARA_VAR: TIPO_VAR . NOMES PONTO_E_VIRG DECLARA_VAR
 
-    FIMVARS  shift, and go to state 43
+    error          shift, and go to state 41
+    IDENTIFICADOR  shift, and go to state 42
+
+    NOMES  go to state 43
 
 
 state 23
+
+    6 LISTA_VAR: INICIOVARS DECLARA_VAR . FIMVARS CODIGO
+
+    FIMVARS  shift, and go to state 44
+
+
+state 24
 
    38 EXPRESSAO: error .
 
     $default  reduce using rule 38 (EXPRESSAO)
 
 
-state 24
-
-   35 EXPRESSAO: INTEGER .
-
-    $default  reduce using rule 35 (EXPRESSAO)
-
-
 state 25
-
-   36 EXPRESSAO: DOUBLE .
-
-    $default  reduce using rule 36 (EXPRESSAO)
-
-
-state 26
-
-   37 EXPRESSAO: STRING .
-
-    $default  reduce using rule 37 (EXPRESSAO)
-
-
-state 27
 
    34 EXPRESSAO: IDENTIFICADOR .
 
     $default  reduce using rule 34 (EXPRESSAO)
 
 
+state 26
+
+   35 EXPRESSAO: INTEGER .
+
+    $default  reduce using rule 35 (EXPRESSAO)
+
+
+state 27
+
+   36 EXPRESSAO: DOUBLE .
+
+    $default  reduce using rule 36 (EXPRESSAO)
+
+
 state 28
 
-   33 EXPRESSAO: SUB . EXPRESSAO
+   37 EXPRESSAO: STRING .
 
-    error          shift, and go to state 23
-    INTEGER        shift, and go to state 24
-    DOUBLE         shift, and go to state 25
-    STRING         shift, and go to state 26
-    IDENTIFICADOR  shift, and go to state 27
-    SUB            shift, and go to state 28
-    ABRE_PAR       shift, and go to state 29
-
-    EXPRESSAO  go to state 44
+    $default  reduce using rule 37 (EXPRESSAO)
 
 
 state 29
 
-   32 EXPRESSAO: ABRE_PAR . EXPRESSAO FECHA_PAR
+   33 EXPRESSAO: SUB . EXPRESSAO
 
-    error          shift, and go to state 23
-    INTEGER        shift, and go to state 24
-    DOUBLE         shift, and go to state 25
-    STRING         shift, and go to state 26
-    IDENTIFICADOR  shift, and go to state 27
-    SUB            shift, and go to state 28
-    ABRE_PAR       shift, and go to state 29
+    error          shift, and go to state 24
+    IDENTIFICADOR  shift, and go to state 25
+    INTEGER        shift, and go to state 26
+    DOUBLE         shift, and go to state 27
+    STRING         shift, and go to state 28
+    SUB            shift, and go to state 29
+    ABRE_PAR       shift, and go to state 30
 
     EXPRESSAO  go to state 45
 
 
 state 30
 
-   22 COMANDO: ESCREVA CORPO_ESCREVA . PONTO_E_VIRG
+   32 EXPRESSAO: ABRE_PAR . EXPRESSAO FECHA_PAR
 
-    PONTO_E_VIRG  shift, and go to state 46
+    error          shift, and go to state 24
+    IDENTIFICADOR  shift, and go to state 25
+    INTEGER        shift, and go to state 26
+    DOUBLE         shift, and go to state 27
+    STRING         shift, and go to state 28
+    SUB            shift, and go to state 29
+    ABRE_PAR       shift, and go to state 30
+
+    EXPRESSAO  go to state 46
 
 
 state 31
+
+   22 COMANDO: ESCREVA CORPO_ESCREVA . PONTO_E_VIRG
+
+    PONTO_E_VIRG  shift, and go to state 47
+
+
+state 32
 
    25 CORPO_ESCREVA: EXPRESSAO .
    28 EXPRESSAO: EXPRESSAO . SOMA EXPRESSAO
@@ -443,60 +458,45 @@ state 31
    30          | EXPRESSAO . MULT EXPRESSAO
    31          | EXPRESSAO . DIV EXPRESSAO
 
-    SOMA  shift, and go to state 47
-    SUB   shift, and go to state 48
-    MULT  shift, and go to state 49
-    DIV   shift, and go to state 50
+    SOMA  shift, and go to state 48
+    SUB   shift, and go to state 49
+    MULT  shift, and go to state 50
+    DIV   shift, and go to state 51
 
     $default  reduce using rule 25 (CORPO_ESCREVA)
 
 
-state 32
+state 33
 
    27 CONDICAO: error .
 
     $default  reduce using rule 27 (CONDICAO)
 
 
-state 33
+state 34
 
    26 CONDICAO: ABRE_PAR . ID_OR_NUMBER OP_RELACIONAL ID_OR_NUMBER FECHA_PAR
 
-    error          shift, and go to state 51
-    INTEGER        shift, and go to state 52
-    DOUBLE         shift, and go to state 53
-    IDENTIFICADOR  shift, and go to state 54
+    error          shift, and go to state 52
+    IDENTIFICADOR  shift, and go to state 53
+    INTEGER        shift, and go to state 54
+    DOUBLE         shift, and go to state 55
 
-    ID_OR_NUMBER  go to state 55
-
-
-state 34
-
-   23 COMANDO: SE CONDICAO . ENTAO CODIGO FIM_SE
-
-    ENTAO  shift, and go to state 56
+    ID_OR_NUMBER  go to state 56
 
 
 state 35
 
-   24 COMANDO: ENQUANTO CONDICAO . FACA CODIGO FIM_ENQUANTO
+   23 COMANDO: SE CONDICAO . ENTAO CODIGO FIM_SE
 
-    FACA  shift, and go to state 57
+    ENTAO  shift, and go to state 57
 
 
 state 36
 
-   21 COMANDO: IDENTIFICADOR ATRIBUICAO . EXPRESSAO PONTO_E_VIRG
+   24 COMANDO: ENQUANTO CONDICAO . FACA CODIGO FIM_ENQUANTO
 
-    error          shift, and go to state 23
-    INTEGER        shift, and go to state 24
-    DOUBLE         shift, and go to state 25
-    STRING         shift, and go to state 26
-    IDENTIFICADOR  shift, and go to state 27
-    SUB            shift, and go to state 28
-    ABRE_PAR       shift, and go to state 29
-
-    EXPRESSAO  go to state 58
+    FACA  shift, and go to state 58
 
 
 state 37
@@ -515,62 +515,77 @@ state 38
 
 state 39
 
+   21 COMANDO: IDENTIFICADOR ATRIBUICAO EXPRESSAO . PONTO_E_VIRG
+   28 EXPRESSAO: EXPRESSAO . SOMA EXPRESSAO
+   29          | EXPRESSAO . SUB EXPRESSAO
+   30          | EXPRESSAO . MULT EXPRESSAO
+   31          | EXPRESSAO . DIV EXPRESSAO
+
+    SOMA          shift, and go to state 48
+    SUB           shift, and go to state 49
+    MULT          shift, and go to state 50
+    DIV           shift, and go to state 51
+    PONTO_E_VIRG  shift, and go to state 59
+
+
+state 40
+
     3 LISTA_PARAM: INICIOARGS DECLARA_VAR FIMARGS . LISTA_VAR
 
-    error          shift, and go to state 59
-    INICIOVARS     shift, and go to state 6
-    ESCREVA        shift, and go to state 7
-    SE             shift, and go to state 8
-    ENQUANTO       shift, and go to state 9
-    IDENTIFICADOR  shift, and go to state 10
+    error          shift, and go to state 60
+    IDENTIFICADOR  shift, and go to state 5
+    INICIOVARS     shift, and go to state 7
+    ESCREVA        shift, and go to state 8
+    SE             shift, and go to state 9
+    ENQUANTO       shift, and go to state 10
 
     FIMPROG  reduce using rule 20 (CODIGO)
 
-    LISTA_VAR  go to state 60
+    LISTA_VAR  go to state 61
     CODIGO     go to state 13
     COMANDO    go to state 14
 
 
-state 40
+state 41
 
    14 NOMES: error .
 
     $default  reduce using rule 14 (NOMES)
 
 
-state 41
+state 42
 
    12 NOMES: IDENTIFICADOR . VIRGULA NOMES
    13      | IDENTIFICADOR .
 
-    VIRGULA  shift, and go to state 61
+    VIRGULA  shift, and go to state 62
 
     $default  reduce using rule 13 (NOMES)
 
 
-state 42
+state 43
 
     9 DECLARA_VAR: TIPO_VAR NOMES . PONTO_E_VIRG DECLARA_VAR
 
-    PONTO_E_VIRG  shift, and go to state 62
-
-
-state 43
-
-    6 LISTA_VAR: INICIOVARS DECLARA_VAR FIMVARS . CODIGO
-
-    ESCREVA        shift, and go to state 7
-    SE             shift, and go to state 8
-    ENQUANTO       shift, and go to state 9
-    IDENTIFICADOR  shift, and go to state 10
-
-    $default  reduce using rule 20 (CODIGO)
-
-    CODIGO   go to state 63
-    COMANDO  go to state 14
+    PONTO_E_VIRG  shift, and go to state 63
 
 
 state 44
+
+    6 LISTA_VAR: INICIOVARS DECLARA_VAR FIMVARS . CODIGO
+
+    IDENTIFICADOR  shift, and go to state 5
+    ESCREVA        shift, and go to state 8
+    SE             shift, and go to state 9
+    ENQUANTO       shift, and go to state 10
+
+    $default  reduce using rule 20 (CODIGO)
+
+    CODIGO   go to state 64
+    COMANDO  go to state 14
+
+
+state 45
 
    28 EXPRESSAO: EXPRESSAO . SOMA EXPRESSAO
    29          | EXPRESSAO . SUB EXPRESSAO
@@ -581,7 +596,7 @@ state 44
     $default  reduce using rule 33 (EXPRESSAO)
 
 
-state 45
+state 46
 
    28 EXPRESSAO: EXPRESSAO . SOMA EXPRESSAO
    29          | EXPRESSAO . SUB EXPRESSAO
@@ -589,138 +604,123 @@ state 45
    31          | EXPRESSAO . DIV EXPRESSAO
    32          | ABRE_PAR EXPRESSAO . FECHA_PAR
 
-    SOMA       shift, and go to state 47
-    SUB        shift, and go to state 48
-    MULT       shift, and go to state 49
-    DIV        shift, and go to state 50
-    FECHA_PAR  shift, and go to state 64
+    SOMA       shift, and go to state 48
+    SUB        shift, and go to state 49
+    MULT       shift, and go to state 50
+    DIV        shift, and go to state 51
+    FECHA_PAR  shift, and go to state 65
 
 
-state 46
+state 47
 
    22 COMANDO: ESCREVA CORPO_ESCREVA PONTO_E_VIRG .
 
     $default  reduce using rule 22 (COMANDO)
 
 
-state 47
+state 48
 
    28 EXPRESSAO: EXPRESSAO SOMA . EXPRESSAO
 
-    error          shift, and go to state 23
-    INTEGER        shift, and go to state 24
-    DOUBLE         shift, and go to state 25
-    STRING         shift, and go to state 26
-    IDENTIFICADOR  shift, and go to state 27
-    SUB            shift, and go to state 28
-    ABRE_PAR       shift, and go to state 29
-
-    EXPRESSAO  go to state 65
-
-
-state 48
-
-   29 EXPRESSAO: EXPRESSAO SUB . EXPRESSAO
-
-    error          shift, and go to state 23
-    INTEGER        shift, and go to state 24
-    DOUBLE         shift, and go to state 25
-    STRING         shift, and go to state 26
-    IDENTIFICADOR  shift, and go to state 27
-    SUB            shift, and go to state 28
-    ABRE_PAR       shift, and go to state 29
+    error          shift, and go to state 24
+    IDENTIFICADOR  shift, and go to state 25
+    INTEGER        shift, and go to state 26
+    DOUBLE         shift, and go to state 27
+    STRING         shift, and go to state 28
+    SUB            shift, and go to state 29
+    ABRE_PAR       shift, and go to state 30
 
     EXPRESSAO  go to state 66
 
 
 state 49
 
-   30 EXPRESSAO: EXPRESSAO MULT . EXPRESSAO
+   29 EXPRESSAO: EXPRESSAO SUB . EXPRESSAO
 
-    error          shift, and go to state 23
-    INTEGER        shift, and go to state 24
-    DOUBLE         shift, and go to state 25
-    STRING         shift, and go to state 26
-    IDENTIFICADOR  shift, and go to state 27
-    SUB            shift, and go to state 28
-    ABRE_PAR       shift, and go to state 29
+    error          shift, and go to state 24
+    IDENTIFICADOR  shift, and go to state 25
+    INTEGER        shift, and go to state 26
+    DOUBLE         shift, and go to state 27
+    STRING         shift, and go to state 28
+    SUB            shift, and go to state 29
+    ABRE_PAR       shift, and go to state 30
 
     EXPRESSAO  go to state 67
 
 
 state 50
 
-   31 EXPRESSAO: EXPRESSAO DIV . EXPRESSAO
+   30 EXPRESSAO: EXPRESSAO MULT . EXPRESSAO
 
-    error          shift, and go to state 23
-    INTEGER        shift, and go to state 24
-    DOUBLE         shift, and go to state 25
-    STRING         shift, and go to state 26
-    IDENTIFICADOR  shift, and go to state 27
-    SUB            shift, and go to state 28
-    ABRE_PAR       shift, and go to state 29
+    error          shift, and go to state 24
+    IDENTIFICADOR  shift, and go to state 25
+    INTEGER        shift, and go to state 26
+    DOUBLE         shift, and go to state 27
+    STRING         shift, and go to state 28
+    SUB            shift, and go to state 29
+    ABRE_PAR       shift, and go to state 30
 
     EXPRESSAO  go to state 68
 
 
 state 51
 
+   31 EXPRESSAO: EXPRESSAO DIV . EXPRESSAO
+
+    error          shift, and go to state 24
+    IDENTIFICADOR  shift, and go to state 25
+    INTEGER        shift, and go to state 26
+    DOUBLE         shift, and go to state 27
+    STRING         shift, and go to state 28
+    SUB            shift, and go to state 29
+    ABRE_PAR       shift, and go to state 30
+
+    EXPRESSAO  go to state 69
+
+
+state 52
+
    42 ID_OR_NUMBER: error .
 
     $default  reduce using rule 42 (ID_OR_NUMBER)
 
 
-state 52
-
-   40 ID_OR_NUMBER: INTEGER .
-
-    $default  reduce using rule 40 (ID_OR_NUMBER)
-
-
 state 53
-
-   41 ID_OR_NUMBER: DOUBLE .
-
-    $default  reduce using rule 41 (ID_OR_NUMBER)
-
-
-state 54
 
    39 ID_OR_NUMBER: IDENTIFICADOR .
 
     $default  reduce using rule 39 (ID_OR_NUMBER)
 
 
+state 54
+
+   40 ID_OR_NUMBER: INTEGER .
+
+    $default  reduce using rule 40 (ID_OR_NUMBER)
+
+
 state 55
 
-   26 CONDICAO: ABRE_PAR ID_OR_NUMBER . OP_RELACIONAL ID_OR_NUMBER FECHA_PAR
+   41 ID_OR_NUMBER: DOUBLE .
 
-    OP_RELACIONAL  shift, and go to state 69
+    $default  reduce using rule 41 (ID_OR_NUMBER)
 
 
 state 56
 
-   23 COMANDO: SE CONDICAO ENTAO . CODIGO FIM_SE
+   26 CONDICAO: ABRE_PAR ID_OR_NUMBER . OP_RELACIONAL ID_OR_NUMBER FECHA_PAR
 
-    ESCREVA        shift, and go to state 7
-    SE             shift, and go to state 8
-    ENQUANTO       shift, and go to state 9
-    IDENTIFICADOR  shift, and go to state 10
-
-    $default  reduce using rule 20 (CODIGO)
-
-    CODIGO   go to state 70
-    COMANDO  go to state 14
+    OP_RELACIONAL  shift, and go to state 70
 
 
 state 57
 
-   24 COMANDO: ENQUANTO CONDICAO FACA . CODIGO FIM_ENQUANTO
+   23 COMANDO: SE CONDICAO ENTAO . CODIGO FIM_SE
 
-    ESCREVA        shift, and go to state 7
-    SE             shift, and go to state 8
-    ENQUANTO       shift, and go to state 9
-    IDENTIFICADOR  shift, and go to state 10
+    IDENTIFICADOR  shift, and go to state 5
+    ESCREVA        shift, and go to state 8
+    SE             shift, and go to state 9
+    ENQUANTO       shift, and go to state 10
 
     $default  reduce using rule 20 (CODIGO)
 
@@ -730,74 +730,81 @@ state 57
 
 state 58
 
-   21 COMANDO: IDENTIFICADOR ATRIBUICAO EXPRESSAO . PONTO_E_VIRG
-   28 EXPRESSAO: EXPRESSAO . SOMA EXPRESSAO
-   29          | EXPRESSAO . SUB EXPRESSAO
-   30          | EXPRESSAO . MULT EXPRESSAO
-   31          | EXPRESSAO . DIV EXPRESSAO
+   24 COMANDO: ENQUANTO CONDICAO FACA . CODIGO FIM_ENQUANTO
 
-    SOMA          shift, and go to state 47
-    SUB           shift, and go to state 48
-    MULT          shift, and go to state 49
-    DIV           shift, and go to state 50
-    PONTO_E_VIRG  shift, and go to state 72
+    IDENTIFICADOR  shift, and go to state 5
+    ESCREVA        shift, and go to state 8
+    SE             shift, and go to state 9
+    ENQUANTO       shift, and go to state 10
+
+    $default  reduce using rule 20 (CODIGO)
+
+    CODIGO   go to state 72
+    COMANDO  go to state 14
 
 
 state 59
+
+   21 COMANDO: IDENTIFICADOR ATRIBUICAO EXPRESSAO PONTO_E_VIRG .
+
+    $default  reduce using rule 21 (COMANDO)
+
+
+state 60
 
     8 LISTA_VAR: error .
 
     $default  reduce using rule 8 (LISTA_VAR)
 
 
-state 60
+state 61
 
     3 LISTA_PARAM: INICIOARGS DECLARA_VAR FIMARGS LISTA_VAR .
 
     $default  reduce using rule 3 (LISTA_PARAM)
 
 
-state 61
+state 62
 
    12 NOMES: IDENTIFICADOR VIRGULA . NOMES
 
-    error          shift, and go to state 40
-    IDENTIFICADOR  shift, and go to state 41
+    error          shift, and go to state 41
+    IDENTIFICADOR  shift, and go to state 42
 
     NOMES  go to state 73
 
 
-state 62
+state 63
 
     9 DECLARA_VAR: TIPO_VAR NOMES PONTO_E_VIRG . DECLARA_VAR
 
-    error    shift, and go to state 16
-    INTEIRO  shift, and go to state 17
-    REAL     shift, and go to state 18
-    LITERAL  shift, and go to state 19
+    error    shift, and go to state 17
+    INTEIRO  shift, and go to state 18
+    REAL     shift, and go to state 19
+    LITERAL  shift, and go to state 20
 
     FIMARGS  reduce using rule 10 (DECLARA_VAR)
     FIMVARS  reduce using rule 10 (DECLARA_VAR)
 
     DECLARA_VAR  go to state 74
-    TIPO_VAR     go to state 21
+    TIPO_VAR     go to state 22
 
 
-state 63
+state 64
 
     6 LISTA_VAR: INICIOVARS DECLARA_VAR FIMVARS CODIGO .
 
     $default  reduce using rule 6 (LISTA_VAR)
 
 
-state 64
+state 65
 
    32 EXPRESSAO: ABRE_PAR EXPRESSAO FECHA_PAR .
 
     $default  reduce using rule 32 (EXPRESSAO)
 
 
-state 65
+state 66
 
    28 EXPRESSAO: EXPRESSAO . SOMA EXPRESSAO
    28          | EXPRESSAO SOMA EXPRESSAO .
@@ -805,13 +812,13 @@ state 65
    30          | EXPRESSAO . MULT EXPRESSAO
    31          | EXPRESSAO . DIV EXPRESSAO
 
-    MULT  shift, and go to state 49
-    DIV   shift, and go to state 50
+    MULT  shift, and go to state 50
+    DIV   shift, and go to state 51
 
     $default  reduce using rule 28 (EXPRESSAO)
 
 
-state 66
+state 67
 
    28 EXPRESSAO: EXPRESSAO . SOMA EXPRESSAO
    29          | EXPRESSAO . SUB EXPRESSAO
@@ -819,13 +826,13 @@ state 66
    30          | EXPRESSAO . MULT EXPRESSAO
    31          | EXPRESSAO . DIV EXPRESSAO
 
-    MULT  shift, and go to state 49
-    DIV   shift, and go to state 50
+    MULT  shift, and go to state 50
+    DIV   shift, and go to state 51
 
     $default  reduce using rule 29 (EXPRESSAO)
 
 
-state 67
+state 68
 
    28 EXPRESSAO: EXPRESSAO . SOMA EXPRESSAO
    29          | EXPRESSAO . SUB EXPRESSAO
@@ -836,7 +843,7 @@ state 67
     $default  reduce using rule 30 (EXPRESSAO)
 
 
-state 68
+state 69
 
    28 EXPRESSAO: EXPRESSAO . SOMA EXPRESSAO
    29          | EXPRESSAO . SUB EXPRESSAO
@@ -847,37 +854,30 @@ state 68
     $default  reduce using rule 31 (EXPRESSAO)
 
 
-state 69
+state 70
 
    26 CONDICAO: ABRE_PAR ID_OR_NUMBER OP_RELACIONAL . ID_OR_NUMBER FECHA_PAR
 
-    error          shift, and go to state 51
-    INTEGER        shift, and go to state 52
-    DOUBLE         shift, and go to state 53
-    IDENTIFICADOR  shift, and go to state 54
+    error          shift, and go to state 52
+    IDENTIFICADOR  shift, and go to state 53
+    INTEGER        shift, and go to state 54
+    DOUBLE         shift, and go to state 55
 
     ID_OR_NUMBER  go to state 75
 
 
-state 70
+state 71
 
    23 COMANDO: SE CONDICAO ENTAO CODIGO . FIM_SE
 
     FIM_SE  shift, and go to state 76
 
 
-state 71
+state 72
 
    24 COMANDO: ENQUANTO CONDICAO FACA CODIGO . FIM_ENQUANTO
 
     FIM_ENQUANTO  shift, and go to state 77
-
-
-state 72
-
-   21 COMANDO: IDENTIFICADOR ATRIBUICAO EXPRESSAO PONTO_E_VIRG .
-
-    $default  reduce using rule 21 (COMANDO)
 
 
 state 73
