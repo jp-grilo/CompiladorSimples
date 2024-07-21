@@ -1,6 +1,5 @@
 /201909754
 201909754.zip
-src/Gramatica.pdf
 src/parser.exe
 src/lex.yy.c
 src/input.txt
@@ -9,6 +8,7 @@ src/parser.tab.c
 src/parser.tab.h
 src/printf.txt
 src/symtab_dump.txt
+Gramatica.pdf
 src/OUT_GERADO.txt
 src/OUT_TABSIMB.txt
 src/OUTLEX.txt
