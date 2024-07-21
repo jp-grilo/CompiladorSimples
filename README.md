@@ -11,7 +11,7 @@ Este repositório foi criado para um trabalho da disciplina de Compiladores na U
 
 ## Descrição
 
-O compilador desenvolvido neste projeto é capaz de realizar a análise léxica e sintática de uma linguagem simples, conforme especificado pelo professor da disciplina. As ferramentas Flex e Bison foram utilizadas para a implementação das etapas de análise léxica e sintática, respectivamente.
+O compilador desenvolvido neste projeto é capaz de realizar a análise léxica, sintática e semântica, de uma linguagem simples, além de gerar um código intermediario em Bril, conforme especificado pelo professor da disciplina. As ferramentas Flex e Bison foram utilizadas para a implementação de todas as etapas, basicamente.
 
 ## Estrutura do Repositório
 
