@@ -94,14 +94,13 @@ typedef union YYSTYPE
     TipoToken tipo;
  
 	// for declarations
-	int tipo_var;
-	int tipo_const;
+	int tipo_associado;
 
 
 
 
 /* Line 1676 of yacc.c  */
-#line 105 "parser.tab.h"
+#line 104 "parser.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

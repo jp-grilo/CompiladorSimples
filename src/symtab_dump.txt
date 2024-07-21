@@ -1,13 +1,13 @@
 ------------ ------- -----------
 Name         Type    Declaration
 ------------ ------- -----------
+"1.0"        string  
 potencia     inteiro variavel  
 pliteral     string  parametro 
 sliteral     string  parametro 
 avulso       inteiro parametro 
 "Este valor eh grande\n" string  
 0            inteiro 
-1            inteiro 
 "Resultado: " string  
 2            inteiro 
 3            inteiro 
@@ -18,8 +18,8 @@ avulso       inteiro parametro
 8            inteiro 
 9            inteiro 
 "\n"         string  
+"1"          string  
 valor        real    variavel  
 resultado    real    variavel  
-1.0          real    
 2.0          real    
 3.0          real    

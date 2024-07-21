@@ -21,11 +21,11 @@ PONTO_E_VIRG	 ->	 ; linha 10
 FIMVARS	 ->	 fimvars linha 11
 IDENTIFICADOR	 ->	 potencia linha 13
 ATRIBUICAO	 ->	 = linha 13
-INTEGER	 ->	 1 linha 13
+STRING	 ->	 "1" linha 13
 PONTO_E_VIRG	 ->	 ; linha 13
 IDENTIFICADOR	 ->	 valor linha 14
 ATRIBUICAO	 ->	 = linha 14
-DOUBLE	 ->	 1.0 linha 14
+STRING	 ->	 "1.0" linha 14
 PONTO_E_VIRG	 ->	 ; linha 14
 IDENTIFICADOR	 ->	 resultado linha 15
 ATRIBUICAO	 ->	 = linha 15
@@ -38,7 +38,7 @@ OP_RELACIONAL	 ->	 == linha 17
 INTEGER	 ->	 2 linha 17
 FECHA_PAR	 ->	 ) linha 17
 ENTAO	 ->	 entao linha 17
-IDENTIFICADOR	 ->	 valor linha 18
+IDENTIFICADOR	 ->	 pliteral linha 18
 ATRIBUICAO	 ->	 = linha 18
 DOUBLE	 ->	 3.0 linha 18
 PONTO_E_VIRG	 ->	 ; linha 18

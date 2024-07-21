@@ -10,16 +10,16 @@ iniciovars
       real valor, resultado;
 fimvars
 
-potencia = 1;
-valor = 1.0;
+potencia = "1";
+valor = "1.0";
 resultado = 2.0;
 
 se (potencia == 2) entao
-     valor = 3.0;
+     pliteral = 3.0;
 fimse
 
 se (potencia < 3) entao
-     valor = 4 / valor;
+    valor = 4 / valor;
 	potencia = potencia * (-5);
 	enquanto (potencia > 0) faca
 		resultado = resultado * valor;

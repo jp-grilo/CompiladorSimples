@@ -67,7 +67,8 @@ COMENTARIO          \{({L}|{D}|{S}|" "|\t)*\}
                             ret_print("INTEGER");
                             //printf("Valor int expr: %s\t\tlinha: %d\n", yytext, lineno);
                             insert(yytext, strlen(yytext), TIPO_INT, INDEF, lineno);
-                            yylval.val.int_val = atoi(yytext);
+                            yylval.val.str_val = malloc(yyleng * sizeof(char));
+				            strcpy(yylval.val.str_val, yytext); 
                             return INTEGER; 
                         }
 
@@ -75,7 +76,8 @@ COMENTARIO          \{({L}|{D}|{S}|" "|\t)*\}
                             ret_print("DOUBLE"); 
                             //printf("Valor real expr: %s\t\tlinha: %d\n", yytext, lineno);
                             insert(yytext, strlen(yytext), TIPO_REAL, INDEF, lineno);
-                            yylval.val.real_val = atof(yytext);
+                            yylval.val.str_val = malloc(yyleng * sizeof(char));
+				            strcpy(yylval.val.str_val, yytext); 
                             return DOUBLE; 
                         }
 

@@ -58,35 +58,8 @@ void init_hash_table(); // Inicializa a tabela hash.
 unsigned int hash(char *key); // Calcula o índice hash para uma chave dada.
 void insert(char *name, int len, int type, int declaracao, int lineno); // Insere um símbolo na tabela hash.
 list_t *lookup(char *name); // Procura por um símbolo na tabela hash.
-char *type_lookup(char *name);// Procura por um símbolo na tabela hash e retorna o seu tipo.
+int type_lookup(char *name);// Procura por um símbolo na tabela hash e retorna o seu tipo.
 void tabsimb_dump(FILE *of); // Imprime o conteúdo da tabela de símbolos em um arquivo.
 list_t **get_hash_table(); // Retorna a tabela hash inteira.
 list_t *get_hash_table_entry(int index); // Retorna uma entrada específica da tabela hash.
-
-
-typedef struct expressoes
-{
-    int num_expressao;
-    int tipo_elem_esquerdo, tipo_elem_direito;
-    int val_int_elem_esquerdo, val_int_elem_direito;
-    double val_real_elem_esquerdo, val_real_elem_direito;
-
-    } expressoes;
-
-// Estrutura para armazenar um lexema
-typedef struct lexemas {
-    char lexema[MAXIDSIZE];
-} lexemas;
-// Funções para lista de expressões
-void init_lista_expr(); // Inicializa a lista de expressões.
-void insert_expr(int index, int num_expressao, int tipo_elem_esquerdo, int tipo_elem_direito, 
-                 int val_int_elem_esquerdo, int val_int_elem_direito, 
-                 double val_real_elem_esquerdo, double val_real_elem_direito); // Insere uma nova expressão na lista.
-expressoes* lookup_expr(int index); // Busca uma expressão específica na lista.
-void dump_lista_expr(int declarados); // Imprime o conteúdo da lista de expressões.
-
-// Funções para lista de lexemas
-void init_lista_lex(); // Inicializa a lista de lexemas.
-void insert_lex(int index, const char* lexema); // Insere um novo lexema na lista na posição especificada.
-char* lookup_lex(int index); // Retorna o lexema na posição especificada.
-void dump_lista_lex(int declarados); // Imprime o conteúdo da lista de lexemas.
+char *return_type(int type);
