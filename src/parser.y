@@ -27,8 +27,6 @@ int num_lexema=0;
 	
 	// structures
 	list_t* item_tabela;
-	
-    TipoToken tipo;
  
 	// for declarations
 	int tipo_associado;
@@ -55,7 +53,7 @@ int num_lexema=0;
 %left ABRE_PAR FECHA_PAR
 
 /* definição de não terminais */
-%type<tipo_associado> TIPO_VAR EXPRESSAO
+%type<tipo_associado> TIPO_VAR EXPRESSAO ID_OR_NUMBER
 
 
 %%
@@ -141,19 +139,27 @@ COMANDO:
         }
     }
     |
-    ESCREVA CORPO_ESCREVA PONTO_E_VIRG { parser_log("COMANDO -> ESCREVA CORPO_ESCREVA PONTO_E_VIRG"); }
+    ESCREVA EXPRESSAO PONTO_E_VIRG { 
+        parser_log("COMANDO -> ESCREVA CORPO_ESCREVA PONTO_E_VIRG"); 
+    }
     |
-    SE CONDICAO ENTAO CODIGO FIM_SE { parser_log("COMANDO -> SE CONDICAO ENTAO CODIGO FIM_SE"); }
-    |
-    ENQUANTO CONDICAO FACA CODIGO FIM_ENQUANTO { parser_log("COMANDO -> ENQUANTO CONDICAO FACA CODIGO FIM_ENQUANTO"); }
-;
+    SE CONDICAO ENTAO CODIGO FIM_SE {
 
-CORPO_ESCREVA:
-    EXPRESSAO { parser_log("CORPO_ESCREVA -> EXPRESSAO"); }
+        parser_log("COMANDO -> SE CONDICAO ENTAO CODIGO FIM_SE"); 
+    }
+    |
+    ENQUANTO CONDICAO FACA CODIGO FIM_ENQUANTO { 
+
+        parser_log("COMANDO -> ENQUANTO CONDICAO FACA CODIGO FIM_ENQUANTO");
+    }
 ;
 
 CONDICAO:
-    ABRE_PAR ID_OR_NUMBER OP_RELACIONAL ID_OR_NUMBER FECHA_PAR { parser_log("CONDICAO -> ABRE_PAR ID_OR_NUMBER OP_RELACIONAL IDENTIFICADOR FECHA_PAR"); }
+    ABRE_PAR ID_OR_NUMBER OP_RELACIONAL ID_OR_NUMBER FECHA_PAR {
+        
+        parser_log("CONDICAO -> ABRE_PAR ID_OR_NUMBER OP_RELACIONAL IDENTIFICADOR FECHA_PAR");
+    
+    }
     | 
     error { temErro=1;  yyerror("\nCONDICAO -> error"); }
 ;
@@ -163,7 +169,7 @@ EXPRESSAO :
         if($1==TIPO_LITERAL || $3==TIPO_LITERAL){
             temErro=1;
             printf("ERRO:\n  - A operação de soma não pode conter literais. Var1:%s, Var2:%s, na linha %d.\n", return_type($1), return_type($3), lineno);
-            $$ = INDEF;
+            $$ = ERRO;
         }
         else if($1==TIPO_REAL || $3==TIPO_REAL){
             $$ = TIPO_REAL;
@@ -175,7 +181,7 @@ EXPRESSAO :
         if($1==TIPO_LITERAL || $3==TIPO_LITERAL){
             temErro=1;
             printf("ERRO:\n  - A operação de subtracao não pode conter literais. Var1:%s, Var2:%s, na linha %d.\n", return_type($1), return_type($3), lineno);
-            $$ = INDEF;
+            $$ = ERRO;
         }
         else if($1==TIPO_REAL || $3==TIPO_REAL){
             $$ = TIPO_REAL;
@@ -187,7 +193,7 @@ EXPRESSAO :
         if($1==TIPO_LITERAL || $3==TIPO_LITERAL){
             temErro=1;
             printf("ERRO:\n  - A operação de multiplicacao não pode conter literais. Var1:%s, Var2:%s, na linha %d.\n", return_type($1), return_type($3), lineno);
-            $$ = INDEF;
+            $$ = ERRO;
         }
         else if($1==TIPO_REAL || $3==TIPO_REAL){
             $$ = TIPO_REAL;
@@ -199,7 +205,7 @@ EXPRESSAO :
         if($1==TIPO_LITERAL || $3==TIPO_LITERAL){
             temErro=1;
             printf("ERRO:\n  - A operação de divisao não pode conter literais. Var1:%s, Var2:%s, na linha %d.\n", return_type($1), return_type($3), lineno);
-            $$ = INDEF;
+            $$ = ERRO;
         }
         else if($1==TIPO_REAL || $3==TIPO_REAL){
             $$ = TIPO_REAL;
@@ -216,7 +222,7 @@ EXPRESSAO :
         if($2==TIPO_LITERAL){
             temErro=1;
             printf("ERRO:\n  - A operação de negacao não pode conter literal. Var1:%s, na linha %d.\n", return_type($2), lineno);
-            $$ = INDEF;
+            $$ = ERRO;
         }
         $$ = $2;
         parser_log("EXPRESSAO -> '-' EXPRESSAO \%prec UMINUS");

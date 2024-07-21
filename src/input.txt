@@ -10,12 +10,12 @@ iniciovars
       real valor, resultado;
 fimvars
 
-potencia = "1";
-valor = "1.0";
+potencia = 1;
+valor = 1.0;
 resultado = 2.0;
 
 se (potencia == 2) entao
-     pliteral = 3.0;
+     valor = 3.0;
 fimse
 
 se (potencia < 3) entao
@@ -37,6 +37,8 @@ fimenquanto
 
 escreva "Resultado: ";
 escreva resultado;
+escreva potencia;
+escreva potencia + potencia;
 escreva "\n";
 
 fimprog

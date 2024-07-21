@@ -5,6 +5,7 @@
 /* tamanho máximo do conteúdo do token  */
 #define MAXCONTENTSIZE 300
 
+#define ERRO 500
 
 /* parametro ou variável */
 #define PARAMETRO 1
@@ -15,8 +16,6 @@
 #define TIPO_INT 1
 #define TIPO_REAL 2
 #define TIPO_LITERAL 3
-#define TIPO_STRING 4
-#define TIPO_COMENTARIO 5
 
 
 /* Tipos de valores */
@@ -25,10 +24,6 @@ typedef union Valores{
 	double real_val;
 	char *str_val;
 }Valores;
-
-typedef struct TipoToken{
-        int tipoNum;
-    }TipoToken;
 
 /* lista de linhas em que o token foi mencionado */
 typedef struct RefList{ 
