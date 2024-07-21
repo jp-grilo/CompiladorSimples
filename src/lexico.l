@@ -9,11 +9,12 @@
 
     extern FILE *yyin;
     extern FILE *yyout;
-    FILE *LEXOUT;
+    extern int leitura;
 
     void yyerror();
     void ret_print(char *token_type);
     
+    FILE *LEXOUT;
     int type;
     int declaracao;
     int lineno=1;     // número da linha
@@ -116,6 +117,7 @@ COMENTARIO          \{({L}|{D}|{S}|" "|\t)*\}
 
 
 void ret_print(char *token_type){
+    if(leitura) return;
     LEXOUT = fopen("OUTLEX.txt", "a") ;
     fprintf(LEXOUT, "%s\t ->\t %s linha %d\n", token_type, yytext, lineno);
 }

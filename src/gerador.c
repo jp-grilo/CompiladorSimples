@@ -8,11 +8,13 @@ int flag_gerador=0;
 int numero_constante=0;;
 
 void iniciaGerador() {
-    if(flag_gerador) return;
-    geraParametros();
-    geraVariaveis();
-    geraConstantes();
-    flag_gerador++;
+    if(!flag_gerador) {
+        geraParametros();
+        geraVariaveis();
+        geraConstantes();
+        flag_gerador++;
+    }
+    else geraFim();
 }
 
 void geraParametros() {
@@ -94,5 +96,16 @@ void geraConstantes(){
     }
   }
     free(nome_constante);
+    fclose(geradorout);
+}
+
+void geraFim(){
+    FILE *geradorout;
+    geradorout = fopen("OUT_GERADO.txt", "a");
+    if (geradorout == NULL) {
+        perror("Erro ao abrir o arquivo");
+        return;
+    }
+    fprintf(geradorout, "}");
     fclose(geradorout);
 }

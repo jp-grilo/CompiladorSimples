@@ -3,6 +3,8 @@
 #include <string.h>
 #include "lista_t.h"
  
+extern int leitura;
+
 void init_hash_table(){
     int i; 
     hash_table = malloc(SIZE * sizeof(list_t*));
@@ -17,6 +19,7 @@ unsigned int hash(char *key){
 }
  
 void insert(char *name, int len, int type, int declaracao, int lineno){
+    if(leitura) return;
     unsigned int hashval = hash(name);
     list_t *token = hash_table[hashval];
 

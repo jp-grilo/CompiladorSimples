@@ -19,6 +19,7 @@ int analise_passou();
 
 int temErro = 0;
 int numExpressao = 0;
+int leitura=0;
 
 FILE *PARSEROUT;
 
@@ -66,7 +67,6 @@ FILE *PARSEROUT;
 
 PROGRAMA:
     INICIOPROG LISTA_PARAM{
-        iniciaGerador();
         iniciaGerador();
         parser_log("PROGRAMA -> INICIOPROG LISTA_PARAM"); 
     }
@@ -330,6 +330,7 @@ void yyerror(char *producao){
 }
 
 void parser_log(char *producao){
+    if(leitura) return;
     FILE *PARSEROUT;
     PARSEROUT = fopen("OUTPARSER.txt", "a") ;
     fprintf(PARSEROUT, "%s\t linha %d\n", producao, lineno);
@@ -365,6 +366,9 @@ int main (){
 
     // parsing
 	yyin = fopen("input.txt", "r");
+    yyparse();
+    leitura=1;
+    yyin = fopen("input.txt", "r");
     yyparse();
 
     // symbol table dump
