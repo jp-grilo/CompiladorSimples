@@ -1,4 +1,0 @@
-@main( pliteral: char, sliteral: char, avulso: int) {
-potencia: int = const -1;
-valor: real = const -1.0;
-resultado: real = const -1.0;

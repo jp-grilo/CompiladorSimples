@@ -9,3 +9,7 @@ src/parser.tab.c
 src/parser.tab.h
 src/printf.txt
 src/symtab_dump.txt
+src/OUT_GERADO.txt
+src/OUT_TABSIMB.txt
+src/OUTLEX.txt
+src/OUTPARSER.txt

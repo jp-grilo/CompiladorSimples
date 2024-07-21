@@ -53,8 +53,8 @@ void init_hash_table(); // Inicializa a tabela hash.
 unsigned int hash(char *key); // Calcula o índice hash para uma chave dada.
 void insert(char *name, int len, int type, int declaracao, int lineno); // Insere um símbolo na tabela hash.
 list_t *lookup(char *name); // Procura por um símbolo na tabela hash.
-int type_lookup(char *name);// Procura por um símbolo na tabela hash e retorna o seu tipo.
+int type_lookup(char *name); // Procura por um símbolo na tabela hash e retorna o seu tipo.
+char *return_type(int type); // Retorna o tipo em formato de string.
 void tabsimb_dump(FILE *of); // Imprime o conteúdo da tabela de símbolos em um arquivo.
 list_t **get_hash_table(); // Retorna a tabela hash inteira.
 list_t *get_hash_table_entry(int index); // Retorna uma entrada específica da tabela hash.
-char *return_type(int type);

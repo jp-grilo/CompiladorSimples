@@ -79,6 +79,7 @@
 
 extern FILE *yyin;
 extern FILE *yyout;
+extern FILE *LEXOUT;
 
 extern int lineno;
 extern char *lexema;
@@ -89,11 +90,12 @@ void parser_log(char *producao);
 
 int temErro = 0;
 int num_lexema=0;
+FILE *PARSEROUT;
 
 
 
 /* Line 189 of yacc.c  */
-#line 97 "parser.tab.c"
+#line 99 "parser.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -164,22 +166,22 @@ typedef union YYSTYPE
 {
 
 /* Line 214 of yacc.c  */
-#line 24 "parser.y"
+#line 26 "parser.y"
 
-	// different types of values
+	// Diferentes tipos de valores
 	Valores val;   
 	
-	// structures
+	// Token da tabela de simbolos
 	list_t* item_tabela;
  
-	// for declarations
+	// Tipo associado
 	int tipo_associado;
 
 
 
 
 /* Line 214 of yacc.c  */
-#line 183 "parser.tab.c"
+#line 185 "parser.tab.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -191,7 +193,7 @@ typedef union YYSTYPE
 
 
 /* Line 264 of yacc.c  */
-#line 195 "parser.tab.c"
+#line 197 "parser.tab.c"
 
 #ifdef short
 # undef short
@@ -492,11 +494,11 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    62,    62,    64,    68,    70,    72,    76,    78,    80,
-      84,    85,    88,    92,    98,   103,   107,   112,   117,   122,
-     126,   127,   132,   142,   146,   150,   156,   160,   164,   176,
-     188,   200,   212,   217,   227,   232,   237,   242,   247,   251,
-     256,   261,   266
+       0,    64,    64,    66,    70,    72,    74,    78,    80,    82,
+      86,    87,    90,    94,    98,   102,   106,   111,   116,   121,
+     125,   126,   131,   141,   145,   149,   155,   159,   163,   175,
+     187,   199,   211,   216,   226,   231,   236,   241,   245,   249,
+     254,   259,   264
 };
 #endif
 
@@ -1453,80 +1455,78 @@ yyreduce:
         case 2:
 
 /* Line 1455 of yacc.c  */
-#line 62 "parser.y"
+#line 64 "parser.y"
     { parser_log("PROGRAMA -> INICIOPROG LISTA_PARAM FIMPROG"); ;}
     break;
 
   case 3:
 
 /* Line 1455 of yacc.c  */
-#line 64 "parser.y"
+#line 66 "parser.y"
     { temErro= 1; yyerror("-  Erro na inicializacao ou finalizacao do codigo"); ;}
     break;
 
   case 4:
 
 /* Line 1455 of yacc.c  */
-#line 68 "parser.y"
+#line 70 "parser.y"
     { parser_log("LISTA_PARAM -> INICIOARGS DECLARA_VAR FIMARGS LISTA_VAR"); ;}
     break;
 
   case 5:
 
 /* Line 1455 of yacc.c  */
-#line 70 "parser.y"
+#line 72 "parser.y"
     { parser_log("LISTA_PARAM -> LISTA_VAR"); ;}
     break;
 
   case 6:
 
 /* Line 1455 of yacc.c  */
-#line 72 "parser.y"
+#line 74 "parser.y"
     { temErro= 1;  yyerror("-  Erro na estrutura de declaracao de argumentos"); ;}
     break;
 
   case 7:
 
 /* Line 1455 of yacc.c  */
-#line 76 "parser.y"
+#line 78 "parser.y"
     { parser_log("LISTA_VAR -> INICIOVARS DECLARA_VAR FIMVARS CODIGO"); ;}
     break;
 
   case 8:
 
 /* Line 1455 of yacc.c  */
-#line 78 "parser.y"
+#line 80 "parser.y"
     { parser_log("LISTA_VAR -> CODIGO"); ;}
     break;
 
   case 9:
 
 /* Line 1455 of yacc.c  */
-#line 80 "parser.y"
+#line 82 "parser.y"
     { temErro= 1;  yyerror("-  Erro na estrutura de declaracao de variaveis"); ;}
     break;
 
   case 10:
 
 /* Line 1455 of yacc.c  */
-#line 84 "parser.y"
+#line 86 "parser.y"
     { parser_log("DECLARA_VAR -> TIPO_VAR NOMES PONTO_E_VIRG DECLARA_VAR"); ;}
     break;
 
   case 12:
 
 /* Line 1455 of yacc.c  */
-#line 88 "parser.y"
+#line 90 "parser.y"
     { temErro= 1;  yyerror("-  Erro na declaracao dos identificadores"); ;}
     break;
 
   case 13:
 
 /* Line 1455 of yacc.c  */
-#line 92 "parser.y"
+#line 94 "parser.y"
     { 
-
-        //printf("Dec id: %s\t\tlinha: %d\n", $1->nome_token, lineno);
         parser_log("NOMES -> IDENTIFICADOR VIRGULA NOMES"); 
     ;}
     break;
@@ -1536,7 +1536,6 @@ yyreduce:
 /* Line 1455 of yacc.c  */
 #line 98 "parser.y"
     { 
-        //printf("Dec id: %s\t\tlinha: %d\n", $1->nome_token, lineno); 
         parser_log("NOMES -> IDENTIFICADOR"); 
     ;}
     break;
@@ -1544,14 +1543,14 @@ yyreduce:
   case 15:
 
 /* Line 1455 of yacc.c  */
-#line 103 "parser.y"
+#line 102 "parser.y"
     { temErro= 1;  yyerror("-  Erro na declaracao dos identificadores"); ;}
     break;
 
   case 16:
 
 /* Line 1455 of yacc.c  */
-#line 107 "parser.y"
+#line 106 "parser.y"
     {
         (yyval.tipo_associado) = TIPO_INT;
         parser_log("TIPO_VAR -> INTEIRO");
@@ -1561,7 +1560,7 @@ yyreduce:
   case 17:
 
 /* Line 1455 of yacc.c  */
-#line 112 "parser.y"
+#line 111 "parser.y"
     {
         (yyval.tipo_associado) = TIPO_REAL;
         parser_log("TIPO_VAR -> INTEIRO");
@@ -1571,7 +1570,7 @@ yyreduce:
   case 18:
 
 /* Line 1455 of yacc.c  */
-#line 117 "parser.y"
+#line 116 "parser.y"
     {
         (yyval.tipo_associado) = TIPO_LITERAL;
         parser_log("TIPO_VAR -> INTEIRO");
@@ -1581,21 +1580,21 @@ yyreduce:
   case 19:
 
 /* Line 1455 of yacc.c  */
-#line 122 "parser.y"
+#line 121 "parser.y"
     { temErro= 1;  yyerror("-  Tipo invalido na declaracao dos identificadores"); ;}
     break;
 
   case 20:
 
 /* Line 1455 of yacc.c  */
-#line 126 "parser.y"
+#line 125 "parser.y"
     { parser_log("CODIGO -> COMANDO CODIGO"); ;}
     break;
 
   case 22:
 
 /* Line 1455 of yacc.c  */
-#line 132 "parser.y"
+#line 131 "parser.y"
     { 
         if( ((yyvsp[(1) - (4)].item_tabela)->tipo_token == TIPO_LITERAL && ((yyvsp[(3) - (4)].tipo_associado) == TIPO_REAL || (yyvsp[(3) - (4)].tipo_associado) == TIPO_INT)) || 
             ( ((yyvsp[(1) - (4)].item_tabela)->tipo_token == TIPO_REAL || (yyvsp[(1) - (4)].item_tabela)->tipo_token == TIPO_INT) && (yyvsp[(3) - (4)].tipo_associado) == TIPO_LITERAL) 
@@ -1610,7 +1609,7 @@ yyreduce:
   case 23:
 
 /* Line 1455 of yacc.c  */
-#line 142 "parser.y"
+#line 141 "parser.y"
     { 
         parser_log("COMANDO -> ESCREVA CORPO_ESCREVA PONTO_E_VIRG"); 
     ;}
@@ -1619,7 +1618,7 @@ yyreduce:
   case 24:
 
 /* Line 1455 of yacc.c  */
-#line 146 "parser.y"
+#line 145 "parser.y"
     {
         parser_log("COMANDO -> SE CONDICAO ENTAO CODIGO FIM_SE"); 
     ;}
@@ -1628,7 +1627,7 @@ yyreduce:
   case 25:
 
 /* Line 1455 of yacc.c  */
-#line 150 "parser.y"
+#line 149 "parser.y"
     { 
         parser_log("COMANDO -> ENQUANTO CONDICAO FACA CODIGO FIM_ENQUANTO");
     ;}
@@ -1637,7 +1636,7 @@ yyreduce:
   case 26:
 
 /* Line 1455 of yacc.c  */
-#line 156 "parser.y"
+#line 155 "parser.y"
     {
         parser_log("COMANDO -> IDENTIFICADOR ATRIBUICAO EXPRESSAO PONTO_E_VIRG"); 
     ;}
@@ -1646,14 +1645,14 @@ yyreduce:
   case 27:
 
 /* Line 1455 of yacc.c  */
-#line 160 "parser.y"
+#line 159 "parser.y"
     { temErro=1;  yyerror("\nCONDICAO -> error"); ;}
     break;
 
   case 28:
 
 /* Line 1455 of yacc.c  */
-#line 164 "parser.y"
+#line 163 "parser.y"
     { 
         if((yyvsp[(1) - (3)].tipo_associado)==TIPO_LITERAL || (yyvsp[(3) - (3)].tipo_associado)==TIPO_LITERAL){
             temErro=1;
@@ -1670,7 +1669,7 @@ yyreduce:
   case 29:
 
 /* Line 1455 of yacc.c  */
-#line 176 "parser.y"
+#line 175 "parser.y"
     { 
         if((yyvsp[(1) - (3)].tipo_associado)==TIPO_LITERAL || (yyvsp[(3) - (3)].tipo_associado)==TIPO_LITERAL){
             temErro=1;
@@ -1687,7 +1686,7 @@ yyreduce:
   case 30:
 
 /* Line 1455 of yacc.c  */
-#line 188 "parser.y"
+#line 187 "parser.y"
     { 
         if((yyvsp[(1) - (3)].tipo_associado)==TIPO_LITERAL || (yyvsp[(3) - (3)].tipo_associado)==TIPO_LITERAL){
             temErro=1;
@@ -1704,7 +1703,7 @@ yyreduce:
   case 31:
 
 /* Line 1455 of yacc.c  */
-#line 200 "parser.y"
+#line 199 "parser.y"
     { 
         if((yyvsp[(1) - (3)].tipo_associado)==TIPO_LITERAL || (yyvsp[(3) - (3)].tipo_associado)==TIPO_LITERAL){
             temErro=1;
@@ -1721,7 +1720,7 @@ yyreduce:
   case 32:
 
 /* Line 1455 of yacc.c  */
-#line 212 "parser.y"
+#line 211 "parser.y"
     { 
         (yyval.tipo_associado) = (yyvsp[(2) - (3)].tipo_associado);
         parser_log("EXPRESSAO -> ABRE_PAR EXPRESSAO FECHA_PAR");
@@ -1731,7 +1730,7 @@ yyreduce:
   case 33:
 
 /* Line 1455 of yacc.c  */
-#line 217 "parser.y"
+#line 216 "parser.y"
     { 
         if((yyvsp[(2) - (2)].tipo_associado)==TIPO_LITERAL){
             temErro=1;
@@ -1746,7 +1745,7 @@ yyreduce:
   case 34:
 
 /* Line 1455 of yacc.c  */
-#line 227 "parser.y"
+#line 226 "parser.y"
     {
         (yyval.tipo_associado) = (yyvsp[(1) - (1)].item_tabela)->tipo_token;
         parser_log("EXPRESSAO -> IDENTIFICADOR");
@@ -1756,7 +1755,7 @@ yyreduce:
   case 35:
 
 /* Line 1455 of yacc.c  */
-#line 232 "parser.y"
+#line 231 "parser.y"
     {
         (yyval.tipo_associado) = type_lookup((yyvsp[(1) - (1)].val).str_val); 
         parser_log("EXPRESSAO -> INTEGER");
@@ -1766,7 +1765,7 @@ yyreduce:
   case 36:
 
 /* Line 1455 of yacc.c  */
-#line 237 "parser.y"
+#line 236 "parser.y"
     { 
         (yyval.tipo_associado) = type_lookup((yyvsp[(1) - (1)].val).str_val);
         parser_log("EXPRESSAO -> DOUBLE");
@@ -1776,24 +1775,23 @@ yyreduce:
   case 37:
 
 /* Line 1455 of yacc.c  */
-#line 242 "parser.y"
+#line 241 "parser.y"
     {
         (yyval.tipo_associado) = type_lookup((yyvsp[(1) - (1)].val).str_val);
-        //printf("Str expr: %s\t\ttipo associado: %d\n", $1.str_val, $$);  
         parser_log("EXPRESSAO -> STRING");;}
     break;
 
   case 38:
 
 /* Line 1455 of yacc.c  */
-#line 247 "parser.y"
+#line 245 "parser.y"
     { temErro= 1;  yyerror("-  Expressão invalida"); ;}
     break;
 
   case 39:
 
 /* Line 1455 of yacc.c  */
-#line 251 "parser.y"
+#line 249 "parser.y"
     {
         (yyval.tipo_associado) = (yyvsp[(1) - (1)].item_tabela)->tipo_token;
         parser_log("EXPRESSAO -> IDENTIFICADOR");
@@ -1803,7 +1801,7 @@ yyreduce:
   case 40:
 
 /* Line 1455 of yacc.c  */
-#line 256 "parser.y"
+#line 254 "parser.y"
     {
         (yyval.tipo_associado) = type_lookup((yyvsp[(1) - (1)].val).str_val); 
         parser_log("EXPRESSAO -> INTEGER");
@@ -1813,7 +1811,7 @@ yyreduce:
   case 41:
 
 /* Line 1455 of yacc.c  */
-#line 261 "parser.y"
+#line 259 "parser.y"
     { 
         (yyval.tipo_associado) = type_lookup((yyvsp[(1) - (1)].val).str_val);
         parser_log("EXPRESSAO -> DOUBLE");
@@ -1823,14 +1821,14 @@ yyreduce:
   case 42:
 
 /* Line 1455 of yacc.c  */
-#line 266 "parser.y"
+#line 264 "parser.y"
     { temErro= 1;  yyerror("-  Elemento da comparacao invalido"); ;}
     break;
 
 
 
 /* Line 1455 of yacc.c  */
-#line 1834 "parser.tab.c"
+#line 1832 "parser.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2042,7 +2040,7 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 269 "parser.y"
+#line 267 "parser.y"
 
 
 void yyerror(char *producao){
@@ -2050,7 +2048,9 @@ void yyerror(char *producao){
 }
 
 void parser_log(char *producao){
-    //printf("%s\t\tnro linha: %d\n", producao, lineno);
+    FILE *PARSEROUT;
+    PARSEROUT = fopen("OUTPARSER.txt", "a") ;
+    fprintf(PARSEROUT, "%s\t linha %d\n", producao, lineno);
 }
 
 int resultado ()
@@ -2064,9 +2064,9 @@ int resultado ()
 }
 
 int main (){
-    // apagando log anterior
-    remove("printf.txt");
-    
+    // apagando logs anteriores
+    remove("OUTLEX.txt");
+    remove("OUTPARSER.txt");
     // iniciando tabelas
     init_hash_table();
 
@@ -2074,16 +2074,17 @@ int main (){
 	int flag;
 	yyin = fopen("input.txt", "r");
 	flag = yyparse();
-	fclose(yyin);
 
     // symbol table dump
-    yyout = fopen("symtab_dump.txt", "w") ;
+    yyout = fopen("OUT_TABSIMB.txt", "w") ;
     tabsimb_dump(yyout);
-    fclose(yyout); 	
-    
     if ( resultado() ) 
         iniciaGerador();
 	
+	fclose(yyin);
+    fclose(yyout); 	
+    fclose(PARSEROUT);
+    fclose(LEXOUT);
     return flag;
 
 }

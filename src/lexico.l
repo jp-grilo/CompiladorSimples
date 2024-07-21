@@ -9,6 +9,7 @@
 
     extern FILE *yyin;
     extern FILE *yyout;
+    FILE *LEXOUT;
 
     void yyerror();
     void ret_print(char *token_type);
@@ -115,7 +116,6 @@ COMENTARIO          \{({L}|{D}|{S}|" "|\t)*\}
 
 
 void ret_print(char *token_type){
-    FILE *pout;
-    pout = fopen("printf.txt", "a") ;
-    fprintf(pout, "%s\t ->\t %s linha %d\n", token_type, yytext, lineno);
+    LEXOUT = fopen("OUTLEX.txt", "a") ;
+    fprintf(LEXOUT, "%s\t ->\t %s linha %d\n", token_type, yytext, lineno);
 }

@@ -8,6 +8,7 @@
 
 extern FILE *yyin;
 extern FILE *yyout;
+extern FILE *LEXOUT;
 
 extern int lineno;
 extern char *lexema;
@@ -18,17 +19,18 @@ void parser_log(char *producao);
 
 int temErro = 0;
 int num_lexema=0;
+FILE *PARSEROUT;
 
 %}
 
 %union{
-	// different types of values
+	// Diferentes tipos de valores
 	Valores val;   
 	
-	// structures
+	// Token da tabela de simbolos
 	list_t* item_tabela;
  
-	// for declarations
+	// Tipo associado
 	int tipo_associado;
 
 }
@@ -90,13 +92,10 @@ DECLARA_VAR:
 
 NOMES:
     IDENTIFICADOR VIRGULA NOMES { 
-
-        //printf("Dec id: %s\t\tlinha: %d\n", $1->nome_token, lineno);
         parser_log("NOMES -> IDENTIFICADOR VIRGULA NOMES"); 
     }
     |
     IDENTIFICADOR { 
-        //printf("Dec id: %s\t\tlinha: %d\n", $1->nome_token, lineno); 
         parser_log("NOMES -> IDENTIFICADOR"); 
     }
     | 
@@ -241,7 +240,6 @@ EXPRESSAO :
     |
     STRING {
         $$ = type_lookup($1.str_val);
-        //printf("Str expr: %s\t\ttipo associado: %d\n", $1.str_val, $$);  
         parser_log("EXPRESSAO -> STRING");}
     |
     error { temErro= 1;  yyerror("-  Expressão invalida"); }
@@ -273,7 +271,9 @@ void yyerror(char *producao){
 }
 
 void parser_log(char *producao){
-    //printf("%s\t\tnro linha: %d\n", producao, lineno);
+    FILE *PARSEROUT;
+    PARSEROUT = fopen("OUTPARSER.txt", "a") ;
+    fprintf(PARSEROUT, "%s\t linha %d\n", producao, lineno);
 }
 
 int resultado ()
@@ -287,9 +287,9 @@ int resultado ()
 }
 
 int main (){
-    // apagando log anterior
-    remove("printf.txt");
-    
+    // apagando logs anteriores
+    remove("OUTLEX.txt");
+    remove("OUTPARSER.txt");
     // iniciando tabelas
     init_hash_table();
 
@@ -297,16 +297,17 @@ int main (){
 	int flag;
 	yyin = fopen("input.txt", "r");
 	flag = yyparse();
-	fclose(yyin);
 
     // symbol table dump
-    yyout = fopen("symtab_dump.txt", "w") ;
+    yyout = fopen("OUT_TABSIMB.txt", "w") ;
     tabsimb_dump(yyout);
-    fclose(yyout); 	
-    
     if ( resultado() ) 
         iniciaGerador();
 	
+	fclose(yyin);
+    fclose(yyout); 	
+    fclose(PARSEROUT);
+    fclose(LEXOUT);
     return flag;
 
 }

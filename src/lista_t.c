@@ -64,6 +64,13 @@ int type_lookup(char *name){ /* return symbol if found or NULL if not found */
     return token->tipo_token; // NULL is not found
 }
  
+char *return_type(int type){
+    if (type == TIPO_INT) return "INTEIRO";
+    else if (type == TIPO_REAL) return "REAL";
+    else if (type == TIPO_LITERAL) return "STRING";
+    return "NULL";
+}
+
 /* print to stdout by default */ 
 void tabsimb_dump(FILE * of){  
   int i;
@@ -100,9 +107,3 @@ list_t *get_hash_table_entry(int index) {
     return NULL;
 }
 
-char *return_type(int type){
-    if (type == TIPO_INT) return "INTEIRO";
-    else if (type == TIPO_REAL) return "REAL";
-    else if (type == TIPO_LITERAL) return "STRING";
-    return "NULL";
-}

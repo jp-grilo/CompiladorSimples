@@ -457,6 +457,7 @@ char *yytext;
 
     extern FILE *yyin;
     extern FILE *yyout;
+    FILE *LEXOUT;
 
     void yyerror();
     void ret_print(char *token_type);
@@ -468,7 +469,7 @@ char *yytext;
     char *lexema;
 /* Define os lexemas */
 /* Regras para os lexemas fornecidos */
-#line 472 "lex.yy.c"
+#line 473 "lex.yy.c"
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -619,10 +620,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
 
-#line 46 "lexico.l"
+#line 47 "lexico.l"
 
 
-#line 626 "lex.yy.c"
+#line 627 "lex.yy.c"
 
 	if ( yy_init )
 		{
@@ -707,87 +708,87 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 48 "lexico.l"
+#line 49 "lexico.l"
 {   ret_print("INICIOPROG"); return INICIOPROG ; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 49 "lexico.l"
+#line 50 "lexico.l"
 {   ret_print("FIMPROG"); return FIMPROG ;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 50 "lexico.l"
+#line 51 "lexico.l"
 {   declaracao=PARAMETRO; ret_print("INICIOARGS"); return INICIOARGS ;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 51 "lexico.l"
+#line 52 "lexico.l"
 {   ret_print("FIMARGS"); return FIMARGS ;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 52 "lexico.l"
+#line 53 "lexico.l"
 {   declaracao=VARIAVEL; ret_print("INICIOVARS"); return INICIOVARS ;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 53 "lexico.l"
+#line 54 "lexico.l"
 {   ret_print("FIMVARS"); return FIMVARS ;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 54 "lexico.l"
+#line 55 "lexico.l"
 {   ret_print("ESCREVA"); return ESCREVA ;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 55 "lexico.l"
+#line 56 "lexico.l"
 {   ret_print("SE"); return SE ;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 56 "lexico.l"
+#line 57 "lexico.l"
 {   ret_print("ENTAO"); return ENTAO ;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 57 "lexico.l"
+#line 58 "lexico.l"
 {   ret_print("FIM_SE"); return FIM_SE ;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 58 "lexico.l"
+#line 59 "lexico.l"
 {   ret_print("ENQUANTO"); return ENQUANTO ;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 59 "lexico.l"
+#line 60 "lexico.l"
 {   ret_print("FACA"); return FACA ;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 60 "lexico.l"
+#line 61 "lexico.l"
 {   ret_print("FIM_ENQUANTO"); return FIM_ENQUANTO ;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 62 "lexico.l"
+#line 63 "lexico.l"
 {   type=TIPO_INT; ret_print("INTEIRO"); return INTEIRO; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 63 "lexico.l"
+#line 64 "lexico.l"
 {   type=TIPO_REAL; ret_print("REAL"); return REAL; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 64 "lexico.l"
+#line 65 "lexico.l"
 {   type=TIPO_LITERAL; ret_print("LITERAL"); return LITERAL; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 66 "lexico.l"
+#line 67 "lexico.l"
 {  
                             ret_print("INTEGER");
                             insert(yytext, strlen(yytext), TIPO_INT, INDEF, lineno);
@@ -798,7 +799,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 74 "lexico.l"
+#line 75 "lexico.l"
 {   
                             ret_print("DOUBLE"); 
                             insert(yytext, strlen(yytext), TIPO_REAL, INDEF, lineno);
@@ -809,7 +810,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 82 "lexico.l"
+#line 83 "lexico.l"
 {   
                             ret_print("STRING");
                             insert(yytext, strlen(yytext), TIPO_LITERAL, INDEF, lineno);
@@ -820,7 +821,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 90 "lexico.l"
+#line 91 "lexico.l"
 {   
                             ret_print("IDENTIFICADOR"); 
                             insert(yytext, strlen(yytext), type, declaracao, lineno);
@@ -830,80 +831,80 @@ YY_RULE_SETUP
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 97 "lexico.l"
+#line 98 "lexico.l"
 {   ret_print("OP_RELACIONAL"); return OP_RELACIONAL; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 98 "lexico.l"
+#line 99 "lexico.l"
 {   ret_print("SOMA"); return SOMA; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 99 "lexico.l"
+#line 100 "lexico.l"
 {   ret_print("SUB"); return SUB; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 100 "lexico.l"
+#line 101 "lexico.l"
 {   ret_print("MULT"); return MULT; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 101 "lexico.l"
+#line 102 "lexico.l"
 {   ret_print("DIV"); return DIV; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 102 "lexico.l"
+#line 103 "lexico.l"
 {   ret_print("ATRIBUICAO"); return ATRIBUICAO; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 103 "lexico.l"
+#line 104 "lexico.l"
 {   ret_print("ABRE_PAR"); return ABRE_PAR; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 104 "lexico.l"
+#line 105 "lexico.l"
 {   ret_print("FECHA_PAR"); return FECHA_PAR; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 105 "lexico.l"
+#line 106 "lexico.l"
 {   ret_print("VIRGULA"); return VIRGULA; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 106 "lexico.l"
+#line 107 "lexico.l"
 {   ret_print("PONTO_E_VIRG"); return PONTO_E_VIRG; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 107 "lexico.l"
+#line 108 "lexico.l"
 {   }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 108 "lexico.l"
+#line 109 "lexico.l"
 {   ret_print("COMENTARIO"); }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 110 "lexico.l"
+#line 111 "lexico.l"
 {   lineno += 1; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 111 "lexico.l"
+#line 112 "lexico.l"
 {   ret_print("ERROR"); return ERROR; }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 114 "lexico.l"
+#line 115 "lexico.l"
 ECHO;
 	YY_BREAK
-#line 907 "lex.yy.c"
+#line 908 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1789,12 +1790,11 @@ int main()
 	return 0;
 	}
 #endif
-#line 114 "lexico.l"
+#line 115 "lexico.l"
 
 
 
 void ret_print(char *token_type){
-    FILE *pout;
-    pout = fopen("printf.txt", "a") ;
-    fprintf(pout, "%s\t ->\t %s linha %d\n", token_type, yytext, lineno);
+    LEXOUT = fopen("OUTLEX.txt", "a") ;
+    fprintf(LEXOUT, "%s\t ->\t %s linha %d\n", token_type, yytext, lineno);
 }

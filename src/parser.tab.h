@@ -83,15 +83,15 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 24 "parser.y"
+#line 26 "parser.y"
 
-	// different types of values
+	// Diferentes tipos de valores
 	Valores val;   
 	
-	// structures
+	// Token da tabela de simbolos
 	list_t* item_tabela;
  
-	// for declarations
+	// Tipo associado
 	int tipo_associado;
 
 
