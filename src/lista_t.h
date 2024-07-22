@@ -43,6 +43,7 @@ typedef struct list_t{
     int declaracao;
     // armazenar o valor
     Valores valor;
+    int inicializada;
     RefList *lines;
     // ponteiro para as próximas ocorrências do token
     struct list_t *next;

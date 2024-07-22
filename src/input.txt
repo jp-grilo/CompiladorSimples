@@ -10,37 +10,8 @@ iniciovars
       real valor, resultado;
 fimvars
 
-se (potencia == 2) entao
-     valor = 3.0;
-fimse
-
-potencia = 1;
-valor = 1.0;
-resultado = 2.0;
+valor = resultado + 1;
 
 
-
-se (potencia < 3) entao
-    valor = 4 / valor;
-	potencia = potencia * (-5);
-	enquanto (potencia > 0) faca
-		resultado = resultado * valor;
-		potencia = potencia - 6;
-	fimenquanto
-fimse
-
-enquanto (potencia > 7) faca
-	resultado = resultado * valor;
-	potencia = potencia - 8;
-	se (resultado > 9) entao
-     	escreva "Este valor eh grande\n";
-	fimse
-fimenquanto
-
-escreva "Resultado: ";
-escreva resultado;
-escreva potencia;
-escreva potencia + potencia;
-escreva "\n";
 
 fimprog

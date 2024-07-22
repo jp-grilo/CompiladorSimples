@@ -32,6 +32,7 @@ void insert(char *name, int len, int type, int declaracao, int lineno){
         /* add to hashtable */
         token->tipo_token = type;
         token->declaracao = declaracao;
+        token->inicializada=0;
         token->lines = (RefList*) malloc(sizeof(RefList));
         token->lines->lineno = lineno;
         token->lines->next = NULL;

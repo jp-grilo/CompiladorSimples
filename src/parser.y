@@ -143,7 +143,11 @@ COMANDO:
         if (($1->tipo_token == TIPO_LITERAL && ($3->tipo_associado == TIPO_REAL || $3->tipo_associado == TIPO_INT)) || 
             (($1->tipo_token == TIPO_REAL || $1->tipo_token == TIPO_INT) && $3->tipo_associado == TIPO_LITERAL)) {
             temErro = 1;
-            printf("ERRO:\n  - A atribuição contém conflito de tipo.\n   Variável: %s, Expressão: %s, na linha %d.\n", return_type($1->tipo_token), return_type($3->tipo_associado), lineno);
+            if(!leitura)
+                printf("ERRO:\n  - A atribuição contém conflito de tipo.\n   Variável: %s, Expressão: %s, na linha %d.\n", return_type($1->tipo_token), return_type($3->tipo_associado), lineno);
+        }
+        else{
+            $1->inicializada=1;
         }
         parser_log("COMANDO -> IDENTIFICADOR ATRIBUICAO EXPRESSAO PONTO_E_VIRG"); 
     }
@@ -174,7 +178,8 @@ EXPRESSAO :
         $$ = (list_expressoes*) malloc(sizeof(list_expressoes));
         if($1->tipo_associado == TIPO_LITERAL || $3->tipo_associado == TIPO_LITERAL){
             temErro = 1;
-            printf("ERRO:\n  - A operação de soma não pode conter literais. \n   Var1: %s, Var2: %s, na linha %d.\n", return_type($1->tipo_associado), return_type($3->tipo_associado), lineno);
+            if(!leitura)
+                printf("ERRO:\n  - A operação de soma não pode conter literais. \n   Var1: %s, Var2: %s, na linha %d.\n", return_type($1->tipo_associado), return_type($3->tipo_associado), lineno);
             $$->tipo_associado = ERRO;
         }
         else if($1->tipo_associado == TIPO_REAL || $3->tipo_associado == TIPO_REAL){
@@ -189,7 +194,8 @@ EXPRESSAO :
         $$ = (list_expressoes*) malloc(sizeof(list_expressoes));
         if($1->tipo_associado == TIPO_LITERAL || $3->tipo_associado == TIPO_LITERAL){
             temErro = 1;
-            printf("ERRO:\n  - A operação de subtração não pode conter literais. \n   Var1: %s, Var2: %s, na linha %d.\n", return_type($1->tipo_associado), return_type($3->tipo_associado), lineno);
+            if(!leitura)
+                printf("ERRO:\n  - A operação de subtração não pode conter literais. \n   Var1: %s, Var2: %s, na linha %d.\n", return_type($1->tipo_associado), return_type($3->tipo_associado), lineno);
             $$->tipo_associado = ERRO;
         }
         else if($1->tipo_associado == TIPO_REAL || $3->tipo_associado == TIPO_REAL){
@@ -204,7 +210,8 @@ EXPRESSAO :
         $$ = (list_expressoes*) malloc(sizeof(list_expressoes));
         if($1->tipo_associado == TIPO_LITERAL || $3->tipo_associado == TIPO_LITERAL){
             temErro = 1;
-            printf("ERRO:\n  - A operação de multiplicação não pode conter literais. \n   Var1: %s, Var2: %s, na linha %d.\n", return_type($1->tipo_associado), return_type($3->tipo_associado), lineno);
+            if(!leitura)
+                printf("ERRO:\n  - A operação de multiplicação não pode conter literais. \n   Var1: %s, Var2: %s, na linha %d.\n", return_type($1->tipo_associado), return_type($3->tipo_associado), lineno);
             $$->tipo_associado = ERRO;
         }
         else if($1->tipo_associado == TIPO_REAL || $3->tipo_associado == TIPO_REAL){
@@ -219,7 +226,8 @@ EXPRESSAO :
         $$ = (list_expressoes*) malloc(sizeof(list_expressoes));
         if($1->tipo_associado == TIPO_LITERAL || $3->tipo_associado == TIPO_LITERAL){
             temErro = 1;
-            printf("ERRO:\n  - A operação de divisão não pode conter literais. \n   Var1: %s, Var2: %s, na linha %d.\n", return_type($1->tipo_associado), return_type($3->tipo_associado), lineno);
+            if(!leitura)
+                printf("ERRO:\n  - A operação de divisão não pode conter literais. \n   Var1: %s, Var2: %s, na linha %d.\n", return_type($1->tipo_associado), return_type($3->tipo_associado), lineno);
             $$->tipo_associado = ERRO;
         }
         else if($1->tipo_associado == TIPO_REAL || $3->tipo_associado == TIPO_REAL){
@@ -240,7 +248,8 @@ EXPRESSAO :
         $$ = (list_expressoes*) malloc(sizeof(list_expressoes));
         if($2->tipo_associado == TIPO_LITERAL){
             temErro = 1;
-            printf("ERRO:\n  - A operação de negação não pode conter literal.\n   Var1: %s, na linha %d.\n", return_type($2->tipo_associado), lineno);
+            if(!leitura)
+                printf("ERRO:\n  - A operação de negação não pode conter literal.\n   Var1: %s, na linha %d.\n", return_type($2->tipo_associado), lineno);
             $$->tipo_associado = ERRO;
         }
         else {
@@ -261,7 +270,12 @@ EXPRESSAO :
         $$->arg2 = NULL; // Não há argumento 2 para esse caso
         $$->resultado = numExpressao++;
         $$->tipo_associado = $1->tipo_token;
-          
+        
+        if(!$1->inicializada){
+            temErro=1;
+            if(!leitura)
+                printf("ERRO:\n  - A Variavel %s nao foi inicializada, na linha %d\n", $1->nome_token, lineno);
+        }
         parser_log("EXPRESSAO -> IDENTIFICADOR");
     }
     |
@@ -283,7 +297,7 @@ EXPRESSAO :
         $$->arg2 = NULL; // Não há argumento 2 para esse caso
         $$->resultado = numExpressao++;
         $$->tipo_associado = type_lookup($1.str_val);
-          
+        
         parser_log("EXPRESSAO -> DOUBLE");
     }
     |
@@ -294,7 +308,7 @@ EXPRESSAO :
         $$->arg2 = NULL; // Não há argumento 2 para esse caso
         $$->resultado = numExpressao++;
         $$->tipo_associado = type_lookup($1.str_val);
-          
+        
         parser_log("EXPRESSAO -> STRING");
     }
     |
