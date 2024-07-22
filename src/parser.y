@@ -71,7 +71,7 @@ PROGRAMA:
         parser_log("PROGRAMA -> INICIOPROG LISTA_PARAM"); 
     }
     | 
-    error { temErro= 1; yyerror("-  Erro na inicializacao ou finalizacao do codigo"); }
+    error { temErro= 1; yyerror("- Erro na inicializacao ou finalizacao do codigo"); }
 ;
 
 LISTA_PARAM:
@@ -81,7 +81,7 @@ LISTA_PARAM:
     |
     LISTA_VAR                                   { parser_log("LISTA_PARAM -> LISTA_VAR"); }
     | 
-    error { temErro= 1;  yyerror("-  Erro na estrutura de declaracao de argumentos"); }
+    error { temErro= 1;  yyerror("- Erro na estrutura de declaracao de argumentos"); }
 ;
 
 LISTA_VAR:
@@ -96,7 +96,7 @@ DECLARA_VAR:
     |
 
     | 
-    error { temErro= 1;  yyerror("-  Erro na declaracao dos identificadores"); }
+    error { temErro= 1;  yyerror("- Erro na declaracao dos identificadores"); }
 ;
 
 NOMES:
@@ -108,7 +108,7 @@ NOMES:
         parser_log("NOMES -> IDENTIFICADOR"); 
     }
     | 
-    error { temErro= 1;  yyerror("-  Erro na declaracao dos identificadores"); }
+    error { temErro= 1;  yyerror("- Erro na declaracao dos identificadores"); }
 ;
 
 TIPO_VAR:
@@ -127,7 +127,7 @@ TIPO_VAR:
         parser_log("TIPO_VAR -> INTEIRO");
         }
     | 
-    error { temErro= 1;  yyerror("-  Tipo invalido na declaracao dos identificadores"); }
+    error { temErro= 1;  yyerror("- Tipo invalido na declaracao dos identificadores"); }
 ;
 
 CODIGO:
@@ -170,7 +170,7 @@ CONDICAO:
         parser_log("COMANDO -> IDENTIFICADOR ATRIBUICAO EXPRESSAO PONTO_E_VIRG"); 
     }
     | 
-    error { temErro=1;  yyerror("\nCONDICAO -> error"); }
+    error { temErro=1;  yyerror("- Estrutura de condicao invalida"); }
 ;
 
 EXPRESSAO : 
@@ -320,7 +320,11 @@ EXPRESSAO :
 
 ID_OR_NUMBER:
     IDENTIFICADOR {
-          
+        if(!$1->inicializada){
+            temErro=1;
+            if(!leitura)
+                printf("ERRO:\n  - A Variavel %s nao foi inicializada, na linha %d\n", $1->nome_token, lineno);
+        }        
         parser_log("ID_OR_NUMBER -> IDENTIFICADOR");
     }
     |
@@ -340,7 +344,8 @@ ID_OR_NUMBER:
 %%
 
 void yyerror(char *producao){
-    printf("%s. \tLinha: %d\n", producao, lineno);
+    if(leitura) return;
+    printf("ERRO:\n  %s. \tLinha: %d\n", producao, lineno);
 }
 
 void parser_log(char *producao){
