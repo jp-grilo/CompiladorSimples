@@ -46,6 +46,7 @@ void geraParametros() {
     fclose(geradorout);
 }
 
+
 void geraVariaveis() {
     FILE *geradorout;
     geradorout = fopen("OUT_GERADO.txt", "a");
@@ -107,5 +108,44 @@ void geraFim(){
         return;
     }
     fprintf(geradorout, "}");
+    fclose(geradorout);
+}
+
+void gerarEscreva(char *mensagem){
+    if(!flag_gerador) return;
+    // Verifica se a string é nula
+    if (mensagem == NULL) {
+        printf("String nula\n");
+        return;
+    }
+
+    size_t len = strlen(mensagem) - 2;
+    char *mensagem_cropada = (char *)malloc((len + 1) * sizeof(char));
+    strncpy(mensagem_cropada, mensagem + 1, len);
+    mensagem_cropada[len] = '\0'; // Adiciona o caractere nulo ao final da nova string
+
+    FILE *geradorout;
+    geradorout = fopen("OUT_GERADO.txt", "a");
+    if (geradorout == NULL) {
+        perror("Erro ao abrir o arquivo");
+        return;
+    }
+
+    int lieral_val=0;
+    char *nome_constante = (char *)malloc(10 * sizeof(char));
+
+    // Itera sobre cada caractere da string até encontrar o caractere nulo '\0'
+    while (*mensagem_cropada != '\0') { //l1: char = const 'c';
+        sprintf(nome_constante, "l%d", lieral_val);
+        fprintf(geradorout, "%s: char = const '%c';\n", nome_constante, *mensagem_cropada);
+        mensagem_cropada++; lieral_val++;
+    }
+    fprintf(geradorout, "print ");
+    for(int index=0; index<lieral_val;index++){
+        sprintf(nome_constante, "l%d", index);
+        fprintf(geradorout, "%s ", nome_constante);
+    }
+
+    fprintf(geradorout, ";\n");
     fclose(geradorout);
 }

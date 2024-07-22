@@ -10,8 +10,6 @@ iniciovars
       real valor, resultado;
 fimvars
 
-valor = 1;
-resultado = valor;
-
+escreva "asdasdad: ";
 
 fimprog

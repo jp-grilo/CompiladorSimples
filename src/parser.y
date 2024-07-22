@@ -152,7 +152,8 @@ COMANDO:
         parser_log("COMANDO -> IDENTIFICADOR ATRIBUICAO EXPRESSAO PONTO_E_VIRG"); 
     }
     |
-    ESCREVA EXPRESSAO PONTO_E_VIRG { 
+    ESCREVA EXPRESSAO PONTO_E_VIRG {
+        gerarEscreva($2->arg1);
         parser_log("COMANDO -> ESCREVA CORPO_ESCREVA PONTO_E_VIRG"); 
     }
     |
