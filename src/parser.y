@@ -187,6 +187,7 @@ EXPRESSAO :
         } else {
             $$->tipo_associado = TIPO_INT;
         }
+        free($$);
         parser_log("EXPRESSAO -> EXPRESSAO SOMA EXPRESSAO");
     } 
     | 
@@ -203,6 +204,7 @@ EXPRESSAO :
         } else {
             $$->tipo_associado = TIPO_INT;
         }
+        free($$);
         parser_log("EXPRESSAO -> EXPRESSAO SUB EXPRESSAO");
     }
     | 
@@ -219,6 +221,7 @@ EXPRESSAO :
         } else {
             $$->tipo_associado = TIPO_INT;
         }
+        free($$);
         parser_log("EXPRESSAO -> EXPRESSAO MULT EXPRESSAO");
     }
     | 
@@ -235,6 +238,7 @@ EXPRESSAO :
         } else {
             $$->tipo_associado = TIPO_INT;
         }
+        free($$);
         parser_log("EXPRESSAO -> EXPRESSAO DIV EXPRESSAO");
     }
     | 
@@ -242,6 +246,7 @@ EXPRESSAO :
         $$ = (list_expressoes*) malloc(sizeof(list_expressoes));
         $$->tipo_associado = $2->tipo_associado;
         parser_log("EXPRESSAO -> ABRE_PAR EXPRESSAO FECHA_PAR");
+        free($$);
     }
     | 
     SUB EXPRESSAO %prec UMINUS { 
@@ -260,6 +265,7 @@ EXPRESSAO :
             $$->tipo_associado = $2->tipo_associado;
             //dump_expr_element($$);
         }
+        free($$);
         parser_log("EXPRESSAO -> '-' EXPRESSAO \%prec UMINUS");
     }
     | 
@@ -276,6 +282,7 @@ EXPRESSAO :
             if(!leitura)
                 printf("ERRO:\n  - A Variavel %s nao foi inicializada, na linha %d\n", $1->nome_token, lineno);
         }
+        free($$);
         parser_log("EXPRESSAO -> IDENTIFICADOR");
     }
     |
@@ -286,7 +293,7 @@ EXPRESSAO :
         $$->arg2 = NULL; // Não há argumento 2 para esse caso
         $$->resultado = numExpressao++;
         $$->tipo_associado = type_lookup($1.str_val);
-        
+        free($$);
         parser_log("EXPRESSAO -> INTEGER");
     }
     |
@@ -297,7 +304,7 @@ EXPRESSAO :
         $$->arg2 = NULL; // Não há argumento 2 para esse caso
         $$->resultado = numExpressao++;
         $$->tipo_associado = type_lookup($1.str_val);
-        
+        free($$);
         parser_log("EXPRESSAO -> DOUBLE");
     }
     |
@@ -308,7 +315,7 @@ EXPRESSAO :
         $$->arg2 = NULL; // Não há argumento 2 para esse caso
         $$->resultado = numExpressao++;
         $$->tipo_associado = type_lookup($1.str_val);
-        
+        free($$);
         parser_log("EXPRESSAO -> STRING");
     }
     |

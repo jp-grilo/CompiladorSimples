@@ -10,8 +10,8 @@ iniciovars
       real valor, resultado;
 fimvars
 
-valor = resultado + 1;
-
+valor = 1;
+resultado = valor;
 
 
 fimprog
