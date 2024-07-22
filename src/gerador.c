@@ -6,7 +6,7 @@
 
 int flag_gerador=0;
 int numero_constante=0;;
-
+int const_neg=0;
 void iniciaGerador() {
     if(!flag_gerador) {
         geraParametros();
@@ -147,5 +147,36 @@ void gerarEscreva(char *mensagem){
     }
 
     fprintf(geradorout, ";\n");
+    fclose(geradorout);
+}
+
+void geraOperacao(list_expressoes* expressao){
+
+    FILE *geradorout;
+    geradorout = fopen("OUT_GERADO.txt", "a");
+    if (geradorout == NULL) {
+        perror("Erro ao abrir o arquivo");
+        return;
+    }
+    //const_neg1: int = const -1;
+    char *nome_expressao = (char *)malloc(10 * sizeof(char));
+    sprintf(nome_expressao, "EXP%d", expressao->resultado);
+
+    if (strcmp(expressao->operacao, "MINUS") == 0) {
+        if(!const_neg){
+            fprintf(geradorout, "iconst_neg: int = const -1;\n");
+            fprintf(geradorout, "fconst_neg: float = constf -1.0;\n");
+            const_neg=1;
+        }
+        if(expressao->tipo_associado==TIPO_INT){
+            fprintf(geradorout, "%s: int = mul iconst_neg ", nome_expressao);
+        } else if(expressao->tipo_associado==TIPO_REAL){
+            fprintf(geradorout, "%s: float = mul fconst_neg ", nome_expressao);            
+        }
+        
+
+
+    }
+
     fclose(geradorout);
 }

@@ -1,15 +1,14 @@
 inicioprog
 
-inicioargs
-	inteiro avulso;	
-	literal pliteral, sliteral;
-fimargs
-
 iniciovars
       inteiro potencia;
       real valor, resultado;
 fimvars
 
-escreva "asdasdad: ";
+potencia = 1.0;
+
+se (potencia > 2) entao
+     valor = 3.0;
+fimse
 
 fimprog

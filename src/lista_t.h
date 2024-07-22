@@ -17,6 +17,7 @@
 #define TIPO_INT 1
 #define TIPO_REAL 2
 #define TIPO_LITERAL 3
+#define TIPO_VARIAVEL 4
 #define CONST_INT 10
 #define CONST_REAL 20
 #define CONST_LITERAL 30
@@ -57,6 +58,8 @@ typedef struct list_expressoes {
     char *operacao;
     char *arg1;
     char *arg2;
+    int tipo_arg1;
+    int tipo_arg2;
     int resultado;
     int tipo_associado;
     struct list_expressoes *next;

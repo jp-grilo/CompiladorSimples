@@ -234,10 +234,12 @@ EXPRESSAO :
                 printf("ERRO:\n  - A operação de divisão não pode conter literais. \n   Var1: %s, Var2: %s, na linha %d.\n", return_type($1->tipo_associado), return_type($3->tipo_associado), lineno);
             $$->tipo_associado = ERRO;
         }
-        else if($1->tipo_associado == TIPO_REAL || $3->tipo_associado == TIPO_REAL){
-            $$->tipo_associado = TIPO_REAL;
-        } else {
-            $$->tipo_associado = TIPO_INT;
+        else {
+            if($1->tipo_associado == TIPO_REAL || $3->tipo_associado == TIPO_REAL){
+                $$->tipo_associado = TIPO_REAL;
+            } else {
+                $$->tipo_associado = TIPO_INT;
+            }
         }
         free($$);
         parser_log("EXPRESSAO -> EXPRESSAO DIV EXPRESSAO");
@@ -264,7 +266,7 @@ EXPRESSAO :
             $$->arg2 = NULL; // Não há argumento 2 para esse caso
             $$->resultado = numExpressao++;
             $$->tipo_associado = $2->tipo_associado;
-            //dump_expr_element($$);
+            geraOperacao($$);
         }
         free($$);
         parser_log("EXPRESSAO -> '-' EXPRESSAO \%prec UMINUS");
